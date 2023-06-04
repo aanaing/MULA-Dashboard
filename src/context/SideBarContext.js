@@ -4,9 +4,10 @@ const SideBarContext = createContext();
 
 const SideBarContextProvider = ({ children }) => {
   const [nav, setNav] = useState("");
+  const [role, setRole] = useState(null);
 
   return (
-    <SideBarContext.Provider value={{ nav, setNav }}>
+    <SideBarContext.Provider value={{ nav, setNav, role, setRole }}>
       {children}
     </SideBarContext.Provider>
   );

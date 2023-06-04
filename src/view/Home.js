@@ -21,6 +21,7 @@ import Artists from "../view/artists/Artists";
 import Artist from "../view/artists/Artist";
 import CreateArtist from "../view/artists/CreateArtist";
 import UpdateArtist from "../view/artists/UpdateArtist";
+import ArtView from "./art/ArtView";
 //const Dashboard = lazy(() => import("./Dashboard"));
 
 // const Users = lazy(() => import("./user/Users"));
@@ -83,16 +84,16 @@ const Admin = () => {
     }, 3000);
   };
 
-  // useEffect(() => {
-  //   const loggedUser = window.localStorage.getItem("loggedUser");
-  //   if (loggedUser) {
-  //     const parsedLoggedUser = JSON.parse(loggedUser);
-  //     setAuth(parsedLoggedUser);
-  //   } else {
-  //     navigate("/login");
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("mulaloggeduser");
+    if (loggedUser) {
+      const parsedLoggedUser = JSON.parse(loggedUser);
+      setAuth(parsedLoggedUser);
+    } else {
+      navigate("/login");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box
@@ -112,13 +113,17 @@ const Admin = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <AuthContext.Provider value={auth}>
             <Routes>
-              <Route path="/user" element={<Users />} />
-              <Route path="/user/:id" element={<User />} />
+              <Route path="/user" element={<Users/>} />
+              <Route path="/user/:id" element={<User/>} />
 
-              <Route path="/artist" element={<Artists />} />
-              <Route path="/artist/:id" element={<Artist />} />
-              <Route path="/create_artist" element={<CreateArtist />} />
-              <Route path="/update_artist" element={<UpdateArtist />} />
+              <Route path="/artist" element={<Artists/>} />
+              {/*<Route path="/artist/:id" element={<Artist/>} />*/}
+              <Route path="/create_artist" element={<CreateArtist/>} />
+              {/*<Route path="/update_artist" element={<UpdateArtist/>} />*/}
+
+              {/*Start Art Route*/}
+              <Route path="/art" element={<ArtView/>}/>
+              {/*End Art Route*/}
             </Routes>
           </AuthContext.Provider>
         </Suspense>

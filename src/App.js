@@ -8,6 +8,7 @@ import { SideBarContextProvider } from "./context/SideBarContext";
 
 function App() {
   return (
+
     <SideBarContextProvider>
       <Routes>
         <Route path="*" element={<Home />} />

@@ -26,11 +26,11 @@ import {
   FormControl,
   Avatar,
 } from "@mui/material";
-import { useLazyQuery } from "@apollo/client";
-// import { USERS } from "../../gql/users";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { ARTIST } from "../../gql/artist";
 import SideBarContext from "../../context/SideBarContext";
 
-const Index = () => {
+const Artists = () => {
   const { setNav } = useContext(SideBarContext);
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
@@ -38,54 +38,37 @@ const Index = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState(null);
-  //   const [loadUsers, result] = useLazyQuery(USERS);
+  const [searchValue, setSearchValue] = useState("");
+  const [artist, setArtist] = useState("");
+  const [loadArtist, resultArtist] = useLazyQuery(ARTIST);
 
-  //   useEffect(() => {
-  //     setNav("");
-  //     loadUsers({
-  //       variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
-  //     });
-  //   }, [loadUsers, offset, rowsPerPage, search]);
+  useEffect(() => {
+    loadArtist({
+      variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+    });
+  }, [loadArtist, rowsPerPage, offset, search]);
 
-  //   useEffect(() => {
-  //     if (result.data) {
-  //       //console.log(result.data);
-  //       setUsers(result.data.users);
-  //       setCount(Number(result.data?.users_aggregate.aggregate.count));
-  //     }
-  //   }, [result]);
+  useEffect(() => {
+    if (resultArtist.data) {
+      setArtist(resultArtist.data.artist);
+      setCount(resultArtist.data?.artist_aggregate.aggregate.count);
+    }
+  }, [resultArtist]);
 
-  //console.log(result);
-  //   const handleChangePage = (event, newPage) => {
-  //     setPage(newPage);
-  //     setOffset(rowsPerPage * newPage);
-  //   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    setOffset(rowsPerPage * newPage);
+  };
 
-  //   const handleChangeRowsPerPage = (event) => {
-  //     setRowsPerPage(+event.target.value);
-  //     setPage(0);
-  //   };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
-  //   const handleSearch = (e) => {
-  //     setSearch(document.getElementById("search-by-phone").value);
-  //   };
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      //   backgroundColor: theme.palette.grey[100],
-      //   backgroundColor: theme.palette.primary.light,
-      //   color: theme.palette.common.black,
-      fontSize: 10,
-      fontWeight: "bold",
-      minWidth: 70,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 15,
-      //backgroundColor: theme.palette.common.white,
-      //   color: theme.palette.common.black,
-    },
-  }));
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearch(searchValue);
+  };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -97,15 +80,10 @@ const Index = () => {
     },
   }));
 
-  //   if (!users) {
-  //     ///console.log(users);
-  //     return (
-  //       <div className="loading">
-  //         <em>Loading...</em>
-  //       </div>
-  //     );
-  //   }
-
+  if (!artist) {
+    return "no artist";
+  }
+  console.log("artist", artist[0].artist_profile_image_url);
   return (
     <div>
       <div
@@ -117,11 +95,7 @@ const Index = () => {
       >
         {/* dashboard */}
         <div>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            fontWeight="bold"
-            fontSize="1.2rem"
-          >
+          <Breadcrumbs aria-label="breadcrumb">
             <Link to="/" className="dashboard">
               Dashboard
             </Link>
@@ -130,39 +104,41 @@ const Index = () => {
         </div>
         {/* search */}
         <div>
-          <Paper
-            component="form"
-            sx={{
-              p: "2px 4px",
-              display: "flex",
-              alignItems: "center",
-              width: 350,
-            }}
-          >
-            {/* Search Box */}
-
-            <InputBase
-              id="search-by-phone"
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Search By Name or Phone"
-              type="search"
-              //   value={search}
-              //   onChange={handleSearch}
-            />
-            <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-              <SearchIcon />
-            </IconButton>
-            <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-            <IconButton
-              //   color="warning"
-              sx={{ p: "10px" }}
-              aria-label="directions"
-              //value={search}
-              //onClick={handleSearch}
+          <form onSubmit={handleSearch}>
+            <Paper
+              component="form"
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                alignItems: "center",
+                width: 350,
+              }}
             >
-              <DirectionsIcon />
-            </IconButton>
-          </Paper>
+              {/* Search Box */}
+
+              <InputBase
+                id="search-by-phone"
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Search By Name or Phone"
+                type="search"
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+              <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+              <IconButton
+                //   color="warning"
+                sx={{ p: "10px" }}
+                aria-label="directions"
+                type="submit"
+                value={search}
+                onClick={handleSearch}
+              >
+                <DirectionsIcon />
+              </IconButton>
+            </Paper>
+          </form>
         </div>
       </div>
 
@@ -200,64 +176,53 @@ const Index = () => {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <StyledTableRow>
-                <StyledTableCell
+                <TableCell
                   style={{
                     minWidth: 100,
                     fontWeight: "bold",
                   }}
                 >
                   ID
-                </StyledTableCell>
-                <StyledTableCell style={{ minWidth: 70 }}>
-                  Artist Name
-                </StyledTableCell>
-                <StyledTableCell style={{ minWidth: 70 }}>
-                  Profile Image
-                </StyledTableCell>
-                <StyledTableCell style={{ minWidth: 70 }}>
-                  Background Image
-                </StyledTableCell>
-                <StyledTableCell style={{ minWidth: 70 }}>
-                  Year Born
-                </StyledTableCell>
-                <StyledTableCell style={{ minWidth: 70 }}>
-                  Year Died
-                </StyledTableCell>
-                <StyledTableCell style={{ minWidth: 100 }}>
-                  Actions
-                </StyledTableCell>
+                </TableCell>
+                <TableCell>Artist Name</TableCell>
+                <TableCell>Profile Image</TableCell>
+
+                <TableCell>Year Born</TableCell>
+                <TableCell>Year Died</TableCell>
+                <TableCell>Actions</TableCell>
               </StyledTableRow>
             </TableHead>
 
             <TableBody>
-              {/* {users.map((row, index) => ( */}
+              {artist.length === 0 && <h1>No Artists</h1>}
+              {artist.map((row, index) => (
+                <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.artist_name}</TableCell>
+                  <TableCell>
+                    <Avatar
+                      width="52px"
+                      height="52px"
+                      src={row.artist_profile_image_url}
+                    ></Avatar>
+                  </TableCell>
 
-              <StyledTableRow hover role="checkbox" tabIndex={-1}>
-                <StyledTableCell>1</StyledTableCell>
-                <StyledTableCell>2</StyledTableCell>
-                <StyledTableCell>3</StyledTableCell>
-                <StyledTableCell>4</StyledTableCell>
-                <StyledTableCell>5</StyledTableCell>
-                <StyledTableCell>6</StyledTableCell>
-                <StyledTableCell>
-                  <Button
-                    size="small"
-                    // color={row.disabled ? "success" : "error"}
-                  ></Button>
-                  <Button
-                    size="small"
-                    sx={{ color: "red" }}
-                    // color="warning"
-                    // variant="contained"
-                    fontWeight="bold"
-                    // onClick={() => navigate(`/user/${row.id}`)}
-                  >
-                    Detail
-                  </Button>
-                </StyledTableCell>
-              </StyledTableRow>
-
-              {/* ))} */}
+                  <TableCell>{row.year_born}</TableCell>
+                  <TableCell>{row.year_died}</TableCell>
+                  <TableCell>
+                    <Button
+                      size="small"
+                      sx={{ color: "red" }}
+                      // color="warning"
+                      // variant="contained"
+                      fontWeight="bold"
+                      onClick={() => navigate(`/artist/${row.id}`)}
+                    >
+                      Detail
+                    </Button>
+                  </TableCell>
+                </StyledTableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -268,12 +233,12 @@ const Index = () => {
           count={count}
           rowsPerPage={rowsPerPage}
           page={page}
-          //   onPageChange={handleChangePage}
-          //   onRowsPerPageChange={handleChangeRowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
     </div>
   );
 };
 
-export default Index;
+export default Artists;

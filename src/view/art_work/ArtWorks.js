@@ -18,15 +18,19 @@ import {
   Table,
   TableHead,
   TableBody,
+  tableCellClasses,
   styled,
   TableRow,
   TableCell,
+  TextField,
+  FormControl,
+  Avatar,
 } from "@mui/material";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { ALL_USERS } from "../../gql/user";
+import { ARTWORKS } from "../../gql/artwork";
 import SideBarContext from "../../context/SideBarContext";
 
-const Index = () => {
+const ArtWork = () => {
   const { setNav } = useContext(SideBarContext);
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
@@ -35,25 +39,23 @@ const Index = () => {
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [user, setUser] = useState("");
-  const [loadUser, resultUser] = useLazyQuery(ALL_USERS);
+  const [artwork, setArtwork] = useState("");
+  const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
 
-  console.log("user data", resultUser);
   useEffect(() => {
-    loadUser({
+    loadArtwork({
       variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
     });
-  }, [loadUser, rowsPerPage, offset, search]);
+  }, [loadArtwork, rowsPerPage, offset, search]);
+
   useEffect(() => {
-    if (resultUser.data) {
-      setUser(resultUser.data.users);
-      setCount(Number(resultUser.data?.users_aggregate.aggregate.count));
+    if (resultArtwork.data) {
+      setArtwork(resultArtwork.data.traditional_art_work);
+      setCount(
+        resultArtwork.data?.traditional_art_work_aggregate.aggregate.count
+      );
     }
-  }, [resultUser]);
-  console.log("user", user);
-  if (!user) {
-    return "no user";
-  }
+  }, [resultArtwork]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -80,12 +82,8 @@ const Index = () => {
     },
   }));
 
-  if (!user) {
-    return (
-      <div className="loading">
-        <em>Loading...</em>
-      </div>
-    );
+  if (!artwork) {
+    return "no data";
   }
 
   return (
@@ -103,7 +101,7 @@ const Index = () => {
             <Link to="/" className="dashboard">
               Dashboard
             </Link>
-            <span>Users</span>
+            <span>ArtWork</span>
           </Breadcrumbs>
         </div>
         {/* search */}
@@ -135,15 +133,34 @@ const Index = () => {
                 //   color="warning"
                 sx={{ p: "10px" }}
                 aria-label="directions"
+                type="submit"
                 value={search}
                 onClick={handleSearch}
-                type="submit"
               >
                 <DirectionsIcon />
               </IconButton>
             </Paper>
           </form>
         </div>
+      </div>
+
+      <div>
+        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+          <Button
+            variant="contained"
+            sx={{
+              width: 90,
+              height: 60,
+              p: 1,
+              my: 2,
+              fontWeight: "bold",
+            }}
+            color="secondary"
+            onClick={() => navigate("/create_artWork")}
+          >
+            Add
+          </Button>
+        </Box>
       </div>
 
       <Box
@@ -169,35 +186,47 @@ const Index = () => {
                 >
                   ID
                 </TableCell>
-                <TableCell style={{ minWidth: 70 }}>Name</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Phone</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Created At</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Updated At</TableCell>
+                <TableCell style={{ minWidth: 70 }}>Artwork Image</TableCell>
+                <TableCell style={{ minWidth: 70 }}>Artwork Name</TableCell>
+
+                <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
+                <TableCell style={{ minWidth: 70 }}>Artwork Type</TableCell>
+
                 <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
               </StyledTableRow>
             </TableHead>
 
             <TableBody>
-              {user.length === 0 && <h1>No Users</h1>}
-              {user.map((row, index) => (
-                <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.fullname}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
-                  <TableCell>{row.created_at.substring(0, 10)}</TableCell>
-                  <TableCell>{row.updated_at.substring(0, 10)}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      color="warning"
-                      fontWeight="bold"
-                      onClick={() => navigate(`/user/${row.id}`)}
-                    >
-                      Detail
-                    </Button>
-                  </TableCell>
-                </StyledTableRow>
-              ))}
+              {artwork.length === 0 && <h1>No Artwork</h1>}
+              {artwork &&
+                artwork.map((row, index) => (
+                  <StyledTableRow hover role="checkbox" tabIndex={-1}>
+                    <TableCell>{row.id}</TableCell>
+
+                    <TableCell>
+                      <Avatar
+                        width="52px"
+                        height="52px"
+                        src={row.artwork_image_url}
+                      ></Avatar>
+                    </TableCell>
+                    <TableCell>{row.artwork_name}</TableCell>
+                    <TableCell>{row.artwork_year}</TableCell>
+                    <TableCell>{row.artwork_type}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        sx={{ color: "red" }}
+                        // color="warning"
+                        // variant="contained"
+                        fontWeight="bold"
+                        onClick={() => navigate(`/art_work/${row.id}`)}
+                      >
+                        Detail
+                      </Button>
+                    </TableCell>
+                  </StyledTableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -216,4 +245,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default ArtWork;

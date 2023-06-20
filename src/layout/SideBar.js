@@ -6,10 +6,10 @@ import ListItem from "@mui/material/ListItem";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
 import BrushIcon from "@mui/icons-material/Brush";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
+import PaletteIcon from "@mui/icons-material/Palette";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
-import FoodBankIcon from "@mui/icons-material/FoodBank";
+import SellIcon from "@mui/icons-material/Sell";
 import { Box, Typography } from "@mui/material";
 import icons from "../view/icons";
 import { Link } from "react-router-dom";
@@ -55,13 +55,13 @@ const SideBar = ({ open }) => {
           sx={{
             display: "flex",
             justifyContent: "center",
-            width: "50px",
+            width: "20px",
             margin: "auto",
             mt: 1,
             mb: 1.5,
           }}
         >
-          <img src={icons.logo} alt="mula" />
+          {/* <img src={icons.logo} alt="mula" /> */}
         </Box>
       </DrawerHeader>
       <List className="nav-list">
@@ -81,12 +81,29 @@ const SideBar = ({ open }) => {
             Users
           </ListItem>
         </Link>
+
+        <Link to="/art_work" onClick={() => setNav("")} className="nav-link">
+          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+            <ListItemIcon>
+              <PaletteIcon className="nav-link-icon" />
+            </ListItemIcon>
+            ArtWork
+          </ListItem>
+        </Link>
         <Link to="/artist" onClick={() => setNav("")} className="nav-link">
           <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
             <ListItemIcon>
               <BrushIcon className="nav-link-icon" />
             </ListItemIcon>
             Artist
+          </ListItem>
+        </Link>
+        <Link to="/reseller" onClick={() => setNav("")} className="nav-link">
+          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+            <ListItemIcon>
+              <SellIcon className="nav-link-icon" />
+            </ListItemIcon>
+            Reseller
           </ListItem>
         </Link>
       </List>

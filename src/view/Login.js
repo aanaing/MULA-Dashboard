@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-// import { LOGIN } from "../gql/auth";
+import ADMIN_LOGIN from "../gql/adminLogin";
 import * as jose from "jose";
 import { useNavigate } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -22,6 +22,7 @@ const Login = () => {
   const [values, setValues] = React.useState({
     username: "",
     password: "",
+    phone: "",
     showPassword: false,
   });
   const [loading, setLoading] = React.useState(false);
@@ -34,39 +35,39 @@ const Login = () => {
   const navigate = useNavigate();
 
   /*Part of gql */
-  // const [postLogin] = useMutation(LOGIN, {
-  //   onError: (error) => {
-  //     console.log("error : ", error);
-  //     setShowAlert({ message: "Error on server", isError: true });
-  //     setTimeout(() => {
-  //       setShowAlert({ message: "", isError: false });
-  //     }, 3000);
-  //   },
-  //   onCompleted: (result) => {
-  //     console.log(result);
-  //     setValues({ username: "", password: "", showPassword: false });
-  //     setLoading(false);
-  //     if (result.AdminLogIn.error) {
-  //       //console.log(result.AdminLogIn.error);
-  //       setShowAlert({ message: result.AdminLogIn.message, isError: true });
-  //       //console.log(result.AdminLogIn.message);
-  //       setTimeout(() => {
-  //         setShowAlert({ message: "", isError: false });
-  //       }, 3000);
-  //       return;
-  //     }
-  //     const decodedToken = jose.decodeJwt(result.AdminLogIn.accessToken);
-  //     //console.log(decodedToken);
-  //     const data = JSON.stringify({
-  //       token: result.AdminLogIn.accessToken,
-  //       // userID: decodedToken.hasura['x-hasura-user-id']
-  //       userID: decodedToken.user_id,
-  //     });
-  //     console.log(data);
-  //     window.localStorage.setItem("loggedUser", data);
-  //     navigate("/");
-  //   },
-  // });
+  const [postLogin] = useMutation(ADMIN_LOGIN, {
+    onError: (error) => {
+      console.log("error : ", error);
+      setShowAlert({ message: "Error on server", isError: true });
+      setTimeout(() => {
+        setShowAlert({ message: "", isError: false });
+      }, 3000);
+    },
+    onCompleted: (result) => {
+      // console.log("result", result);
+      setValues({ username: "", phone: "", password: "", showPassword: false });
+      setLoading(false);
+      if (result.AdminLogIn.error) {
+        //console.log(result.AdminLogIn.error);
+        setShowAlert({ message: result.AdminLogIn.message, isError: true });
+        console.log("show error", result.AdminLogIn.message);
+        setTimeout(() => {
+          setShowAlert({ message: "", isError: false });
+        }, 3000);
+        return;
+      }
+      const decodedToken = jose.decodeJwt(result.AdminLogIn.accessToken);
+      // console.log(decodedToken);
+      const data = JSON.stringify({
+        token: result.AdminLogIn.accessToken,
+        // userID: decodedToken.hasura['x-hasura-user-id']
+        userID: decodedToken.user_id,
+      });
+      // console.log("data", data);
+      window.localStorage.setItem("loggedUser", data);
+      navigate("/");
+    },
+  });
 
   const handleClickShowPassword = () => {
     setValues({
@@ -104,10 +105,14 @@ const Login = () => {
       setLoading(false);
       return;
     }
-    //console.log("values : ", values);
-    // postLogin({
-    //   variables: { username: values.username, password: values.password },
-    // });
+    console.log("values : ", values);
+    postLogin({
+      variables: {
+        username: values.username,
+        phone: "",
+        password: values.password,
+      },
+    });
   };
 
   return (

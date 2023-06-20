@@ -10,14 +10,16 @@ import {
   Card,
   CardActions,
   ListItem,
-  Paper,
   ListItemText,
   Alert,
+  Paper,
 } from "@mui/material";
-import { ARTIST, ARTIST_ID, DELETE_ARTIST } from "../../gql/artist";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { DELETE_IMAGE } from "../../gql/image";
+import { ARTIST_ID } from "../../gql/artist";
+import { ARTWORK_ID, DELETE_ARTWORK, ARTWORKS } from "../../gql/artwork";
 const styleR = {
   position: "absolute",
   top: "50%",
@@ -31,22 +33,23 @@ const styleR = {
   p: 4,
 };
 
-const Artist = () => {
+const ArtWork = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { data } = useQuery(ARTIST_ID, { variables: { id: id } });
+  const { data } = useQuery(ARTWORK_ID, { variables: { id: id } });
+  console.log("data is ", data);
 
-  const [delete_artist] = useMutation(DELETE_ARTIST, {
+  const [delete_artwork] = useMutation(DELETE_ARTWORK, {
     onError: (error) => {
       alert("delete error");
     },
     onCompleted: (data) => {
-      alert("artist had been deleted");
+      alert("Artwork has been deleted");
     },
-    refetchQueries: [ARTIST],
+    refetchQueries: [ARTWORKS],
   });
 
   // const [deleteImage] = useMutation(DELETE_IMAGE, {
@@ -66,7 +69,7 @@ const Artist = () => {
     //   image_url.lenght
     // );
     // await deleteImage({ variables: { image_name: image_name } });
-    await delete_artist({ variables: { id: id } });
+    await delete_artwork({ variables: { id: id } });
     navigate(-1);
   };
 
@@ -78,7 +81,7 @@ const Artist = () => {
   if (!data) {
     return "no data";
   }
-  console.log("data ", data.artist_by_pk.artist_name);
+
   return (
     <>
       <div role="presentation" className="align">
@@ -86,58 +89,18 @@ const Artist = () => {
           <Link to="/" className="dashboard">
             Dashboard
           </Link>
-          <Link to="/artist" className="dashboard">
-            Artist
+          <Link to="/art_work" className="dashboard">
+            Artwork
           </Link>
           <span>{id}</span>
         </Breadcrumbs>
       </div>
       <Typography variant="h6" component="h2" sx={{ m: 3, color: "black" }}>
-        Artist Details
+        Artwork Details
       </Typography>
 
       <Card>
         <CardContent>
-          {/* <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "2rem",
-              px: "3rem",
-              pb: "2rem",
-            }}
-          >
-            <div>
-              <CardMedia
-                sx={{
-                  flex: 1,
-                  bgcolor: "#cecece",
-                  height: 250,
-                  objectFit: "contain",
-                  width: 250,
-                  mt: 4,
-                  boxShadow: 5,
-                  borderRadius: 2,
-                  borderColor: "white",
-                }}
-                component="img"
-                height="300"
-                image={data.artist_by_pk.artist_profile_image_url}
-                alt="profile image"
-              />
-              <Typography
-                variant="p"
-                fontSize="12px"
-                mt="0.5rem"
-                color="blue"
-                display="flex"
-                justifyContent="center"
-              >
-                Profile Image
-              </Typography>
-            </div>
-          </Box> */}
-
           <Box
             sx={{
               maxWidth: "40%",
@@ -152,7 +115,7 @@ const Artist = () => {
             <CardMedia
               component="img"
               height="320"
-              image={data.artist_by_pk.artist_profile_image_url}
+              image={data.traditional_art_work_by_pk.artwork_image_url}
               sx={{ my: 2 }}
             />
           </Box>
@@ -166,50 +129,79 @@ const Artist = () => {
           >
             Artwork Image
           </Typography>
-
-          <Paper sx={{ m: "2rem", p: "2rem" }}>
+          <Paper sx={{ p: "2rem", m: "2rem" }}>
             <CardActions
               sx={{
                 display: "flex",
-                ml: "2rem",
+                justifyContent: "center",
               }}
             >
-              <ListItem sx={{ width: "600px" }}>
-                <ListItemText
-                  primary="ID"
-                  secondary={data.artist_by_pk.id}
-                ></ListItemText>
-              </ListItem>
-
-              <ListItem>
-                <ListItemText
-                  primary="Artist Name"
-                  secondary={data.artist_by_pk.artist_name}
-                ></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Year Born"
-                  secondary={data.artist_by_pk.year_born}
-                ></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Year Died"
-                  secondary={data.artist_by_pk.year_died}
-                ></ListItemText>
-              </ListItem>
+              <Box display="grid" rowGap="1rem">
+                <ListItem sx={{ width: "600px" }}>
+                  <ListItemText
+                    primary="ID"
+                    secondary={data.traditional_art_work_by_pk.id}
+                  ></ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Artwork Name"
+                    secondary={data.traditional_art_work_by_pk.artwork_name}
+                  ></ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Artwork Type"
+                    secondary={data.traditional_art_work_by_pk.artwork_name}
+                  ></ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Artwork Year"
+                    secondary={data.traditional_art_work_by_pk.artwork_year}
+                  ></ListItemText>
+                </ListItem>
+              </Box>
+              <Box display="grid" rowGap="1rem">
+                <ListItem>
+                  <ListItemText
+                    primary="Dimensions"
+                    secondary={data.traditional_art_work_by_pk.dimensions}
+                  ></ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Pending"
+                    secondary={data.traditional_art_work_by_pk.pending}
+                  ></ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Current Price"
+                    secondary={data.traditional_art_work_by_pk.current_price}
+                  ></ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Update Price"
+                    secondary={data.traditional_art_work_by_pk.update_price}
+                  ></ListItemText>
+                </ListItem>
+              </Box>
             </CardActions>
 
-            <Box>
+            <Box
+              sx={{
+                margin: "auto",
+              }}
+            >
               <Typography display="flex" justifyContent="center" mt="2rem">
-                Biography
+                Description
               </Typography>
-
-              <Box sx={{ ml: "4rem", mt: "1rem" }}>
+              <Box sx={{ ml: "5rem", mt: "1rem" }}>
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: data.artist_by_pk.biography,
+                    __html: data.traditional_art_work_by_pk.description,
                   }}
                 ></div>
               </Box>
@@ -219,14 +211,17 @@ const Artist = () => {
         <Box display="flex" justifyContent="end" columnGap="3rem" m="2rem">
           <Button
             variant="contained"
-            onClick={() => navigate(`/update_artist/${data.artist_by_pk.id}`)}
+            onClick={() =>
+              navigate(`/update_artwork/${data.traditional_art_work_by_pk.id}`)
+            }
+            // to={`/art_work/${data.traditional_art_work_by_pk.id}`}
           >
             Edit
           </Button>
           <Button
             variant="contained"
             color="error"
-            onClick={() => handleRemoveOpen(data.artist_by_pk)}
+            onClick={() => handleRemoveOpen(data.traditional_art_work_by_pk)}
           >
             Remove
           </Button>
@@ -257,7 +252,6 @@ const Artist = () => {
         </Box>
       </Modal>
     </>
-    // <h1>hello</h1>
   );
 };
-export default Artist;
+export default ArtWork;

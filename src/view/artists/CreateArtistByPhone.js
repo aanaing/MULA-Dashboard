@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Button,
   Typography,
@@ -17,21 +16,15 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState } from "react";
+import RichTextEditor from "react-rte";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  ADD_ARTIST,
-  ARTIST,
-  ARTIST_ID,
-  USER,
-  // USERS,
-  USER_ID,
-} from "../../gql/artist";
+import { ADD_ARTIST, ARTIST, ARTIST_ID, USER_ID } from "../../gql/artist";
 import { IMAGE_UPLOAD } from "../../gql/image";
 import imageService from "../../services/image";
 import LoadingButton from "@mui/lab/LoadingButton";
-import RichTextEditor from "react-rte";
-
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 const imageType = ["image/jpeg", "image/png"];
+
 const toolbarConfig = {
   // Optionally specify the groups to display (displayed in the order listed).
   display: [
@@ -58,35 +51,29 @@ const toolbarConfig = {
   ],
 };
 
-const CreateArtistByPhone = () => {
+const CreateArtistByPhone = ({ phone, handleClose }) => {
+  console.log("phone", phone);
   const { id } = useParams();
   const navigate = useNavigate();
-  const [values, setValues] = useState({
-    artist_name: "",
-    year_born: "",
-    year_died: "",
-    biography: "",
-    fk_user_id: "",
-  });
+  const [values, setValues] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
 
   const [imageFileUrl, setImageFileUrl] = useState("");
   const [imageFile, setImageFile] = useState("");
   const [imagePreview, setImagePreview] = useState("");
-
-  const { data } = useQuery(USER);
-
-  const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
-
-  const onChange = (value) => {
-    setTextValue(value);
-    setValues({ ...values, biography: value.toString("html") });
-  };
+  const { data } = useQuery(USER_ID, { variables: { id: id } });
+  console.log("user data is ", data);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
     // delete error[prop];
+  };
+  const onChange = (value) => {
+    setTextValue(value);
+    setValues({ ...values, biography: value.toString("html") });
   };
 
   const [add_artist] = useMutation(ADD_ARTIST, {
@@ -95,7 +82,7 @@ const CreateArtistByPhone = () => {
     },
     onCompleted: (result) => {
       setLoading(false);
-      console.log("result data is ", result);
+      console.log("object", result);
       setValues({});
       alert("New Artists had been added");
       navigate("/artist");
@@ -141,6 +128,10 @@ const CreateArtistByPhone = () => {
     }
   };
 
+  if (!data) {
+    return;
+  }
+
   const handleCreate = async () => {
     setLoading(true);
     let isErrorExit = false;
@@ -152,11 +143,6 @@ const CreateArtistByPhone = () => {
     if (!values.year_born) {
       isErrorExit = true;
       errorObject.year_born = "Year born is required";
-    }
-
-    if (!values.phone) {
-      isErrorExit = true;
-      errorObject.phone = "Phone is required";
     }
     if (!values.artist_profile_image_url) {
       isErrorExit = true;
@@ -177,17 +163,12 @@ const CreateArtistByPhone = () => {
     try {
       await imageService.uploadImage(imageFileUrl, imageFile);
       await add_artist({
-        variables: { ...values },
+        variables: { ...values, fk_user_id: data.users_by_pk.id },
       });
     } catch (error) {
       console.log("Error ", error);
     }
   };
-  // console.log("user data ", data.users);
-
-  if (!data) {
-    return;
-  }
 
   return (
     <>
@@ -271,7 +252,7 @@ const CreateArtistByPhone = () => {
             sx={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              gap: "3rem",
+              gap: "2rem",
 
               px: "1rem",
             }}
@@ -320,32 +301,18 @@ const CreateArtistByPhone = () => {
             {/* User phone */}
 
             <FormControl>
-              <InputLabel id="sub_type">Phone</InputLabel>
-              <Select
-                labelId="Phone"
-                label="Phone"
+              <TextField
                 variant="filled"
-                defaultValue=""
-                value={values.fk_user_id}
-                onChange={handleChange("fk_user_id")}
-                // error={error.user ? true : false}
-                // helperText={error.user}
-              >
-                <MenuItem value="" disabled>
-                  Value
-                </MenuItem>
-                {Array.isArray(data.users)
-                  ? data.users.map((user) => (
-                      <MenuItem key={user.id} value={user.id}>
-                        {user.phone}
-                      </MenuItem>
-                    ))
-                  : null}
-              </Select>
-              {error.phone && (
-                <FormHelperText error>{error.phone}</FormHelperText>
-              )}
+                id="phone"
+                label="Phone"
+                value={data.users_by_pk.phone}
+                // value={values.year_died}
+                // onChange={handleChange("phone")}
+                // error={error.year_died ? true : false}
+                // helperText={error.year_died}
+              />
             </FormControl>
+
             {/* Biography */}
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>

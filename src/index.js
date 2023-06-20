@@ -1,22 +1,59 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import { HttpLink, ApolloClient, InMemoryCache } from "@apollo/client";
+import App from "./App";
+import { createRoot } from "react-dom/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 
-const httpLink = new HttpLink({ uri: "https://powerplay.axra.app/v1/graphql" });
+const authLink = setContext((_, { headers }) => {
+  const loggedUserJSON = window.localStorage.getItem("loggedUser");
+  const loggedUserParsed = JSON.parse(loggedUserJSON);
+  return {
+    headers: {
+      ...headers,
+      Authorization: loggedUserParsed
+        ? `Bearer ${loggedUserParsed.token}`
+        : null,
+      "x-hasura-admin-secret": "mula is very good",
+    },
+  };
+});
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log("graphql", graphQLErrors);
+    graphQLErrors.forEach(({ extensions }) => {
+      if (
+        extensions.code === "invalid-headers" ||
+        extensions.code === "invalid-jwt"
+      ) {
+        window.location.assign(`${window.location.origin}/login`);
+      }
+    });
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+    alert("network connection problem");
+  }
+});
+
+const httpLink = new HttpLink({ uri: "http://146.190.4.124:8080/v1/graphql" });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: httpLink,
+  link: errorLink.concat(authLink).concat(httpLink),
 });
 console.log("connected ......");
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
+  <BrowserRouter>
+    <ApolloProvider client={client}>
       <App />
-    </BrowserRouter>
-  </React.StrictMode>
+    </ApolloProvider>
+  </BrowserRouter>
 );

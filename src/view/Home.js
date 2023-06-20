@@ -17,19 +17,23 @@ import SideBar from "../layout/SideBar";
 
 import Users from "../view/user/Users";
 import User from "../view/user/User";
+
 import Artists from "../view/artists/Artists";
 import Artist from "../view/artists/Artist";
-import CreateArtist from "../view/artists/CreateArtist";
+import CreateArtistByPhone from "./artists/CreateArtistByPhone";
+import CreateArtist from "./artists/CreateArtist";
 import UpdateArtist from "../view/artists/UpdateArtist";
-//const Dashboard = lazy(() => import("./Dashboard"));
 
-// const Users = lazy(() => import("./user/Users"));
-// const User = lazy(() => import("./user/User"));
+import Resellers from "../view/reseller/Resellers";
+import Reseller from "../view/reseller/Reseller";
+import CreateReseller from "../view/reseller/CreateReseller";
+import UpdateReseller from "../view/reseller/UpdateReseller";
+import DirectCreateReseller from "../view/reseller/DirectCreateReseller";
 
-// const Artists = lazy(() => import("./artists/Artists"));
-// const Artist = lazy(() => import("./artists/Artist"));
-//const CreateArtist = lazy(() => import("./artists/CreateArtist"));
-// const UpdateArtist = lazy(() => import("./artists/UpdateArtist"));
+import ArtWorks from "../view/art_work/ArtWorks";
+import ArtWork from "../view/art_work/ArtWork";
+import CreateArtWork from "../view/art_work/CreateArtWork";
+import UpdateArtWork from "../view/art_work/UpdateArtWork";
 
 const drawerWidth = 280;
 
@@ -117,8 +121,26 @@ const Admin = () => {
 
               <Route path="/artist" element={<Artists />} />
               <Route path="/artist/:id" element={<Artist />} />
+              <Route
+                path="/create_artist/:id"
+                element={<CreateArtistByPhone />}
+              />
               <Route path="/create_artist" element={<CreateArtist />} />
-              <Route path="/update_artist" element={<UpdateArtist />} />
+              <Route path="/update_artist/:id" element={<UpdateArtist />} />
+
+              <Route path="/reseller" element={<Resellers />} />
+              <Route path="/reseller/:id" element={<Reseller />} />
+              <Route path="/create_reseller" element={<CreateReseller />} />
+              <Route path="/update_reseller/:id" element={<UpdateReseller />} />
+              <Route
+                path="/create_directReseller/:id"
+                element={<DirectCreateReseller />}
+              />
+
+              <Route path="/art_work" element={<ArtWorks />} />
+              <Route path="/art_work/:id" element={<ArtWork />} />
+              <Route path="/create_artWork" element={<CreateArtWork />} />
+              <Route path="/update_artWork/:id" element={<UpdateArtWork />} />
             </Routes>
           </AuthContext.Provider>
         </Suspense>

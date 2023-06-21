@@ -27,6 +27,7 @@ import {
   OWNERSHIP,
   ART_SERIES,
   ADD_ARTWORK,
+  ARTWORKS,
 } from "../../gql/artwork";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import imageService from "../../services/image";
@@ -136,6 +137,7 @@ const CreateArtWork = () => {
       alert("New Artwork has been added");
       navigate("/art_work");
     },
+    refetchQueries: [ARTWORKS],
   });
 
   const onChange = (value) => {

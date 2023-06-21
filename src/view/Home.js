@@ -15,6 +15,7 @@ import { Alert } from "@mui/material";
 import Header from "../layout/Header";
 import SideBar from "../layout/SideBar";
 
+import Dashboard from "../view/dashboard/Dashboard";
 import Users from "../view/user/Users";
 import User from "../view/user/User";
 
@@ -116,6 +117,7 @@ const Admin = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <AuthContext.Provider value={auth}>
             <Routes>
+              <Route path="/" element={<Dashboard />} />
               <Route path="/user" element={<Users />} />
               <Route path="/user/:id" element={<User />} />
 

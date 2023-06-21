@@ -42,7 +42,8 @@ const Reseller = () => {
       console.log("delete Error", err);
     },
     onCompleted: (result) => {
-      navigate("/reseller");
+      alert("Reseller user has been deleted");
+      navigate(-1);
     },
     refetchQueries: [ALL_RESELLER],
   });

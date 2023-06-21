@@ -132,7 +132,7 @@ const ArtWork = () => {
             <CardActions
               sx={{
                 display: "flex",
-                justifyContent: "center",
+                // justifyContent: "center",
               }}
             >
               <Box display="grid" rowGap="1rem">
@@ -148,10 +148,14 @@ const ArtWork = () => {
                     secondary={data.traditional_art_work_by_pk.artwork_name}
                   ></ListItemText>
                 </ListItem>
+
                 <ListItem>
                   <ListItemText
                     primary="Artwork Type"
-                    secondary={data.traditional_art_work_by_pk.artwork_name}
+                    secondary={
+                      data.traditional_art_work_by_pk
+                        .traditional_art_work_artwork_medium_type?.medium_name
+                    }
                   ></ListItemText>
                 </ListItem>
                 <ListItem>
@@ -160,9 +164,24 @@ const ArtWork = () => {
                     secondary={data.traditional_art_work_by_pk.artwork_year}
                   ></ListItemText>
                 </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Art Series"
+                    // secondary={data.traditional_art_work_by_pk.artwork_year}
+                  ></ListItemText>
+                </ListItem>
               </Box>
-              {console.log("object,", data)}
+
               <Box display="grid" rowGap="1rem">
+                <ListItem>
+                  <ListItemText
+                    primary="Artist Name"
+                    secondary={
+                      data.traditional_art_work_by_pk
+                        .traditional_art_work_artist?.artist_name
+                    }
+                  ></ListItemText>
+                </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Dimensions"

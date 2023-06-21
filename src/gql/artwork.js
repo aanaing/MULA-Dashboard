@@ -26,6 +26,10 @@ export const ARTWORKS = gql`
       traditional_art_work_artist {
         artist_name
       }
+      traditional_art_work_artwork_medium_type {
+        medium_name
+        id
+      }
     }
     traditional_art_work_aggregate {
       aggregate {
@@ -59,6 +63,14 @@ export const ARTWORK_ID = gql`
       fk_dimension
       traditional_artwork_dimension {
         dimension_name
+        id
+      }
+      traditional_art_work_artwork_medium_type {
+        id
+        medium_name
+      }
+      traditional_art_work_artist {
+        artist_name
         id
       }
     }

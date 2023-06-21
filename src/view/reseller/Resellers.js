@@ -83,11 +83,7 @@ const Resellers = () => {
       >
         {/* dashboard */}
         <div>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            fontWeight="bold"
-            fontSize="1.2rem"
-          >
+          <Breadcrumbs aria-label="breadcrumb">
             <Link to="/" className="dashboard">
               Dashboard
             </Link>

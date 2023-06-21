@@ -100,6 +100,7 @@ const CreateArtistByPhone = () => {
       alert("New Artists had been added");
       navigate("/artist");
     },
+    refetchQueries: [ARTIST],
   });
 
   //for image upload

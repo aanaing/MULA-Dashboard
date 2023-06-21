@@ -61,7 +61,7 @@ const SideBar = ({ open }) => {
             mb: 1.5,
           }}
         >
-          {/* <img src={icons.logo} alt="mula" /> */}
+          <img src={icons.logo} alt="mula" width="50px" height="50px" />
         </Box>
       </DrawerHeader>
       <List className="nav-list">

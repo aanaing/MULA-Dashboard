@@ -70,7 +70,7 @@
 
 .nav-list {
   /* fontSize: "18px", padding: "1rem", borderTop: "1px" */
-  font-size: "18px";
+  font-size: "16px" !important;
   padding: 1rem !important;
   border-top: 0.1px solid #adadaf;
 }

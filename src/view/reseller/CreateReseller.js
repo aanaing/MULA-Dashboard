@@ -15,7 +15,7 @@ import {
   useScrollTrigger,
 } from "@mui/material";
 import { useDebugValue, useState } from "react";
-import { ADD_RESELLER, USERID } from "../../gql/reseller";
+import { ADD_RESELLER, ALL_RESELLER, USERID } from "../../gql/reseller";
 import RichTextEditor from "react-rte";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +72,7 @@ const CreateReseller = () => {
       alert("New Reseller has been added");
       navigate("/reseller");
     },
+    refetchQueries: [ALL_RESELLER],
   });
 
   const handleCreate = (e) => {

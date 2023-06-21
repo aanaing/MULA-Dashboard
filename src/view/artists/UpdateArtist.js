@@ -1,5 +1,11 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { USER_ID, UPDATE_ARTIST, ARTIST_ID, USER } from "../../gql/artist";
+import {
+  USER_ID,
+  UPDATE_ARTIST,
+  ARTIST_ID,
+  USER,
+  ARTIST,
+} from "../../gql/artist";
 import { IMAGE_UPLOAD } from "../../gql/image";
 import imageService from "../../services/image";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
@@ -149,6 +155,7 @@ const UpdateArtist = () => {
       alert("Artist had been updated");
       navigate(`/artist`);
     },
+    refetchQueries: [ARTIST],
   });
 
   const handleChange = (prop) => (event) => {

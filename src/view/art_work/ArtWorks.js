@@ -85,7 +85,7 @@ const ArtWork = () => {
   if (!artwork) {
     return "no data";
   }
-
+  console.log("artwork", artwork);
   return (
     <div>
       <div
@@ -212,7 +212,12 @@ const ArtWork = () => {
                     </TableCell>
                     <TableCell>{row.artwork_name}</TableCell>
                     <TableCell>{row.artwork_year}</TableCell>
-                    <TableCell>{row.artwork_type}</TableCell>
+                    <TableCell>
+                      {
+                        row.traditional_art_work_artwork_medium_type
+                          ?.medium_name
+                      }
+                    </TableCell>
                     <TableCell>
                       <Button
                         size="small"

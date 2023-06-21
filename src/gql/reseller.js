@@ -56,6 +56,10 @@ export const USERID = gql`
     users {
       fullname
       id
+      users_resellers {
+        fk_user_id
+        id
+      }
     }
   }
 `;

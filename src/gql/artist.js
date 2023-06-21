@@ -13,7 +13,6 @@ export const ARTIST = gql`
       created_at
       fk_user_id
       id
-
       updated_at
       year_born
       year_died

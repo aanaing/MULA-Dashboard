@@ -154,10 +154,10 @@ const CreateArtistByPhone = () => {
       errorObject.year_born = "Year born is required";
     }
 
-    if (!values.phone) {
-      isErrorExit = true;
-      errorObject.phone = "Phone is required";
-    }
+    // if (!values.phone) {
+    //   isErrorExit = true;
+    //   errorObject.phone = "Phone is required";
+    // }
     if (!values.artist_profile_image_url) {
       isErrorExit = true;
       errorObject.artist_profile_image_url =
@@ -318,7 +318,7 @@ const CreateArtistByPhone = () => {
             </FormControl>
 
             {/* User phone */}
-
+            {console.log("user data", data)}
             <FormControl>
               <InputLabel id="sub_type">Phone</InputLabel>
               <Select
@@ -328,18 +328,18 @@ const CreateArtistByPhone = () => {
                 defaultValue=""
                 value={values.fk_user_id}
                 onChange={handleChange("fk_user_id")}
-                // error={error.user ? true : false}
-                // helperText={error.user}
               >
                 <MenuItem value="" disabled>
                   Value
                 </MenuItem>
                 {Array.isArray(data.users)
-                  ? data.users.map((user) => (
-                      <MenuItem key={user.id} value={user.id}>
-                        {user.phone}
-                      </MenuItem>
-                    ))
+                  ? data.users
+                      .filter((users) => users.users_artist.length === 0)
+                      .map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                          {user.phone}
+                        </MenuItem>
+                      ))
                   : null}
               </Select>
               {error.phone && (

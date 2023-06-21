@@ -40,7 +40,6 @@ const ArtWork = () => {
   const [loading, setLoading] = useState(false);
 
   const { data } = useQuery(ARTWORK_ID, { variables: { id: id } });
-  console.log("data is ", data);
 
   const [delete_artwork] = useMutation(DELETE_ARTWORK, {
     onError: (error) => {
@@ -162,11 +161,12 @@ const ArtWork = () => {
                   ></ListItemText>
                 </ListItem>
               </Box>
+              {console.log("object,", data)}
               <Box display="grid" rowGap="1rem">
                 <ListItem>
                   <ListItemText
                     primary="Dimensions"
-                    secondary={data.traditional_art_work_by_pk.dimensions}
+                    secondary={`${data.traditional_art_work_by_pk.height}${data.traditional_art_work_by_pk.traditional_artwork_dimension?.dimension_name} × ${data.traditional_art_work_by_pk.width}${data.traditional_art_work_by_pk.traditional_artwork_dimension?.dimension_name}`}
                   ></ListItemText>
                 </ListItem>
                 <ListItem>

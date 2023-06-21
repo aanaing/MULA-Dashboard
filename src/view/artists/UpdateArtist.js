@@ -299,7 +299,7 @@ const UpdateArtist = () => {
             </FormControl>
 
             {/* User phone */}
-            {console.log("fkuser id", values.fk_user_id)}
+
             {values.fk_user_id && (
               <FormControl>
                 <InputLabel id="sub_type">Phone</InputLabel>

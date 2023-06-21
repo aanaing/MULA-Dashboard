@@ -132,11 +132,12 @@ const CreateReseller = () => {
                 gap: "2rem",
               }}
             >
+              {console.log("user data", userData)}
               <FormControl>
-                <InputLabel id="fk_user_id">User Name</InputLabel>
+                <InputLabel id="fk_user_id">Reseller User</InputLabel>
                 <Select
                   labelId="fk_user_id"
-                  label="User Name"
+                  label="Reseller User"
                   variant="filled"
                   defaultValue=""
                   //value={values.fk_medium_type_id}
@@ -146,11 +147,13 @@ const CreateReseller = () => {
                     Value
                   </MenuItem>
                   {Array.isArray(userData.users)
-                    ? userData.users.map((user) => (
-                        <MenuItem key={user.id} value={user.id}>
-                          {user.fullname}
-                        </MenuItem>
-                      ))
+                    ? userData.users
+                        .filter((users) => users.users_resellers?.length === 0)
+                        .map((user) => (
+                          <MenuItem key={user.id} value={user.id}>
+                            {user.fullname}
+                          </MenuItem>
+                        ))
                     : null}
                 </Select>
 

@@ -57,6 +57,10 @@ export const ARTWORK_ID = gql`
       update_price
       updated_at
       fk_dimension
+      traditional_artwork_dimension {
+        dimension_name
+        id
+      }
     }
   }
 `;

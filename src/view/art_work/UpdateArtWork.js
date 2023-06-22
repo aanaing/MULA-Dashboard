@@ -219,7 +219,6 @@ const UpdateArtWork = () => {
       isErrorExit = true;
       errorObject.description = "description  is required";
     }
-
     if (!values.artwork_year) {
       isErrorExit = true;
       errorObject.artwork_year = "artwork_year is required";
@@ -269,13 +268,7 @@ const UpdateArtWork = () => {
     }
   };
 
-  if (
-    !typeData ||
-    !seriesData ||
-    !dimensionData ||
-    !ownershipData ||
-    !nameData
-  ) {
+  if (!typeData || !dimensionData || !ownershipData || !nameData) {
     return "no data";
   }
 

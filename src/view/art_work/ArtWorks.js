@@ -40,22 +40,11 @@ const ArtWork = () => {
   const [search, setSearch] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [artwork, setArtwork] = useState("");
-  const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
-
-  useEffect(() => {
-    loadArtwork({
-      variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
-    });
-  }, [loadArtwork, rowsPerPage, offset, search]);
-
-  useEffect(() => {
-    if (resultArtwork.data) {
-      setArtwork(resultArtwork.data.traditional_art_work);
-      setCount(
-        resultArtwork.data?.traditional_art_work_aggregate.aggregate.count
-      );
-    }
-  }, [resultArtwork]);
+  // const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
+  const { data } = useQuery(ARTWORKS, {
+    variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+    fetchPolicy: "network-only",
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -82,7 +71,7 @@ const ArtWork = () => {
     },
   }));
 
-  if (!artwork) {
+  if (!data) {
     return "no data";
   }
   console.log("artwork", artwork);
@@ -197,9 +186,9 @@ const ArtWork = () => {
             </TableHead>
 
             <TableBody>
-              {artwork.length === 0 && <h1>No Artwork</h1>}
-              {artwork &&
-                artwork.map((row, index) => (
+              {data.traditional_art_work.length === 0 && <h1>No Artwork</h1>}
+              {data.traditional_art_work &&
+                data.traditional_art_work.map((row, index) => (
                   <StyledTableRow hover role="checkbox" tabIndex={-1}>
                     <TableCell>{row.id}</TableCell>
 
@@ -239,7 +228,7 @@ const ArtWork = () => {
           sx={{ color: "black" }}
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={count}
+          count={data?.traditional_art_work_aggregate.aggregate.count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

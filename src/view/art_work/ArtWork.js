@@ -38,7 +38,6 @@ const ArtWork = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const { data } = useQuery(ARTWORK_ID, { variables: { id: id } });
 
   const [delete_artwork] = useMutation(DELETE_ARTWORK, {
@@ -105,7 +104,6 @@ const ArtWork = () => {
               maxWidth: "40%",
               display: "grid",
               justifyContent: "center",
-
               margin: "auto",
               borderRadius: 2,
               boxShadow: 2,

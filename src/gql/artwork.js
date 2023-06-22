@@ -6,6 +6,7 @@ export const ARTWORKS = gql`
     traditional_art_work(
       limit: $limit
       offset: $offset
+      order_by: { created_at: desc }
       where: { artwork_name: { _ilike: $search } }
     ) {
       artwork_image_url
@@ -109,10 +110,14 @@ export const OWNERSHIP = gql`
 
 //get art_series
 export const ART_SERIES = gql`
-  query MyQuery {
-    art_series {
-      id
+  query art_series($fk_artist_id: Int!) {
+    art_series(where: { fk_artist_id: { _eq: $fk_artist_id } }) {
       series_name
+      id
+      art_series_artist_art_series {
+        fk_art_series_id
+        fk_traditional_art_work_id
+      }
     }
   }
 `;
@@ -180,6 +185,11 @@ export const ADD_ARTWORK = gql`
       artwork_image_url
       update_price
       updated_at
+      traditional_art_work_artist_art_series {
+        fk_art_series_id
+        fk_traditional_art_work_id
+        id
+      }
     }
   }
 `;
@@ -251,6 +261,27 @@ export const UPDATE_ARTWORK = gql`
       update_price
       updated_at
       width
+    }
+  }
+`;
+
+//add artist_art_series
+export const ADD_ART_SERIES = gql`
+  mutation add_art_series(
+    $fk_art_series_id: Int!
+    $fk_traditional_art_work_id: Int!
+  ) {
+    insert_artist_art_series_one(
+      object: {
+        fk_traditional_art_work_id: $fk_traditional_art_work_id
+        fk_art_series_id: $fk_art_series_id
+      }
+    ) {
+      created_at
+      fk_art_series_id
+      fk_traditional_art_work_id
+      id
+      updated_at
     }
   }
 `;

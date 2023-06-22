@@ -5,6 +5,7 @@ export const ARTIST = gql`
     artist(
       limit: $limit
       offset: $offset
+      order_by: { created_at: desc }
       where: { artist_name: { _ilike: $search } }
     ) {
       artist_name

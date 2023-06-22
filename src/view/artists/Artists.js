@@ -45,6 +45,7 @@ const Artists = () => {
   useEffect(() => {
     loadArtist({
       variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+      fetchPolicy: "network-only",
     });
   }, [loadArtist, rowsPerPage, offset, search]);
 

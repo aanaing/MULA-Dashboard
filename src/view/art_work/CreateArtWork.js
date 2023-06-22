@@ -13,9 +13,11 @@ import {
   FormHelperText,
   InputLabel,
   TextareaAutosize,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { IMAGE_UPLOAD } from "../../gql/image";
 import RichTextEditor from "react-rte";
@@ -28,6 +30,7 @@ import {
   ART_SERIES,
   ADD_ARTWORK,
   ARTWORKS,
+  ADD_ART_SERIES,
 } from "../../gql/artwork";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import imageService from "../../services/image";
@@ -61,8 +64,11 @@ const toolbarConfig = {
 };
 
 const CreateArtWork = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [values, setValues] = useState({});
+
+  const [artistNameId, setArtistNameId] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
 
@@ -79,8 +85,27 @@ const CreateArtWork = () => {
   const { data: dimensionData } = useQuery(DIMENSIONS);
   const { data: typeData } = useQuery(ARTWORK_TYPE);
   const { data: ownershipData } = useQuery(OWNERSHIP);
-  const { data: seriesData } = useQuery(ART_SERIES);
+  const { data: seriesData } = useQuery(ART_SERIES, {
+    variables: { fk_artist_id: artistNameId },
+  });
+  console.log("series data", seriesData);
+
   const { data: nameData } = useQuery(ARTIST_NAME);
+
+  const [checkedItems, setCheckedItems] = useState([]);
+
+  const handleCheckboxChange = (id) => {
+    const currentIndex = checkedItems.indexOf(id);
+    const newCheckedItems = [...checkedItems];
+
+    if (currentIndex === -1) {
+      newCheckedItems.push(id);
+    } else {
+      newCheckedItems.splice(currentIndex, 1);
+    }
+
+    setCheckedItems(newCheckedItems);
+  };
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -90,9 +115,9 @@ const CreateArtWork = () => {
   const [getImageUrl] = useMutation(IMAGE_UPLOAD, {
     onError: (error) => {
       alert("Error on Server");
+      console.log("error ", error);
     },
     onCompleted: (result) => {
-      console.log("result", result);
       setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
       setValues({
         ...values,
@@ -130,14 +155,26 @@ const CreateArtWork = () => {
       alert("Error on server");
     },
     onCompleted: (result) => {
+      console.log("result id ", result);
       setLoading(false);
       setTextValue(RichTextEditor.createEmptyValue());
-
       setValues({});
       alert("New Artwork has been added");
-      navigate("/art_work");
+      navigate(-1);
     },
     refetchQueries: [ARTWORKS],
+  });
+
+  const [add_art_series] = useMutation(ADD_ART_SERIES, {
+    onError: (err) => {
+      setLoading(false);
+      console.log("Error ", err);
+      alert("Error on Server");
+    },
+    onCompleted: (result) => {
+      setLoading(false);
+      alert("Added to art_series table");
+    },
   });
 
   const onChange = (value) => {
@@ -182,9 +219,9 @@ const CreateArtWork = () => {
       isErrorExit = true;
       errorObject.fk_ownership_id = "ownership is required";
     }
-    if (!values.fk_artist_id) {
+    if (!artistNameId) {
       isErrorExit = true;
-      errorObject.fk_artist_id = "artist name  is required";
+      errorObject.artistNameId = "artist name  is required";
     }
     if (!height) {
       isErrorExit = true;
@@ -201,8 +238,18 @@ const CreateArtWork = () => {
       return;
     }
 
+    if (!artistNameId) {
+      return;
+    }
+
     try {
       await imageService.uploadImage(imageFileUrl, imageFile);
+      // await add_art_series({
+      //   variables: {
+      //     fk_art_series_id: seriesData?.art_series[0].id,
+      //     fk_traditional_art_work_id: 222,
+      //   },
+      // });
       await add_artwork({
         variables: {
           ...values,
@@ -212,6 +259,7 @@ const CreateArtWork = () => {
           fk_dimension: unit,
           disabled: false,
           dimensions: "",
+          fk_artist_id: artistNameId,
         },
       });
     } catch (error) {
@@ -219,13 +267,7 @@ const CreateArtWork = () => {
     }
   };
 
-  if (
-    !typeData ||
-    !seriesData ||
-    !dimensionData ||
-    !ownershipData ||
-    !nameData
-  ) {
+  if (!typeData || !dimensionData || !ownershipData || !nameData) {
     return "no data";
   }
 
@@ -315,19 +357,6 @@ const CreateArtWork = () => {
               px: "0.5rem",
             }}
           >
-            {/* Profile Image URL */}
-            {/* <FormControl>
-              <TextField
-                variant="filled"
-                id="artwork_image_url"
-                label="Profile Image"
-                type="file"
-                InputLabelProps={{ shrink: true }}
-                onChange={chooseImage}
-                error={error.artwork_image_url}
-                helperText={error.artwork_image_url}
-              />
-            </FormControl> */}
             {/* Artwork Name */}
             <FormControl>
               <TextField
@@ -366,7 +395,6 @@ const CreateArtWork = () => {
                 helperText={error.current_price}
               />
             </FormControl>
-
             {/* update_price */}
             <FormControl>
               <TextField
@@ -415,8 +443,8 @@ const CreateArtWork = () => {
                 label="artist"
                 variant="filled"
                 defaultValue=""
-                value={values.fk_artist_id}
-                onChange={handleChange("fk_artist_id")}
+                value={artistNameId}
+                onChange={(e) => setArtistNameId(e.target.value)}
               >
                 <MenuItem value="" disabled>
                   Value
@@ -502,29 +530,37 @@ const CreateArtWork = () => {
               </div>
             </FormControl>
             {/* art_series */}
-            <FormControl>
-              <InputLabel id="sub_type">art_series</InputLabel>
-              <Select
-                labelId="artist"
-                label="artist"
-                variant="filled"
-                defaultValue=""
-              >
-                <MenuItem value="" disabled>
-                  Value
-                </MenuItem>
-                {Array.isArray(seriesData.art_series)
-                  ? seriesData.art_series.map((series) => (
-                      <MenuItem key={series.id} value={series.id}>
-                        {series.series_name}
-                      </MenuItem>
-                    ))
-                  : null}
-              </Select>
-              {/* {error.data.users.username && (
-                <FormHelperText error>{error.user}</FormHelperText>
-              )} */}
-            </FormControl>
+            {seriesData &&
+              seriesData.art_series.map((series, index) => (
+                <FormControlLabel
+                  control={<Checkbox name={series.series_name} />}
+                  label={series.series_name}
+                  onChange={() => handleCheckboxChange(series.id)}
+                />
+              ))}
+
+            {/* {Array.isArray(seriesData) &&
+              seriesData.map((checkbox, index) => {
+                return (
+                  <FormControlLabel
+                    key={index + checkbox.series_name}
+                    control={
+                      <Checkbox
+                        name={checkbox.series_name}
+                        // value={checkbox.weight}
+                        // id={checkbox.category}
+                        // checked={isChecked[index]}
+                        checked={checkedItems.indexOf(checkbox.id) !== -1}
+                        color="primary"
+                        // onChange={(e) => isCheckboxChecked(index, e.target.checked)}
+                        onChange={() => handleCheckboxChange(checkbox.id)}
+                      />
+                    }
+                    label={checkbox.series_name}
+                  />
+                );
+              })} */}
+
             {/* description */}
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>

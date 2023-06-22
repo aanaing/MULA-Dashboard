@@ -43,7 +43,10 @@ const Resellers = () => {
   const [loadReseller, resultReseller] = useLazyQuery(ALL_RESELLER);
 
   useEffect(() => {
-    loadReseller({ variables: { limit: rowsPerPage, offset: offset } });
+    loadReseller({
+      variables: { limit: rowsPerPage, offset: offset },
+      fetchPolicy: "network-only",
+    });
   }, [loadReseller, rowsPerPage, offset]);
 
   useEffect(() => {

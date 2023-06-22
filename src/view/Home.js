@@ -36,7 +36,7 @@ import ArtWork from "../view/art_work/ArtWork";
 import CreateArtWork from "../view/art_work/CreateArtWork";
 import UpdateArtWork from "../view/art_work/UpdateArtWork";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({

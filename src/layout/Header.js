@@ -12,7 +12,7 @@ import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../style/App.css";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",

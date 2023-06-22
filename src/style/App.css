@@ -10,7 +10,7 @@
   padding: 0;
 }
 .nav-link-icon {
-  /* color: #262626; */
+  color: #1e1e1f;
   margin-left: 0.4rem;
 }
 
@@ -69,13 +69,15 @@
 }
 
 .nav-list {
-  /* fontSize: "18px", padding: "1rem", borderTop: "1px" */
-  font-size: "16px" !important;
   padding: 1rem !important;
   border-top: 0.1px solid #adadaf;
 }
+.nav-btn {
+  margin-bottom: 0.3rem !important;
+}
 .nav-btn:hover {
-  background-color: #e4faf7 !important;
+  /* background-color: #e4faf7 !important; */
+  background-color: #dadadc !important;
   border-radius: 10px;
   color: #1c1c1d;
   font-weight: bold !important;
@@ -84,11 +86,10 @@
 /* .nav-btn.active {
   background-color: #e0eff6 !important;
   border-radius: 10px;
-  color: #1c1c1d;
-  font-weight: bold !important;
 } */
 .AppBar {
   background-color: #f7f7f7;
+
   padding: 0.5rem;
   color: #000;
   border: none;
@@ -117,7 +118,6 @@ thead .MuiTableCell-root:last-child {
 }
 
 .MuiTableRow-root.MuiTableRow-hover:hover {
-  /* background-color: #d7d7dc !important; */
   border: none !important;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
@@ -134,7 +134,7 @@ thead .MuiTableCell-root:last-child {
 .dashboard,
 .nav-link,
 .user {
-  color: #7f7f80 !important;
+  color: #1c1c1d !important;
   text-decoration: none !important;
 }
 .biography:focus {

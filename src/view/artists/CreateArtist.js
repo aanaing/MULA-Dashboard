@@ -86,12 +86,12 @@ const CreateArtistByPhone = () => {
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
-    // delete error[prop];
   };
 
   const [add_artist] = useMutation(ADD_ARTIST, {
     onError: (err) => {
       alert("Error on Server");
+      setLoading(false);
     },
     onCompleted: (result) => {
       setLoading(false);

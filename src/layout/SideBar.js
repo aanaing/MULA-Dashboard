@@ -13,13 +13,14 @@ import SellIcon from "@mui/icons-material/Sell";
 import { Box, Typography } from "@mui/material";
 import icons from "../view/icons";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../style/App.css";
 import SideBarContext from "../context/SideBarContext";
 
 import { makeStyles } from "@mui/styles";
 import { Icon } from "@mui/material";
 
-const drawerWidth = 280;
+const drawerWidth = 260;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -33,6 +34,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const SideBar = ({ open }) => {
   const { nav, setNav } = useContext(SideBarContext);
+
+  const isActive = {
+    fontWeight: "bold",
+    backgroundColor: "red",
+  };
 
   return (
     <Drawer
@@ -73,6 +79,7 @@ const SideBar = ({ open }) => {
             Dashboard
           </ListItem>
         </Link>
+
         <Link to="/user" onClick={() => setNav("")} className="nav-link">
           <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
             <ListItemIcon>
@@ -99,7 +106,12 @@ const SideBar = ({ open }) => {
           </ListItem>
         </Link>
         <Link to="/reseller" onClick={() => setNav("")} className="nav-link">
-          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+          <ListItem
+            button
+            // className={`nav-btn ${nav === "" && "active"}`}
+            className="nav-btn"
+            activeClassName="active"
+          >
             <ListItemIcon>
               <SellIcon className="nav-link-icon" />
             </ListItemIcon>

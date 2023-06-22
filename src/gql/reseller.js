@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 //get all reseller
 export const ALL_RESELLER = gql`
   query allReseller($limit: Int!, $offset: Int!) {
-    reseller(limit: $limit, offset: $offset) {
+    reseller(limit: $limit, offset: $offset, order_by: { created_at: desc }) {
       updated_at
       id
       created_at

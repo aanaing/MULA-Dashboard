@@ -164,11 +164,13 @@ const CreateArtWork = () => {
     },
 
     onCompleted: (result) => {
+      console.log("result id ", result);
       checkedItems.map((checkedItem, index) => {
         add_art_series({
           variables: {
             fk_art_series_id: checkedItem,
-            fk_traditional_art_work_id: result.id,
+            fk_traditional_art_work_id:
+              result.insert_traditional_art_work_one.id,
           },
         });
       });
@@ -189,8 +191,7 @@ const CreateArtWork = () => {
       alert("Error on Server");
     },
     onCompleted: (result) => {
-      console.log("add art seires");
-      console.log("result ", result);
+      console.log("add art_series result ", result);
     },
   });
 

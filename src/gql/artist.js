@@ -31,8 +31,10 @@ export const ARTIST_ID = gql`
   query artist_id($id: Int!) {
     artist_by_pk(id: $id) {
       artist_name
+      artist_name_mm
       artist_profile_image_url
       biography
+      biography_mm
       created_at
       fk_user_id
       id
@@ -67,8 +69,10 @@ export const DELETE_ARTIST = gql`
 export const ADD_ARTIST = gql`
   mutation add_artist(
     $artist_name: String!
+    $artist_name_mm: String!
     $artist_profile_image_url: String!
     $biography: String!
+    $biography_mm: String!
     $fk_user_id: Int!
     $year_died: Int!
     $year_born: Int!
@@ -76,16 +80,20 @@ export const ADD_ARTIST = gql`
     insert_artist_one(
       object: {
         artist_name: $artist_name
+        artist_name_mm: $artist_name_mm
         artist_profile_image_url: $artist_profile_image_url
         biography: $biography
+        biography_mm: $biography_mm
         fk_user_id: $fk_user_id
         year_died: $year_died
         year_born: $year_born
       }
     ) {
       artist_name
+      artist_name_mm
       artist_profile_image_url
       biography
+      biography_mm
       fk_user_id
       created_at
       id

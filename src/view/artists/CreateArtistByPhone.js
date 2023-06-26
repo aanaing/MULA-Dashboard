@@ -51,7 +51,7 @@ const toolbarConfig = {
   ],
 };
 
-const CreateArtistByPhone = ({ phone, handleClose }) => {
+const CreateArtistByPhone = ({ phone }) => {
   console.log("phone", phone);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -60,6 +60,9 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
   const [loading, setLoading] = useState(false);
 
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
 
   const [imageFileUrl, setImageFileUrl] = useState("");
   const [imageFile, setImageFile] = useState("");
@@ -74,6 +77,10 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
   const onChange = (value) => {
     setTextValue(value);
     setValues({ ...values, biography: value.toString("html") });
+  };
+  const onChangeMM = (value) => {
+    setTextValue(value);
+    setValues({ ...values, biography_mm: value.toString("html") });
   };
 
   const [add_artist] = useMutation(ADD_ARTIST, {
@@ -254,7 +261,6 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
               gap: "2rem",
-
               px: "1rem",
             }}
           >
@@ -268,6 +274,18 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
                 onChange={handleChange("artist_name")}
                 error={error.artist_name ? true : false}
                 helperText={error.artist_name}
+              />
+            </FormControl>
+            {/* Artist Name MM*/}
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="artist_name_mm"
+                label="Artist Name MM"
+                value={values.artist_name_mm}
+                onChange={handleChange("artist_name_mm")}
+                error={error.artist_name_mm ? true : false}
+                helperText={error.artist_name_mm}
               />
             </FormControl>
 
@@ -300,7 +318,6 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
             </FormControl>
 
             {/* User phone */}
-
             <FormControl>
               <TextField
                 variant="filled"
@@ -313,8 +330,29 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
                 // helperText={error.year_died}
               />
             </FormControl>
-
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            px="0.5rem"
+            py="2rem"
+          >
             {/* Biography */}
+            <Box className="description">
+              <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                Biography
+              </InputLabel>
+              <RichTextEditor
+                className="description-text"
+                onChange={onChange}
+                value={textValue}
+                toolbarConfig={toolbarConfig}
+              />
+              {error.biography && (
+                <FormHelperText error> {error.biography}</FormHelperText>
+              )}
+            </Box>
+            {/* Biography MM */}
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Biography

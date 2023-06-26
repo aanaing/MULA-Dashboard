@@ -205,7 +205,6 @@ const CreateArtWork = () => {
   };
 
   const handleCreate = async () => {
-    console.log("hiiiiiii");
     setLoading(true);
     let isErrorExit = false;
     let errorObject = {};

@@ -23,6 +23,7 @@ const Login = () => {
     username: "",
     password: "",
     phone: "",
+    role: "admin",
     showPassword: false,
   });
   const [loading, setLoading] = React.useState(false);
@@ -45,7 +46,13 @@ const Login = () => {
     },
     onCompleted: (result) => {
       // console.log("result", result);
-      setValues({ username: "", phone: "", password: "", showPassword: false });
+      setValues({
+        username: "",
+        phone: "",
+        password: "",
+        role: "",
+        showPassword: false,
+      });
       setLoading(false);
       if (result.AdminLogIn.error) {
         //console.log(result.AdminLogIn.error);
@@ -110,6 +117,7 @@ const Login = () => {
       variables: {
         username: values.username,
         phone: "",
+        role: "admin",
         password: values.password,
       },
     });

@@ -1,11 +1,16 @@
 import { gql } from "@apollo/client";
 
 const ADMIN_LOGIN = gql`
-  mutation admin_login($password: String!, $username: String!) {
-    AdminLogIn(password: $password, phone: "", username: $username) {
+  mutation admin($password: String!, $username: String!, $role: String!) {
+    AdminLogIn(
+      password: $password
+      phone: ""
+      role: $role
+      username: $username
+    ) {
+      accessToken
       error
       message
-      accessToken
     }
   }
 `;

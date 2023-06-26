@@ -171,7 +171,7 @@ const Artist = () => {
             <CardActions
               sx={{
                 display: "flex",
-                ml: "2rem",
+                mx: "2rem",
               }}
             >
               <ListItem sx={{ width: "600px" }}>
@@ -189,6 +189,12 @@ const Artist = () => {
               </ListItem>
               <ListItem>
                 <ListItemText
+                  primary="Artist Name"
+                  secondary={data.artist_by_pk.artist_name_mm}
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
                   primary="Year Born"
                   secondary={data.artist_by_pk.year_born}
                 ></ListItemText>
@@ -200,18 +206,37 @@ const Artist = () => {
                 ></ListItemText>
               </ListItem>
             </CardActions>
+            <Box
+              display="grid"
+              gridTemplateColumns="50% 50%"
+              columnGap="1rem"
+              mx="2rem"
+            >
+              <Box>
+                <Typography display="flex" justifyContent="center" mt="2rem">
+                  Biography Eng
+                </Typography>
 
-            <Box>
-              <Typography display="flex" justifyContent="center" mt="2rem">
-                Biography
-              </Typography>
+                <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data.artist_by_pk.biography,
+                    }}
+                  ></div>
+                </Box>
+              </Box>
+              <Box>
+                <Typography display="flex" justifyContent="center" mt="2rem">
+                  Biography MM
+                </Typography>
 
-              <Box sx={{ ml: "4rem", mt: "1rem" }}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: data.artist_by_pk.biography,
-                  }}
-                ></div>
+                <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data.artist_by_pk.biography,
+                    }}
+                  ></div>
+                </Box>
               </Box>
             </Box>
           </Paper>

@@ -192,7 +192,6 @@ const CreateArtistByPhone = () => {
       console.log("Error ", error);
     }
   };
-  // console.log("user data ", data.users);
 
   if (!data) {
     return;

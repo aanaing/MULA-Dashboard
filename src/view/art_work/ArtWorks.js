@@ -180,7 +180,7 @@ const ArtWork = () => {
 
                 <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
                 <TableCell style={{ minWidth: 70 }}>Artwork Type</TableCell>
-
+                <TableCell style={{ minWidth: 70 }}>Status</TableCell>
                 <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
               </StyledTableRow>
             </TableHead>
@@ -206,6 +206,9 @@ const ArtWork = () => {
                         row.traditional_art_work_artwork_medium_type
                           ?.medium_name
                       }
+                    </TableCell>
+                    <TableCell>
+                      {row.pending === "true" ? "Active" : "Pending"}
                     </TableCell>
                     <TableCell>
                       <Button

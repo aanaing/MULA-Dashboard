@@ -69,6 +69,9 @@ const CreateArtWork = () => {
   const [values, setValues] = useState({});
 
   const [artistNameId, setArtistNameId] = useState();
+  const [artistNameMMId, setArtistNameMMId] = useState();
+  const [artworkTypeId, setArtworkTypeId] = useState();
+  const [ownershipId, setOwnershipId] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({});
 
@@ -81,6 +84,9 @@ const CreateArtWork = () => {
   const [unit, setUnit] = useState();
 
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
 
   const { data: dimensionData } = useQuery(DIMENSIONS);
   const { data: typeData } = useQuery(ARTWORK_TYPE);
@@ -89,6 +95,7 @@ const CreateArtWork = () => {
     variables: { fk_artist_id: artistNameId },
   });
   console.log("series data", seriesData);
+  console.log("artist id", artistNameId);
 
   const { data: nameData } = useQuery(ARTIST_NAME);
 
@@ -106,6 +113,7 @@ const CreateArtWork = () => {
 
     setCheckedItems(newCheckedItems);
   };
+  console.log("check item id", checkedItems);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -154,14 +162,23 @@ const CreateArtWork = () => {
     onError: (err) => {
       alert("Error on server");
     },
+
     onCompleted: (result) => {
-      console.log("result id ", result);
+      checkedItems.map((checkedItem, index) => {
+        add_art_series({
+          variables: {
+            fk_art_series_id: checkedItem,
+            fk_traditional_art_work_id: result.id,
+          },
+        });
+      });
       setLoading(false);
       setTextValue(RichTextEditor.createEmptyValue());
       setValues({});
       alert("New Artwork has been added");
       navigate(-1);
     },
+
     refetchQueries: [ARTWORKS],
   });
 
@@ -172,8 +189,8 @@ const CreateArtWork = () => {
       alert("Error on Server");
     },
     onCompleted: (result) => {
-      setLoading(false);
-      alert("Added to art_series table");
+      console.log("add art seires");
+      console.log("result ", result);
     },
   });
 
@@ -181,8 +198,13 @@ const CreateArtWork = () => {
     setTextValue(value);
     setValues({ ...values, description: value.toString("html") });
   };
+  const onChangeMM = (value) => {
+    setTextValueMM(value);
+    setValues({ ...values, description_mm: value.toString("html") });
+  };
 
   const handleCreate = async () => {
+    console.log("hiiiiiii");
     setLoading(true);
     let isErrorExit = false;
     let errorObject = {};
@@ -233,6 +255,7 @@ const CreateArtWork = () => {
     }
 
     if (isErrorExit) {
+      console.log("err obj", errorObject);
       setError(errorObject);
       setLoading(false);
       return;
@@ -244,12 +267,6 @@ const CreateArtWork = () => {
 
     try {
       await imageService.uploadImage(imageFileUrl, imageFile);
-      // await add_art_series({
-      //   variables: {
-      //     fk_art_series_id: seriesData?.art_series[0].id,
-      //     fk_traditional_art_work_id: 222,
-      //   },
-      // });
       await add_artwork({
         variables: {
           ...values,
@@ -369,6 +386,19 @@ const CreateArtWork = () => {
                 helperText={error.artwork_name}
               />
             </FormControl>
+
+            {/* Artwork Name */}
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="artwork_name_mm"
+                label="Artwork Name MM"
+                value={values.artwork_name_mm}
+                onChange={handleChange("artwork_name_mm")}
+                error={error.artwork_name_mm ? true : false}
+                helperText={error.artwork_name_mm}
+              />
+            </FormControl>
             {/* artwork_year */}
             <FormControl>
               <TextField
@@ -410,7 +440,7 @@ const CreateArtWork = () => {
             </FormControl>
             {/* artwork_type */}
             <FormControl>
-              <InputLabel id="sub_type">artwork_type</InputLabel>
+              <InputLabel id="sub_type">Artwork_type</InputLabel>
               <Select
                 labelId="fk_medium_type_id"
                 label="artwork_type"
@@ -435,6 +465,7 @@ const CreateArtWork = () => {
                 <FormHelperText error>{error.fk_medium_type_id}</FormHelperText>
               )}
             </FormControl>
+
             {/* artist */}
             <FormControl>
               <InputLabel id="sub_type">Artist Name</InputLabel>
@@ -461,6 +492,7 @@ const CreateArtWork = () => {
                 <FormHelperText error>{error.fk_artist_id}</FormHelperText>
               )}
             </FormControl>
+
             {/* ownership */}
             <FormControl>
               <InputLabel id="sub_type">Ownership</InputLabel>
@@ -488,6 +520,7 @@ const CreateArtWork = () => {
                 <FormHelperText error>{error.fk_ownership_id}</FormHelperText>
               )}
             </FormControl>
+
             {/* dimensions */}
             <FormControl sx={{ width: "100%" }}>
               <div className="grid_3_cols">
@@ -529,7 +562,18 @@ const CreateArtWork = () => {
                 </Select>
               </div>
             </FormControl>
-            {/* art_series */}
+          </Box>
+
+          {/* art_series */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+              my: "2rem",
+              px: "1rem",
+              flexWrap: "wrap",
+            }}
+          >
             {seriesData &&
               seriesData.art_series.map((series, index) => (
                 <FormControlLabel
@@ -538,29 +582,9 @@ const CreateArtWork = () => {
                   onChange={() => handleCheckboxChange(series.id)}
                 />
               ))}
+          </Box>
 
-            {/* {Array.isArray(seriesData) &&
-              seriesData.map((checkbox, index) => {
-                return (
-                  <FormControlLabel
-                    key={index + checkbox.series_name}
-                    control={
-                      <Checkbox
-                        name={checkbox.series_name}
-                        // value={checkbox.weight}
-                        // id={checkbox.category}
-                        // checked={isChecked[index]}
-                        checked={checkedItems.indexOf(checkbox.id) !== -1}
-                        color="primary"
-                        // onChange={(e) => isCheckboxChecked(index, e.target.checked)}
-                        onChange={() => handleCheckboxChange(checkbox.id)}
-                      />
-                    }
-                    label={checkbox.series_name}
-                  />
-                );
-              })} */}
-
+          <Box display="flex" justifyContent="space-between" px="0.5rem">
             {/* description */}
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
@@ -576,7 +600,24 @@ const CreateArtWork = () => {
                 <FormHelperText error> {error.description}</FormHelperText>
               )}
             </Box>
+
+            {/* description_mm */}
+            <Box className="description">
+              <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                Description MM
+              </InputLabel>
+              <RichTextEditor
+                className="description-text"
+                onChange={onChangeMM}
+                value={textValueMM}
+                toolbarConfig={toolbarConfig}
+              />
+              {error.description_mm && (
+                <FormHelperText error> {error.description_mm}</FormHelperText>
+              )}
+            </Box>
           </Box>
+
           <Box sx={{ display: "flex", justifyContent: "end", m: "2rem" }}>
             <LoadingButton
               variant="contained"

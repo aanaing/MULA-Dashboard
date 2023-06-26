@@ -11,11 +11,13 @@ export const ARTWORKS = gql`
     ) {
       artwork_image_url
       artwork_name
+      artwork_name_mm
       artwork_year
       created_at
       current_price
       dimensions
       description
+      description_mm
       disabled
       fk_artist_id
       fk_medium_type_id
@@ -26,9 +28,11 @@ export const ARTWORKS = gql`
       updated_at
       traditional_art_work_artist {
         artist_name
+        artist_name_mm
       }
       traditional_art_work_artwork_medium_type {
         medium_name
+        medium_name_mm
         id
       }
     }
@@ -46,10 +50,12 @@ export const ARTWORK_ID = gql`
     traditional_art_work_by_pk(id: $id) {
       artwork_image_url
       artwork_name
+      artwork_name_mm
       artwork_year
       created_at
       current_price
       description
+      description_mm
       dimensions
       disabled
       fk_artist_id
@@ -69,9 +75,11 @@ export const ARTWORK_ID = gql`
       traditional_art_work_artwork_medium_type {
         id
         medium_name
+        medium_name_mm
       }
       traditional_art_work_artist {
         artist_name
+        artist_name_mm
         id
       }
     }
@@ -94,6 +102,7 @@ export const ARTWORK_TYPE = gql`
     artwork_medium_type {
       id
       medium_name
+      medium_name_mm
     }
   }
 `;
@@ -103,6 +112,7 @@ export const OWNERSHIP = gql`
   query ownership {
     users {
       fullname
+      fullname_mm
       id
     }
   }
@@ -113,6 +123,7 @@ export const ART_SERIES = gql`
   query art_series($fk_artist_id: Int!) {
     art_series(where: { fk_artist_id: { _eq: $fk_artist_id } }) {
       series_name
+      series_name_mm
       id
       art_series_artist_art_series {
         fk_art_series_id
@@ -127,6 +138,7 @@ export const ARTIST_NAME = gql`
   query MyQuery {
     artist {
       artist_name
+      artist_name_mm
       id
     }
   }
@@ -145,9 +157,11 @@ export const ADD_ARTWORK = gql`
     $disabled: Boolean!
     $dimensions: String!
     $description: String!
+    $description_mm: String!
     $current_price: Int!
     $artwork_year: Int!
     $artwork_name: String!
+    $artwork_name_mm: String!
     $artwork_image_url: String!
     $fk_dimension: Int!
   ) {
@@ -163,9 +177,11 @@ export const ADD_ARTWORK = gql`
         width: $width
         dimensions: $dimensions
         description: $description
+        description_mm: $description_mm
         current_price: $current_price
         artwork_year: $artwork_year
         artwork_name: $artwork_name
+        artwork_name_mm: $artwork_name_mm
         artwork_image_url: $artwork_image_url
         fk_dimension: $fk_dimension
       }
@@ -178,10 +194,12 @@ export const ADD_ARTWORK = gql`
       disabled
       dimensions
       description
+      description_mm
       current_price
       created_at
       artwork_year
       artwork_name
+      artwork_name_mm
       artwork_image_url
       update_price
       updated_at
@@ -217,9 +235,11 @@ export const UPDATE_ARTWORK = gql`
     $disabled: Boolean!
     $dimensions: String!
     $description: String!
+    $description_mm: String!
     $current_price: Int!
     $artwork_year: Int!
     $artwork_name: String!
+    $artwork_name_mm: String!
     $artwork_image_url: String!
     $fk_dimension: Int!
   ) {
@@ -236,19 +256,23 @@ export const UPDATE_ARTWORK = gql`
         width: $width
         dimensions: $dimensions
         description: $description
+        description_mm: $description_mm
         current_price: $current_price
         artwork_year: $artwork_year
         artwork_name: $artwork_name
+        artwork_name_mm: $artwork_name_mm
         artwork_image_url: $artwork_image_url
         fk_dimension: $fk_dimension
       }
     ) {
       artwork_image_url
       artwork_name
+      artwork_name_mm
       artwork_year
       created_at
       current_price
       description
+      description_mm
       dimensions
       disabled
       fk_artist_id

@@ -7,6 +7,8 @@ import {
   Card,
   FormControl,
   TextField,
+  Checkbox,
+  FormControlLabel,
   Modal,
   Select,
   MenuItem,
@@ -77,16 +79,31 @@ const UpdateArtWork = () => {
   const [width, setWidth] = useState();
   const [unit, setUnit] = useState();
 
+  const [artistNameId, setArtistNameId] = useState();
+  const [artistNameMMId, setArtistNameMMId] = useState();
+
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [checkedItemsMM, setCheckedItemsMM] = useState([]);
 
   const { data: dimensionData } = useQuery(DIMENSIONS);
   const { data: typeData } = useQuery(ARTWORK_TYPE);
   const { data: ownershipData } = useQuery(OWNERSHIP);
-  const { data: seriesData } = useQuery(ART_SERIES);
+
   const { data: nameData } = useQuery(ARTIST_NAME);
 
+  const { data: seriesData } = useQuery(ART_SERIES, {
+    variables: { fk_artist_id: artistNameId },
+  });
+
+  const { data: seriesDataMM } = useQuery(ART_SERIES, {
+    variables: { fk_artist_id: artistNameMMId },
+  });
+
   const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORK_ID);
-  console.log("resultartwork", resultArtwork);
 
   useEffect(() => {
     loadArtwork({ variables: { id: id } });
@@ -100,6 +117,8 @@ const UpdateArtWork = () => {
           resultArtwork.data.traditional_art_work_by_pk.artwork_image_url ?? "",
         artwork_name:
           resultArtwork.data.traditional_art_work_by_pk.artwork_name ?? "",
+        artwork_name_mm:
+          resultArtwork.data.traditional_art_work_by_pk.artwork_name_mm ?? "",
         artwork_year:
           resultArtwork.data.traditional_art_work_by_pk.artwork_year ?? "",
         current_price:
@@ -111,7 +130,6 @@ const UpdateArtWork = () => {
           resultArtwork.data.traditional_art_work_by_pk.fk_medium_type_id ?? "",
         fk_ownership_id:
           resultArtwork.data.traditional_art_work_by_pk.fk_ownership_id ?? "",
-        height: resultArtwork.data.traditional_art_work_by_pk.height ?? "",
         pending: true,
         update_price:
           resultArtwork.data.traditional_art_work_by_pk.update_price ?? "",
@@ -119,6 +137,8 @@ const UpdateArtWork = () => {
         fk_dimension:
           resultArtwork.data.traditional_art_work_by_pk.fk_dimension ?? "",
       });
+      setheight(resultArtwork.data.traditional_art_work_by_pk.height ?? "");
+      setWidth(resultArtwork.data.traditional_art_work_by_pk.width ?? "");
       setImagePreview(
         resultArtwork.data.traditional_art_work_by_pk.artwork_image_url
       );
@@ -128,10 +148,14 @@ const UpdateArtWork = () => {
           "html"
         )
       );
+      setTextValueMM(
+        RichTextEditor.createValueFromString(
+          resultArtwork.data.traditional_art_work_by_pk.description_mm,
+          "html"
+        )
+      );
     }
   }, [resultArtwork]);
-
-  console.log("values ", values);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -143,7 +167,6 @@ const UpdateArtWork = () => {
       alert("Error on Server");
     },
     onCompleted: (result) => {
-      console.log("result", result);
       setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
       setValues({
         ...values,
@@ -169,7 +192,6 @@ const UpdateArtWork = () => {
         // });
         return;
       }
-
       setImageFile(image);
       setImagePreview(URL.createObjectURL(image));
       getImageUrl({ variables: { contentType: "image/*" } });
@@ -179,6 +201,7 @@ const UpdateArtWork = () => {
   const [update_artwork] = useMutation(UPDATE_ARTWORK, {
     onError: (err) => {
       alert("Error on server");
+      setLoading(false);
     },
     onCompleted: (result) => {
       setLoading(false);
@@ -194,47 +217,48 @@ const UpdateArtWork = () => {
     setTextValue(value);
     setValues({ ...values, description: value.toString("html") });
   };
+  const onChangeMM = (value) => {
+    setTextValueMM(value);
+    setValues({ ...values, description_mm: value.toString("html") });
+  };
 
   const handleUpdate = async () => {
     setLoading(true);
-    let isErrorExit = false;
-    let errorObject = {};
-    if (!values.artwork_name) {
-      isErrorExit = true;
-      errorObject.artwork_name = "artwork name is required";
-    }
-    if (!values.artwork_image_url) {
-      isErrorExit = true;
-      errorObject.artwork_image_url = "artwork_image_url is required";
-    }
-    if (!values.current_price) {
-      isErrorExit = true;
-      errorObject.current_price = "current_price is required";
-    }
-    if (!values.update_price) {
-      isErrorExit = true;
-      errorObject.update_price = "update_price is required";
-    }
-    if (!values.description) {
-      isErrorExit = true;
-      errorObject.description = "description  is required";
-    }
-    if (!values.artwork_year) {
-      isErrorExit = true;
-      errorObject.artwork_year = "artwork_year is required";
-    }
-    if (!values.fk_medium_type_id) {
-      isErrorExit = true;
-      errorObject.fk_medium_type_id = "artwork_type is required";
-    }
-    if (!values.fk_ownership_id) {
-      isErrorExit = true;
-      errorObject.fk_ownership_id = "ownership is required";
-    }
-    if (!values.fk_artist_id) {
-      isErrorExit = true;
-      errorObject.fk_artist_id = "artist name  is required";
-    }
+    // let isErrorExit = false;
+    // let errorObject = {};
+    // if (!values.artwork_name) {
+    //   isErrorExit = true;
+    //   errorObject.artwork_name = "artwork name is required";
+    // }
+    // if (!values.artwork_image_url) {
+    //   isErrorExit = true;
+    //   errorObject.artwork_image_url = "artwork_image_url is required";
+    // }
+    // if (!values.current_price) {
+    //   isErrorExit = true;
+    //   errorObject.current_price = "current_price is required";
+    // }
+    // if (!values.update_price) {
+    //   isErrorExit = true;
+    //   errorObject.update_price = "update_price is required";
+    // }
+
+    // if (!values.artwork_year) {
+    //   isErrorExit = true;
+    //   errorObject.artwork_year = "artwork_year is required";
+    // }
+    // if (!values.fk_medium_type_id) {
+    //   isErrorExit = true;
+    //   errorObject.fk_medium_type_id = "artwork_type is required";
+    // }
+    // if (!values.fk_ownership_id) {
+    //   isErrorExit = true;
+    //   errorObject.fk_ownership_id = "ownership is required";
+    // }
+    // if (!values.fk_artist_id) {
+    //   isErrorExit = true;
+    //   errorObject.fk_artist_id = "artist name  is required";
+    // }
     // if (!values.height) {
     //   isErrorExit = true;
     //   errorObject.height = "height is required";
@@ -244,20 +268,20 @@ const UpdateArtWork = () => {
     //   errorObject.width = "width is required";
     // }
 
-    if (isErrorExit) {
-      setErrors(errorObject);
-      setLoading(false);
-      return;
-    }
-
+    // if (isErrorExit) {
+    //   setErrors(errorObject);
+    //   setLoading(false);
+    //   return;
+    // }
+    console.log("values", values);
     try {
       await imageService.uploadImage(imageFileUrl, imageFile);
       await update_artwork({
         variables: {
           ...values,
           pending: false,
-          height: values.height,
-          width: values.width,
+          height: height,
+          width: width,
           fk_dimension: values.fk_dimension,
           disabled: false,
           dimensions: "",
@@ -268,6 +292,29 @@ const UpdateArtWork = () => {
     }
   };
 
+  const handleCheckboxChange = (id) => {
+    const currentIndex = checkedItems.indexOf(id);
+    const newCheckedItems = [...checkedItems];
+
+    if (currentIndex === -1) {
+      newCheckedItems.push(id);
+    } else {
+      newCheckedItems.splice(currentIndex, 1);
+    }
+    setCheckedItems(newCheckedItems);
+  };
+  const handleCheckboxChangeMM = (id) => {
+    const currentIndex = checkedItemsMM.indexOf(id);
+    const newCheckedItems = [...checkedItemsMM];
+
+    if (currentIndex === -1) {
+      newCheckedItems.push(id);
+    } else {
+      newCheckedItems.splice(currentIndex, 1);
+    }
+    setCheckedItemsMM(newCheckedItems);
+  };
+
   if (!typeData || !dimensionData || !ownershipData || !nameData) {
     return "no data";
   }
@@ -275,7 +322,6 @@ const UpdateArtWork = () => {
   if (!resultArtwork) {
     return "no data";
   }
-  console.log("values.description", values.fk_dimension);
   return (
     <>
       <Box
@@ -313,6 +359,7 @@ const UpdateArtWork = () => {
               sx={{ my: 2 }}
             />
           </Box>
+
           {/* image */}
           <FormControl
             sx={{
@@ -352,247 +399,370 @@ const UpdateArtWork = () => {
             </Button>
             <FormHelperText error>{errors["artwork_image_url"]}</FormHelperText>
           </FormControl>
-          {values && (
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                columnGap: "2rem",
-                rowGap: "3rem",
-                px: "0.5rem",
-              }}
-            >
-              {/* Artwork Name */}
+
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              columnGap: "2rem",
+              rowGap: "3rem",
+              px: "0.5rem",
+            }}
+          >
+            {/* Artwork Name */}
+
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="artwork_name"
+                label="Artwork Name"
+                value={values.artwork_name}
+                onChange={handleChange("artwork_name")}
+                // error={error.artwork_name ? true : false}
+                // helperText={error.artwork_name}
+              />
+            </FormControl>
+
+            {/* Artwork Name */}
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="artwork_name_mm"
+                label="Artwork Name MM"
+                value={values.artwork_name_mm}
+                onChange={handleChange("artwork_name_mm")}
+                // error={error.artwork_name_mm ? true : false}
+                // helperText={error.artwork_name_mm}
+              />
+            </FormControl>
+            {/* artwork_year */}
+            <FormControl>
+              <TextField
+                type="number"
+                variant="filled"
+                id="artwork_year"
+                label="artwork_year"
+                value={values.artwork_year}
+                onChange={handleChange("artwork_year")}
+                // error={error.artwork_year ? true : false}
+                // helperText={error.artwork_year}
+              />
+            </FormControl>
+            {/* current_price */}
+            <FormControl>
+              <TextField
+                type="number"
+                variant="filled"
+                id="current_price"
+                label="current_price"
+                value={values.current_price}
+                onChange={handleChange("current_price")}
+                // error={error.current_price ? true : false}
+                // helperText={error.current_price}
+              />
+            </FormControl>
+            {/* update_price */}
+            <FormControl>
+              <TextField
+                type="number"
+                variant="filled"
+                id="update_price"
+                label="update_price"
+                value={values.update_price}
+                onChange={handleChange("update_price")}
+                // error={error.update_price ? true : false}
+                // helperText={error.update_price}
+              />
+            </FormControl>
+            {/* artwork_type */}
+            {values.fk_medium_type_id && (
               <FormControl>
-                <TextField
+                <InputLabel id="sub_type">Artwork_type</InputLabel>
+                <Select
+                  labelId="fk_medium_type_id"
+                  label="artwork_type"
                   variant="filled"
-                  id="artwork_name"
-                  label="Artwork Name"
-                  value={values.artwork_name}
-                  onChange={handleChange("artwork_name")}
-                  error={errors.artwork_name ? true : false}
-                  helperText={errors.artwork_name}
-                />
+                  defaultValue=""
+                  value={values.fk_medium_type_id}
+                  onChange={handleChange("fk_medium_type_id")}
+                >
+                  <MenuItem value="" disabled>
+                    Value
+                  </MenuItem>
+                  {Array.isArray(typeData.artwork_medium_type)
+                    ? typeData.artwork_medium_type.map((type) => (
+                        <MenuItem key={type.id} value={type.id}>
+                          {type.medium_name}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+
+                {/* {error.fk_medium_type_id && (
+               <FormHelperText error>{error.fk_medium_type_id}</FormHelperText>
+             )} */}
               </FormControl>
-              {/* artwork_year */}
+            )}
+            {/* artwork_type */}
+            {values.fk_medium_type_id && (
               <FormControl>
-                <TextField
-                  type="number"
+                <InputLabel id="sub_type">artwork_type_MM</InputLabel>
+                <Select
+                  labelId="fk_medium_type_id"
+                  label="Artwork_type_MM"
                   variant="filled"
-                  id="artwork_year"
-                  label="artwork_year"
-                  value={values.artwork_year}
-                  onChange={handleChange("artwork_year")}
-                  error={errors.artwork_year ? true : false}
-                  helperText={errors.artwork_year}
-                />
+                  defaultValue=""
+                  value={values.fk_medium_type_id}
+                  onChange={handleChange("fk_medium_type_id")}
+                >
+                  <MenuItem value="" disabled>
+                    Value
+                  </MenuItem>
+                  {Array.isArray(typeData.artwork_medium_type)
+                    ? typeData.artwork_medium_type.map((type) => (
+                        <MenuItem key={type.id} value={type.id}>
+                          {type.medium_name_mm}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+
+                {/* {error.fk_medium_type_id && (
+             <FormHelperText error>{error.fk_medium_type_id}</FormHelperText>
+           )} */}
               </FormControl>
-              {/* current_price */}
+            )}
+            {/* artist */}
+            {values.fk_artist_id && (
               <FormControl>
-                <TextField
-                  type="number"
-                  variant="filled"
-                  id="current_price"
-                  label="current_price"
-                  value={values.current_price}
-                  onChange={handleChange("current_price")}
-                  error={errors.current_price ? true : false}
-                  helperText={errors.current_price}
-                />
-              </FormControl>
-
-              {/* update_price */}
-              <FormControl>
-                <TextField
-                  type="number"
-                  variant="filled"
-                  id="update_price"
-                  label="update_price"
-                  value={values.update_price}
-                  onChange={handleChange("update_price")}
-                  error={errors.update_price ? true : false}
-                  helperText={errors.update_price}
-                />
-              </FormControl>
-
-              {/* artwork_type */}
-              {values.fk_medium_type_id && (
-                <FormControl>
-                  <InputLabel id="sub_type">artwork_type</InputLabel>
-                  <Select
-                    labelId="fk_medium_type_id"
-                    label="artwork_type"
-                    variant="filled"
-                    defaultValue=""
-                    value={values.fk_medium_type_id}
-                    onChange={handleChange("fk_medium_type_id")}
-                  >
-                    <MenuItem value="" disabled>
-                      Value
-                    </MenuItem>
-                    {Array.isArray(typeData.artwork_medium_type)
-                      ? typeData.artwork_medium_type.map((type) => (
-                          <MenuItem key={type.id} value={type.id}>
-                            {type.medium_name}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-
-                  {errors.fk_medium_type_id && (
-                    <FormHelperText error>
-                      {errors.fk_medium_type_id}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              )}
-
-              {/* artist */}
-              {values.fk_artist_id && (
-                <FormControl>
-                  <InputLabel id="sub_type">Artist Name</InputLabel>
-                  <Select
-                    labelId="artist"
-                    label="artist"
-                    variant="filled"
-                    defaultValue=""
-                    value={values.fk_artist_id}
-                    onChange={handleChange("fk_artist_id")}
-                  >
-                    <MenuItem value="" disabled>
-                      Value
-                    </MenuItem>
-                    {Array.isArray(nameData.artist)
-                      ? nameData.artist.map((ast) => (
-                          <MenuItem key={ast.id} value={ast.id}>
-                            {ast.artist_name}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-                  {errors.fk_artist_id && (
-                    <FormHelperText error>{errors.fk_artist_id}</FormHelperText>
-                  )}
-                </FormControl>
-              )}
-              {/* ownership */}
-              {values.fk_ownership_id && (
-                <FormControl>
-                  <InputLabel id="sub_type">Ownership</InputLabel>
-                  <Select
-                    labelId="fk_ownership_id"
-                    label="artist"
-                    variant="filled"
-                    defaultValue=""
-                    value={values.fk_ownership_id}
-                    onChange={handleChange("fk_ownership_id")}
-                  >
-                    <MenuItem value="" disabled>
-                      Value
-                    </MenuItem>
-
-                    {Array.isArray(ownershipData.users)
-                      ? ownershipData.users.map((user) => (
-                          <MenuItem key={user.id} value={user.id}>
-                            {user.fullname}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
-                  {errors.fk_ownership_id && (
-                    <FormHelperText error>
-                      {errors.fk_ownership_id}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              )}
-              {/* dimensions */}
-
-              {values.height && (
-                <FormControl>
-                  <div className="grid_3_cols">
-                    <TextField
-                      id="sub_type"
-                      variant="filled"
-                      placeholder="height"
-                      value={values.height}
-                      onChange={(e) => setheight(e.target.value)}
-                      error={errors.height ? true : false}
-                      helperText={errors.height}
-                    />
-                    <TextField
-                      id="sub_type"
-                      variant="filled"
-                      placeholder="Width"
-                      value={values.width}
-                      onChange={(e) => setWidth(e.target.value)}
-                      error={errors.width ? true : false}
-                      helperText={errors.width}
-                    />
-                    <Select
-                      labelId="width"
-                      label="Width"
-                      variant="filled"
-                      value={values.fk_dimension}
-                      defaultValue=""
-                      onChange={(e) => setUnit(e.target.value)}
-                    >
-                      <MenuItem value="" disabled>
-                        Value
-                      </MenuItem>
-                      {Array.isArray(dimensionData.artwork_dimensions)
-                        ? dimensionData.artwork_dimensions.map((dimension) => (
-                            <MenuItem key={dimension.id} value={dimension.id}>
-                              {dimension.dimension_name}
-                            </MenuItem>
-                          ))
-                        : null}
-                    </Select>
-                  </div>
-                </FormControl>
-              )}
-
-              {/* art_series */}
-              <FormControl>
-                <InputLabel id="sub_type">art_series</InputLabel>
+                <InputLabel id="sub_type">Artist Name</InputLabel>
                 <Select
                   labelId="artist"
                   label="artist"
                   variant="filled"
                   defaultValue=""
+                  value={values.fk_artist_id}
+                  onChange={(e) => setArtistNameId(e.target.value)}
                 >
                   <MenuItem value="" disabled>
                     Value
                   </MenuItem>
-                  {Array.isArray(seriesData.art_series)
-                    ? seriesData.art_series.map((series) => (
-                        <MenuItem key={series.id} value={series.id}>
-                          {series.series_name}
+                  {Array.isArray(nameData.artist)
+                    ? nameData.artist.map((ast) => (
+                        <MenuItem key={ast.id} value={ast.id}>
+                          {ast.artist_name}
                         </MenuItem>
                       ))
                     : null}
                 </Select>
-                {/* {errors.data.users.username && (
-                  <FormHelperText error>{errors.user}</FormHelperText>
-                )} */}
+                {/* {error.fk_artist_id && (
+        <FormHelperText error>{error.fk_artist_id}</FormHelperText>
+      )} */}
               </FormControl>
-              {/* description */}
-              <Box className="description">
-                <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
-                  Description
-                </InputLabel>
-                <RichTextEditor
-                  className="description-text"
-                  onChange={onChange}
-                  value={textValue}
-                  toolbarConfig={toolbarConfig}
+            )}
+            {/* artist_MM */}
+            {values.fk_artist_id && (
+              <FormControl>
+                <InputLabel id="sub_type">Artist Name MM</InputLabel>
+                <Select
+                  labelId="artist"
+                  label="artist"
+                  variant="filled"
+                  defaultValue=""
+                  value={values.fk_artist_id}
+                  onChange={(e) => setArtistNameMMId(e.target.value)}
+                >
+                  <MenuItem value="" disabled>
+                    Value
+                  </MenuItem>
+                  {Array.isArray(nameData.artist)
+                    ? nameData.artist.map((ast) => (
+                        <MenuItem key={ast.id} value={ast.id}>
+                          {ast.artist_name_mm}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+                {/* {error.fk_artist_id && (
+          <FormHelperText error>{error.fk_artist_id}</FormHelperText>
+        )} */}
+              </FormControl>
+            )}
+            {/* ownership */}
+            {values.fk_ownership_id && (
+              <FormControl>
+                <InputLabel id="sub_type">Ownership</InputLabel>
+                <Select
+                  labelId="fk_ownership_id"
+                  label="artist"
+                  variant="filled"
+                  defaultValue=""
+                  value={values.fk_ownership_id}
+                  onChange={handleChange("fk_ownership_id")}
+                >
+                  <MenuItem value="" disabled>
+                    Value
+                  </MenuItem>
+
+                  {Array.isArray(ownershipData.users)
+                    ? ownershipData.users.map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                          {user.fullname}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+                {/* {error.fk_ownership_id && (
+            <FormHelperText error>{error.fk_ownership_id}</FormHelperText>
+          )} */}
+              </FormControl>
+            )}
+            {/* ownership_MM */}
+            {values.fk_ownership_id && (
+              <FormControl>
+                <InputLabel id="sub_type">Ownership MM</InputLabel>
+                <Select
+                  labelId="fk_ownership_id"
+                  label="artist"
+                  variant="filled"
+                  defaultValue=""
+                  value={values.fk_ownership_id}
+                  onChange={handleChange("fk_ownership_id")}
+                >
+                  <MenuItem value="" disabled>
+                    Value
+                  </MenuItem>
+
+                  {Array.isArray(ownershipData.users)
+                    ? ownershipData.users.map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                          {user.fullname_mm}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+                {/* {error.fk_ownership_id && (
+ <FormHelperText error>{error.fk_ownership_id}</FormHelperText>
+)} */}
+              </FormControl>
+            )}
+            {/* dimensions */}
+            {values.fk_dimension && (
+              <FormControl sx={{ width: "100%" }}>
+                <div className="grid_3_cols">
+                  <TextField
+                    id="sub_type"
+                    type="number"
+                    variant="filled"
+                    placeholder="height"
+                    value={height}
+                    onChange={(e) => setheight(e.target.value)}
+                    // error={error.height ? true : false}
+                    // helperText={error.height}
+                  />
+                  <TextField
+                    id="sub_type"
+                    type="number"
+                    variant="filled"
+                    placeholder="Width"
+                    value={width}
+                    onChange={(e) => setWidth(e.target.value)}
+                  />
+                  <Select
+                    labelId="width"
+                    label="Width"
+                    variant="filled"
+                    defaultValue=""
+                    onChange={(e) => setUnit(e.target.value)}
+                  >
+                    <MenuItem value="" disabled>
+                      Value
+                    </MenuItem>
+                    {Array.isArray(dimensionData.artwork_dimensions)
+                      ? dimensionData.artwork_dimensions.map((dimension) => (
+                          <MenuItem key={dimension.id} value={dimension.id}>
+                            {dimension.dimension_name}
+                          </MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                </div>
+              </FormControl>
+            )}
+          </Box>
+
+          {/* art_series */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+              my: "2rem",
+              px: "1rem",
+              flexWrap: "wrap",
+            }}
+          >
+            {seriesData &&
+              seriesData.art_series.map((series, index) => (
+                <FormControlLabel
+                  control={<Checkbox name={series.series_name} />}
+                  label={series.series_name}
+                  onChange={() => handleCheckboxChangeMM(series.id)}
                 />
-                {errors.description && (
-                  <FormHelperText error> {errors.description}</FormHelperText>
-                )}
-              </Box>
+              ))}
+          </Box>
+          {/* art_series_mm*/}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+              my: "2rem",
+              px: "1rem",
+              flexWrap: "wrap",
+            }}
+          >
+            {seriesDataMM &&
+              seriesDataMM.art_series.map((series, index) => (
+                <FormControlLabel
+                  control={<Checkbox name={series.series_name_mm} />}
+                  label={series.series_name_mm}
+                  onChange={() => handleCheckboxChange(series.id)}
+                />
+              ))}
+          </Box>
+
+          <Box display="flex" justifyContent="space-between" px="0.5rem">
+            {/* description */}
+            <Box className="description">
+              <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                Description
+              </InputLabel>
+              <RichTextEditor
+                className="description-text"
+                onChange={onChange}
+                value={textValue}
+                toolbarConfig={toolbarConfig}
+              />
+              {/* {error.description && (
+                <FormHelperText error> {error.description}</FormHelperText>
+              )} */}
             </Box>
-          )}
+
+            {/* description_mm */}
+            <Box className="description">
+              <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                Description MM
+              </InputLabel>
+              <RichTextEditor
+                className="description-text"
+                onChange={onChangeMM}
+                value={textValueMM}
+                toolbarConfig={toolbarConfig}
+              />
+              {/* {error.description_mm && (
+                <FormHelperText error> {error.description_mm}</FormHelperText>
+              )} */}
+            </Box>
+          </Box>
 
           <Box sx={{ display: "flex", justifyContent: "end", m: "2rem" }}>
             <LoadingButton

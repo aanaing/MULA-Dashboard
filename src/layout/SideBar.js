@@ -72,7 +72,10 @@ const SideBar = ({ open }) => {
       </DrawerHeader>
       <List className="nav-list">
         <Link to="/" onClick={() => setNav("")} className="nav-link">
-          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+          <ListItem
+            button
+            className={`${nav === "" ? "nav-btn active" : "nav-btn"}`}
+          >
             <ListItemIcon>
               <DashboardIcon className="nav-link-icon" />
             </ListItemIcon>
@@ -80,8 +83,11 @@ const SideBar = ({ open }) => {
           </ListItem>
         </Link>
 
-        <Link to="/user" onClick={() => setNav("")} className="nav-link">
-          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+        <Link to="/user" onClick={() => setNav("user")} className="nav-link">
+          <ListItem
+            button
+            className={`${nav === "user" ? "nav-btn active" : "nav-btn"}`}
+          >
             <ListItemIcon>
               <AccountCircleSharpIcon className="nav-link-icon" />
             </ListItemIcon>
@@ -89,28 +95,46 @@ const SideBar = ({ open }) => {
           </ListItem>
         </Link>
 
-        <Link to="/art_work" onClick={() => setNav("")} className="nav-link">
-          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+        <Link
+          to="/art_work"
+          onClick={() => setNav("art_work")}
+          className="nav-link"
+        >
+          {/* <ListItem button className={`nav-btn ${nav === "" && "active"}`}> */}
+          <ListItem
+            button
+            className={`${nav === "art_work" ? "nav-btn active" : "nav-btn"}`}
+          >
             <ListItemIcon>
               <PaletteIcon className="nav-link-icon" />
             </ListItemIcon>
             ArtWork
           </ListItem>
         </Link>
-        <Link to="/artist" onClick={() => setNav("")} className="nav-link">
-          <ListItem button className={`nav-btn ${nav === "" && "active"}`}>
+        <Link
+          to="/artist"
+          onClick={() => setNav("artist")}
+          className="nav-link"
+        >
+          <ListItem
+            button
+            className={`${nav === "artist" ? "nav-btn active" : "nav-btn"}`}
+          >
             <ListItemIcon>
               <BrushIcon className="nav-link-icon" />
             </ListItemIcon>
             Artist
           </ListItem>
         </Link>
-        <Link to="/reseller" onClick={() => setNav("")} className="nav-link">
+
+        <Link
+          to="/reseller"
+          onClick={() => setNav("reseller")}
+          className="nav-link"
+        >
           <ListItem
             button
-            // className={`nav-btn ${nav === "" && "active"}`}
-            className="nav-btn"
-            activeClassName="active"
+            className={`${nav === "reseller" ? "nav-btn active" : "nav-btn"}`}
           >
             <ListItemIcon>
               <SellIcon className="nav-link-icon" />

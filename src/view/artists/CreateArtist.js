@@ -78,10 +78,18 @@ const CreateArtistByPhone = () => {
   const { data } = useQuery(USER);
 
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
 
   const onChange = (value) => {
     setTextValue(value);
     setValues({ ...values, biography: value.toString("html") });
+  };
+
+  const onChangeMM = (value) => {
+    setTextValueMM(value);
+    setValues({ ...values, biography_mm: value.toString("html") });
   };
 
   const handleChange = (prop) => (event) => {
@@ -273,8 +281,7 @@ const CreateArtistByPhone = () => {
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1fr 1fr",
               gap: "3rem",
-
-              px: "1rem",
+              px: "0.5rem",
             }}
           >
             {/* Artist Name */}
@@ -287,6 +294,19 @@ const CreateArtistByPhone = () => {
                 onChange={handleChange("artist_name")}
                 error={error.artist_name ? true : false}
                 helperText={error.artist_name}
+              />
+            </FormControl>
+
+            {/* Artist Name MM */}
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="artist_name"
+                label="Artist Name MM"
+                value={values.artist_name_mm}
+                onChange={handleChange("artist_name_mm")}
+                error={error.artist_name_mm ? true : false}
+                helperText={error.artist_name_mm}
               />
             </FormControl>
 
@@ -347,6 +367,13 @@ const CreateArtistByPhone = () => {
                 <FormHelperText error>{error.phone}</FormHelperText>
               )}
             </FormControl>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            px="0.5rem"
+            py="2rem"
+          >
             {/* Biography */}
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
@@ -362,8 +389,23 @@ const CreateArtistByPhone = () => {
                 <FormHelperText error> {error.biography}</FormHelperText>
               )}
             </Box>
+            {/* Biography MM */}
+            <Box className="description">
+              <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                Biography MM
+              </InputLabel>
+              <RichTextEditor
+                className="description-text"
+                onChange={onChangeMM}
+                value={textValueMM}
+                toolbarConfig={toolbarConfig}
+              />
+              {error.biography_mm && (
+                <FormHelperText error> {error.biography_mm}</FormHelperText>
+              )}
+            </Box>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "end", m: "2rem" }}>
+          <Box sx={{ display: "flex", justifyContent: "end", m: "1rem" }}>
             <LoadingButton
               variant="contained"
               onClick={handleCreate}

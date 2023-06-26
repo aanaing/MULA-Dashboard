@@ -104,28 +104,19 @@ const User = () => {
           elevation={3}
           sx={{
             flex: 4,
-            mx: 3,
-            py: 3,
-            //bgcolor: "#262626",
+            py: "2rem",
             color: "black",
             display: "flex",
+            justifyContent: "space-around",
           }}
         >
-          <Box
-            sx={{
-              ml: "5rem",
-              // p: 2,
-              width: "50rem",
-              // bgcolor: "#f7f7f5",
-              borderRadius: 2,
-            }}
-          >
+          <Box>
             {/* User ID */}
             <Grid sx={{ m: 2 }} container spacing={2}>
               <Grid item xs={3}>
                 <Typography variant="body2">ID:</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={8}>
                 <Typography variant="body2" color="text.secondary">
                   {user.id}
                 </Typography>
@@ -134,10 +125,10 @@ const User = () => {
 
             {/* FullName */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Typography variant="body2">FullName:</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={8}>
                 <Typography variant="body2" color="text.secondary">
                   {user.fullname}
                 </Typography>
@@ -146,7 +137,7 @@ const User = () => {
 
             {/* Email */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Typography variant="body2">Email:</Typography>
               </Grid>
               <Grid item xs={2}>
@@ -158,10 +149,10 @@ const User = () => {
 
             {/* Address */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Typography variant="body2">Address:</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={8}>
                 <Typography variant="body2" color="text.secondary">
                   {user.address}
                 </Typography>
@@ -170,10 +161,10 @@ const User = () => {
 
             {/* Gender */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Typography variant="body2">Gender:</Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={8}>
                 <Typography variant="body2" color="text.secondary">
                   {user.gender}
                 </Typography>
@@ -182,10 +173,96 @@ const User = () => {
 
             {/* Phone Number */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={4}>
                 <Typography variant="body2">Phone Number:</Typography>
               </Grid>
+              <Grid item xs={8}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.phone}
+                </Typography>
+              </Grid>
+            </Grid>
+            {/* Role */}
+            {/* <Grid sx={{ m: 2 }} container spacing={2}>
               <Grid item xs={2}>
+                <Typography variant="body2" color="text.secondary">
+                  Role:
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.role}
+                </Typography>
+              </Grid>
+            </Grid> */}
+          </Box>
+          <Box>
+            {/* User ID */}
+            <Grid sx={{ m: 2 }} container spacing={2}>
+              <Grid item xs={3}>
+                <Typography variant="body2">ID:</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.id}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* FullName */}
+            <Grid sx={{ m: 2 }} container spacing={2}>
+              <Grid item xs={4}>
+                <Typography variant="body2">FullName:</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.fullname_mm}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* Email */}
+            <Grid sx={{ m: 2 }} container spacing={2}>
+              <Grid item xs={4}>
+                <Typography variant="body2">Email:</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.email}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* Address */}
+            <Grid sx={{ m: 2 }} container spacing={2}>
+              <Grid item xs={4}>
+                <Typography variant="body2">Address:</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.address_mm}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* Gender */}
+            <Grid sx={{ m: 2 }} container spacing={2}>
+              <Grid item xs={4}>
+                <Typography variant="body2">Gender:</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography variant="body2" color="text.secondary">
+                  {user.gender_mm}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            {/* Phone Number */}
+            <Grid sx={{ m: 2 }} container spacing={2}>
+              <Grid item xs={4}>
+                <Typography variant="body2">Phone Number:</Typography>
+              </Grid>
+              <Grid item xs={8}>
                 <Typography variant="body2" color="text.secondary">
                   {user.phone}
                 </Typography>

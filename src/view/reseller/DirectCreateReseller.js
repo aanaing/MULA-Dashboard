@@ -58,7 +58,11 @@ const DirectCreateReseller = () => {
 
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
   const { data: userData } = useQuery(USERID);
 
   const { data: userDataPK } = useQuery(USERBYPK, { variables: { id: id } });
@@ -71,11 +75,17 @@ const DirectCreateReseller = () => {
     setTextValue(value);
     setValues({ ...values, biography: value.toString("html") });
   };
+  const onChangeMM = (value) => {
+    setTextValueMM(value);
+    setValues({ ...values, biography_mm: value.toString("html") });
+  };
   const [addReseller] = useMutation(ADD_RESELLER, {
     onError: (err) => {
       alert("Error on Server");
+      setLoading(false);
     },
     onCompleted: (result) => {
+      setLoading(true);
       console.log("result ", result);
       setValues({});
       setTextValue(RichTextEditor.createEmptyValue());
@@ -133,27 +143,25 @@ const DirectCreateReseller = () => {
         </Button>
       </Box>
       <Card>
-        <CardContent>
-          <CardActions>
-            {/* user id */}
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "2rem",
-              }}
-            >
-              <FormControl>
-                <TextField
-                  variant="filled"
-                  id="fk_user_id"
-                  label="Reseller User"
-                  value={userDataPK.users_by_pk.fullname}
-                />
-              </FormControl>
+        <CardContent sx={{ p: "2rem" }}>
+          {/* user id */}
+          <Box
+            sx={{
+              display: "grid",
+              gap: "2rem",
+            }}
+          >
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="fk_user_id"
+                label="Reseller User"
+                value={userDataPK.users_by_pk.fullname}
+              />
+            </FormControl>
 
+            <Box display="grid" gridTemplateColumns="1fr 1fr" columnGap="2rem">
               {/* biography */}
-
               <Box>
                 <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                   biography
@@ -168,15 +176,33 @@ const DirectCreateReseller = () => {
                   <FormHelperText error> {errors.biography}</FormHelperText>
                 )}
               </Box>
+              {/* biography MM */}
+              <Box>
+                <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                  Biography MM
+                </InputLabel>
+                <RichTextEditor
+                  className="description-text"
+                  onChange={onChangeMM}
+                  value={textValueMM}
+                  toolbarConfig={toolbarConfig}
+                />
+                {errors.biography_mm && (
+                  <FormHelperText error> {errors.biography_mm}</FormHelperText>
+                )}
+              </Box>
             </Box>
-          </CardActions>
-          <LoadingButton
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-            variant="contained"
-            onClick={handleCreate}
-          >
-            Create
-          </LoadingButton>
+          </Box>
+
+          <Box display="flex" justifyContent="flex-end" my="2rem">
+            <LoadingButton
+              variant="contained"
+              onClick={handleCreate}
+              loading={loading}
+            >
+              Create
+            </LoadingButton>
+          </Box>
         </CardContent>
       </Card>
     </>

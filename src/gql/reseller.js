@@ -7,6 +7,7 @@ export const ALL_RESELLER = gql`
       id
       created_at
       biography
+
       reseller_user {
         fullname
         id
@@ -25,6 +26,7 @@ export const RESELLER_ID = gql`
   query reseller_id($id: Int!) {
     reseller_by_pk(id: $id) {
       biography
+      biography_mm
       created_at
       fk_user_id
       id
@@ -37,11 +39,20 @@ export const RESELLER_ID = gql`
   }
 `;
 export const ADD_RESELLER = gql`
-  mutation add_reseller($biography: String, $fk_user_id: Int!) {
+  mutation add_reseller(
+    $biography: String
+    $biography_mm: String
+    $fk_user_id: Int!
+  ) {
     insert_reseller_one(
-      object: { biography: $biography, fk_user_id: $fk_user_id }
+      object: {
+        biography: $biography
+        biography_mm: $biography_mm
+        fk_user_id: $fk_user_id
+      }
     ) {
       biography
+      biography_mm
       created_at
       fk_user_id
       id

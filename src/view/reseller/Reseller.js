@@ -96,21 +96,41 @@ const Reseller = () => {
                   ></ListItemText>
                 </ListItem>
               </div>
-              <div>
-                <Typography display="flex" justifyContent="center">
-                  Biography
-                </Typography>
-
-                <Box sx={{ mt: "1rem" }}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: data.reseller_by_pk.biography,
-                    }}
-                  ></div>
-                </Box>
-              </div>
             </Box>
           </CardActions>
+          <Box
+            display="grid"
+            gridTemplateColumns="50% 50%"
+            columnGap="1rem"
+            mx="2rem"
+          >
+            <Box>
+              <Typography display="flex" justifyContent="center" mt="2rem">
+                Biography Eng
+              </Typography>
+
+              <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: data.reseller_by_pk.biography,
+                  }}
+                ></div>
+              </Box>
+            </Box>
+            <Box>
+              <Typography display="flex" justifyContent="center" mt="2rem">
+                Biography MM
+              </Typography>
+
+              <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: data.reseller_by_pk.biography_mm,
+                  }}
+                ></div>
+              </Box>
+            </Box>
+          </Box>
         </CardContent>
         <Box display="flex" justifyContent="end" columnGap="3rem" m="2rem">
           <Button

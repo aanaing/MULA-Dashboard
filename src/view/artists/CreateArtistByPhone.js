@@ -51,7 +51,7 @@ const toolbarConfig = {
   ],
 };
 
-const CreateArtistByPhone = ({ phone }) => {
+const CreateArtistByPhone = ({ phone, handleClose }) => {
   console.log("phone", phone);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const CreateArtistByPhone = ({ phone }) => {
     setValues({ ...values, biography: value.toString("html") });
   };
   const onChangeMM = (value) => {
-    setTextValue(value);
+    setTextValueMM(value);
     setValues({ ...values, biography_mm: value.toString("html") });
   };
 
@@ -276,12 +276,12 @@ const CreateArtistByPhone = ({ phone }) => {
                 helperText={error.artist_name}
               />
             </FormControl>
-            {/* Artist Name MM*/}
+            {/* Artist Name */}
             <FormControl>
               <TextField
                 variant="filled"
                 id="artist_name_mm"
-                label="Artist Name MM"
+                label="Artist Name"
                 value={values.artist_name_mm}
                 onChange={handleChange("artist_name_mm")}
                 error={error.artist_name_mm ? true : false}
@@ -318,6 +318,7 @@ const CreateArtistByPhone = ({ phone }) => {
             </FormControl>
 
             {/* User phone */}
+
             <FormControl>
               <TextField
                 variant="filled"
@@ -334,8 +335,8 @@ const CreateArtistByPhone = ({ phone }) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            px="0.5rem"
-            py="2rem"
+            my="2rem"
+            px="1rem"
           >
             {/* Biography */}
             <Box className="description">
@@ -352,19 +353,20 @@ const CreateArtistByPhone = ({ phone }) => {
                 <FormHelperText error> {error.biography}</FormHelperText>
               )}
             </Box>
+
             {/* Biography MM */}
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
-                Biography
+                Biography MM
               </InputLabel>
               <RichTextEditor
                 className="description-text"
-                onChange={onChange}
-                value={textValue}
+                onChange={onChangeMM}
+                value={textValueMM}
                 toolbarConfig={toolbarConfig}
               />
-              {error.biography && (
-                <FormHelperText error> {error.biography}</FormHelperText>
+              {error.biography_mm && (
+                <FormHelperText error> {error.biography_mm}</FormHelperText>
               )}
             </Box>
           </Box>

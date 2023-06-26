@@ -208,19 +208,36 @@ const ArtWork = () => {
             </CardActions>
 
             <Box
-              sx={{
-                margin: "auto",
-              }}
+              display="grid"
+              gridTemplateColumns="50% 50%"
+              columnGap="1rem"
+              mx="2rem"
             >
-              <Typography display="flex" justifyContent="center" mt="2rem">
-                Description
-              </Typography>
-              <Box sx={{ ml: "5rem", mt: "1rem" }}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: data.traditional_art_work_by_pk.description,
-                  }}
-                ></div>
+              <Box>
+                <Typography display="flex" justifyContent="center" mt="2rem">
+                  Description Eng
+                </Typography>
+
+                <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data.traditional_art_work_by_pk.description,
+                    }}
+                  ></div>
+                </Box>
+              </Box>
+              <Box>
+                <Typography display="flex" justifyContent="center" mt="2rem">
+                  Description MM
+                </Typography>
+
+                <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: data.traditional_art_work_by_pk.description,
+                    }}
+                  ></div>
+                </Box>
               </Box>
             </Box>
           </Paper>

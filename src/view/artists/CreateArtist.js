@@ -338,7 +338,7 @@ const CreateArtistByPhone = () => {
             </FormControl>
 
             {/* User phone */}
-            {console.log("user data", data)}
+
             <FormControl>
               <InputLabel id="sub_type">Phone</InputLabel>
               <Select

@@ -130,76 +130,44 @@ const CreateReseller = () => {
         </Button>
       </Box>
       <Card>
-        <CardContent>
-          <CardActions>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "2rem",
-                px: "0.5rem",
-                py: "1rem",
-              }}
-            >
-              {/* Reseller User  */}
-              <FormControl>
-                <InputLabel id="fk_user_id">Reseller User</InputLabel>
-                <Select
-                  labelId="fk_user_id"
-                  label="Reseller User"
-                  variant="filled"
-                  defaultValue=""
-                  //value={values.fk_medium_type_id}
-                  onChange={handleChange("fk_user_id")}
-                >
-                  <MenuItem value="" disabled>
-                    Value
-                  </MenuItem>
-                  {Array.isArray(userData.users)
-                    ? userData.users
-                        .filter((users) => users.users_resellers?.length === 0)
-                        .map((user) => (
-                          <MenuItem key={user.id} value={user.id}>
-                            {user.fullname}
-                          </MenuItem>
-                        ))
-                    : null}
-                </Select>
+        <CardContent sx={{ p: "2rem" }}>
+          <Box
+            sx={{
+              display: "grid",
+              rowGap: "2rem",
+            }}
+          >
+            {/* Reseller User  */}
+            <FormControl>
+              <InputLabel id="fk_user_id">Reseller User</InputLabel>
+              <Select
+                labelId="fk_user_id"
+                label="Reseller User"
+                variant="filled"
+                defaultValue=""
+                //value={values.fk_medium_type_id}
+                onChange={handleChange("fk_user_id")}
+              >
+                <MenuItem value="" disabled>
+                  Value
+                </MenuItem>
+                {Array.isArray(userData.users)
+                  ? userData.users
+                      .filter((users) => users.users_resellers?.length === 0)
+                      .map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                          {user.fullname}
+                        </MenuItem>
+                      ))
+                  : null}
+              </Select>
 
-                {errors.fk_user_id && (
-                  <FormHelperText error>{errors.fk_user_id}</FormHelperText>
-                )}
-              </FormControl>
-              {/* Reseller User MM */}
-              <FormControl>
-                <InputLabel id="fk_user_id">Reseller User MM</InputLabel>
-                <Select
-                  labelId="fk_user_id"
-                  label="Reseller User"
-                  variant="filled"
-                  defaultValue=""
-                  //value={values.fk_medium_type_id}
-                  onChange={handleChange("fk_user_id")}
-                >
-                  <MenuItem value="" disabled>
-                    Value
-                  </MenuItem>
-                  {Array.isArray(userData.users)
-                    ? userData.users
-                        .filter((users) => users.users_resellers?.length === 0)
-                        .map((user) => (
-                          <MenuItem key={user.id} value={user.id}>
-                            {user.fullname_mm}
-                          </MenuItem>
-                        ))
-                    : null}
-                </Select>
+              {errors.fk_user_id && (
+                <FormHelperText error>{errors.fk_user_id}</FormHelperText>
+              )}
+            </FormControl>
 
-                {errors.fk_user_id && (
-                  <FormHelperText error>{errors.fk_user_id}</FormHelperText>
-                )}
-              </FormControl>
-
+            <Box display="grid" gridTemplateColumns="1fr 1fr" columnGap="2rem">
               {/* biography */}
               <Box>
                 <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
@@ -231,8 +199,8 @@ const CreateReseller = () => {
                 )}
               </Box>
             </Box>
-          </CardActions>
-          <Box display="flex" justifyContent="flex-end" mr="1rem">
+          </Box>
+          <Box display="flex" justifyContent="flex-end" my="2rem">
             <LoadingButton variant="contained" onClick={handleCreate}>
               Create
             </LoadingButton>

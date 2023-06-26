@@ -57,6 +57,9 @@ const UpdateReseller = () => {
 
   const [values, setValues] = useState({});
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
 
   const { data: userData } = useQuery(USERID);
 
@@ -71,10 +74,18 @@ const UpdateReseller = () => {
       setValues({
         id: resultReseller.data.reseller_by_pk.id,
         fk_user_id: resultReseller.data.reseller_by_pk.fk_user_id,
+        biography: resultReseller.data.reseller_by_pk.biography,
+        biography_mm: resultReseller.data.reseller_by_pk.biography_mm,
       });
       setTextValue(
         RichTextEditor.createValueFromString(
           resultReseller.data.reseller_by_pk.biography,
+          "html"
+        )
+      );
+      setTextValueMM(
+        RichTextEditor.createValueFromString(
+          resultReseller.data.reseller_by_pk.biography_mm,
           "html"
         )
       );
@@ -88,6 +99,11 @@ const UpdateReseller = () => {
   const onChange = (value) => {
     setTextValue(value);
     setValues({ ...values, biography: value.toString("html") });
+  };
+
+  const onChangeMM = (value) => {
+    setTextValueMM(value);
+    setValues({ ...values, biography_mm: value.toString("html") });
   };
   const [updateReseller] = useMutation(UPDATE_RESELLER, {
     onError: (err) => {
@@ -103,9 +119,9 @@ const UpdateReseller = () => {
     refetchQueries: [ALL_RESELLER, USERID],
   });
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    updateReseller({ variables: { ...values } });
+    await updateReseller({ variables: { ...values } });
   };
 
   if (!userData) {
@@ -131,50 +147,48 @@ const UpdateReseller = () => {
       </Box>
 
       <Card>
-        <CardContent>
-          <CardActions>
-            {/* user id */}
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "2rem",
-              }}
-            >
-              {values.fk_user_id && (
-                <FormControl>
-                  <InputLabel id="fk_user_id">User Name</InputLabel>
-                  <Select
-                    labelId="fk_user_id"
-                    label="User Name"
-                    variant="filled"
-                    defaultValue=""
-                    value={values.fk_user_id}
-                    onChange={handleChange("fk_user_id")}
-                  >
-                    <MenuItem value="" disabled>
-                      Value
-                    </MenuItem>
-                    {Array.isArray(userData.users)
-                      ? userData.users.map((user) => (
-                          <MenuItem key={user.id} value={user.id}>
-                            {user.fullname}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
+        <CardContent sx={{ p: "2rem" }}>
+          {/* user id */}
+          <Box
+            sx={{
+              display: "grid",
+              gap: "2rem",
+            }}
+          >
+            {values.fk_user_id && (
+              <FormControl>
+                <InputLabel id="fk_user_id">User Name</InputLabel>
+                <Select
+                  labelId="fk_user_id"
+                  label="User Name"
+                  variant="filled"
+                  defaultValue=""
+                  value={values.fk_user_id}
+                  onChange={handleChange("fk_user_id")}
+                >
+                  <MenuItem value="" disabled>
+                    Value
+                  </MenuItem>
+                  {Array.isArray(userData.users)
+                    ? userData.users.map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                          {user.fullname}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
 
-                  {/* {error.fk_medium_type_id && (
+                {/* {error.fk_medium_type_id && (
               <FormHelperText error>{error.fk_medium_type_id}</FormHelperText>
             )} */}
-                </FormControl>
-              )}
+              </FormControl>
+            )}
 
+            <Box display="grid" gridTemplateColumns="1fr 1fr" columnGap="2rem">
               {/* biography */}
-
               <Box>
                 <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
-                  biography
+                  Biography
                 </InputLabel>
                 <RichTextEditor
                   className="description-text"
@@ -182,19 +196,28 @@ const UpdateReseller = () => {
                   value={textValue}
                   toolbarConfig={toolbarConfig}
                 />
-                {/* {error.description && (
-                <FormHelperText error> {error.description}</FormHelperText>
-              )} */}
+              </Box>
+
+              {/* biography MM */}
+              <Box>
+                <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                  Biography MM
+                </InputLabel>
+                <RichTextEditor
+                  className="description-text"
+                  onChange={onChangeMM}
+                  value={textValueMM}
+                  toolbarConfig={toolbarConfig}
+                />
               </Box>
             </Box>
-          </CardActions>
-          <LoadingButton
-            sx={{ display: "flex", justifyContent: "flex-end" }}
-            variant="contained"
-            onClick={handleUpdate}
-          >
-            Update
-          </LoadingButton>
+          </Box>
+
+          <Box display="flex" justifyContent="end" my="2rem">
+            <LoadingButton variant="contained" onClick={handleUpdate}>
+              Update
+            </LoadingButton>
+          </Box>
         </CardContent>
       </Card>
     </>

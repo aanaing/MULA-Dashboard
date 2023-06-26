@@ -109,8 +109,10 @@ export const UPDATE_ARTIST = gql`
   mutation update_artist(
     $id: Int!
     $artist_name: String!
+    $artist_name_mm: String!
     $artist_profile_image_url: String!
     $biography: String!
+    $biography_mm: String!
     $fk_user_id: Int!
     $year_born: Int!
     $year_died: Int!
@@ -119,8 +121,10 @@ export const UPDATE_ARTIST = gql`
       pk_columns: { id: $id }
       _set: {
         artist_name: $artist_name
+        artist_name_mm: $artist_name_mm
         artist_profile_image_url: $artist_profile_image_url
         biography: $biography
+        biography_mm: $biography_mm
         fk_user_id: $fk_user_id
         year_born: $year_born
         year_died: $year_died
@@ -133,8 +137,10 @@ export const UPDATE_ARTIST = gql`
       fk_user_id
       created_at
       biography
+      biography_mm
       artist_profile_image_url
       artist_name
+      artist_name_mm
     }
   }
 `;

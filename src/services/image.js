@@ -3,7 +3,7 @@ import axios from "axios";
 const uploadImage = async (uri, data) => {
   const config = {
     headers: {
-      "Content-Type": "video/*",
+      "Content-Type": "image",
       "x-amz-acl": "public-read",
     },
   };
@@ -14,7 +14,7 @@ const uploadImage = async (uri, data) => {
 const deleteImage = async (uri, data) => {
   const config = {
     headers: {
-      "Content-Type": "video/*",
+      "Content-Type": "image",
       "x-amz-acl": "public-read",
     },
   };

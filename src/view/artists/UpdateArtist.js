@@ -6,7 +6,7 @@ import {
   USER,
   ARTIST,
 } from "../../gql/artist";
-import { IMAGE_UPLOAD } from "../../gql/image";
+import { IMAGE_UPLOAD, DELETE_IMAGE } from "../../gql/image";
 import imageService from "../../services/image";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
@@ -65,13 +65,18 @@ const UpdateArtist = () => {
   const [imageFile, setImageFile] = useState("");
   const [imageFileUrl, setImageFileUrl] = useState("");
   const [imagePreview, setImagePreview] = useState("");
+  const [isImageChange, setImageChange] = useState(false);
+  const [oldImageName, setOldImageName] = useState();
 
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
+  const [textValueMM, setTextValueMM] = useState(
+    RichTextEditor.createEmptyValue()
+  );
 
   const { data } = useQuery(USER);
 
   const [loadArtistId, getArtistData] = useLazyQuery(ARTIST_ID);
-  console.log("artist data", getArtistData);
+
   useEffect(() => {
     loadArtistId({ variables: { id: id } });
   }, [loadArtistId]);
@@ -86,7 +91,9 @@ const UpdateArtist = () => {
         artist_profile_image_url:
           getArtistData.data.artist_by_pk.artist_profile_image_url ?? "",
         artist_name: getArtistData.data.artist_by_pk.artist_name ?? "",
-
+        artist_name_mm: getArtistData.data.artist_by_pk.artist_name_mm ?? "",
+        biography: getArtistData.data.artist_by_pk.biography ?? "",
+        biography_mm: getArtistData.data.artist_by_pk.biography_mm ?? "",
         year_born: getArtistData.data.artist_by_pk.year_born ?? "",
         year_died: getArtistData.data.artist_by_pk.year_died ?? "",
         fk_user_id: getArtistData.data.artist_by_pk.fk_user_id ?? "",
@@ -96,6 +103,16 @@ const UpdateArtist = () => {
           getArtistData.data.artist_by_pk.biography,
           "html"
         )
+      );
+      setTextValueMM(
+        RichTextEditor.createValueFromString(
+          getArtistData.data.artist_by_pk.biography_mm,
+          "html"
+        )
+      );
+      let image = getArtistData.data.artist_by_pk.artist_profile_image_url;
+      setOldImageName(
+        image.substring(image.lastIndexOf("/") + 1, image.lenght)
       );
     }
   }, [getArtistData]);
@@ -108,6 +125,7 @@ const UpdateArtist = () => {
     onCompleted: (result) => {
       console.log("result", result);
       setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
+      setImageChange(true);
       setValues({
         ...values,
         artist_profile_image_url: `https://axra.sgp1.digitaloceanspaces.com/Mula/${result.getImageUploadUrl.imageName}`,
@@ -120,9 +138,16 @@ const UpdateArtist = () => {
     setValues({ ...values, biography: value.toString("html") });
   };
 
+  const onChangeMM = (value) => {
+    setTextValueMM(value);
+    setValues({ ...values, biography_mm: value.toString("html") });
+  };
+
   const chooseImage = async (e) => {
+    console.log("mmmmmmmmmm");
     if (e.target.files && e.target.files[0]) {
       let image = e.target.files[0];
+      console.log("image", image);
       if (!imageType.includes(image.type)) {
         setError({
           ...error,
@@ -137,7 +162,6 @@ const UpdateArtist = () => {
         });
         return;
       }
-
       setImageFile(image);
       setImagePreview(URL.createObjectURL(image));
       getImageUrl({ variables: { contentType: "image/*" } });
@@ -147,10 +171,11 @@ const UpdateArtist = () => {
   const [update_artist] = useMutation(UPDATE_ARTIST, {
     onError: (err) => {
       alert("Error on Server");
+      setLoading(false);
     },
     onCompleted: (data) => {
       setLoading(false);
-      console.log("data is ", data);
+
       setValues({ ...values });
       alert("Artist had been updated");
       navigate(`/artist`);
@@ -161,11 +186,21 @@ const UpdateArtist = () => {
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
+
+  const [deleteImage] = useMutation(DELETE_IMAGE, {
+    onError: (error) => {
+      console.log("error : ", error);
+      setLoading(false);
+    },
+  });
+
   const handleUpdate = async () => {
     setLoading(true);
-    setError({});
     try {
-      await imageService.uploadImage(imageFileUrl, imageFile);
+      if (isImageChange) {
+        await imageService.uploadImage(imageFileUrl, imageFile);
+        await deleteImage({ variables: { image_name: oldImageName } });
+      }
       await update_artist({ variables: { ...values } });
     } catch (error) {
       console.log("Error ", error);
@@ -277,6 +312,19 @@ const UpdateArtist = () => {
               />
             </FormControl>
 
+            {/* Artist Name */}
+            <FormControl>
+              <TextField
+                variant="filled"
+                id="artist_name_mm"
+                label="Artist Name MM"
+                value={values.artist_name_mm}
+                onChange={handleChange("artist_name_mm")}
+                error={error.artist_name_mm ? true : false}
+                helperText={error.artist_name_mm}
+              />
+            </FormControl>
+
             {/* Year_born */}
             <FormControl>
               <TextField
@@ -334,9 +382,15 @@ const UpdateArtist = () => {
                 )}
               </FormControl>
             )}
-
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            columnGap="2rem"
+            px="1rem"
+            my="2rem"
+          >
             {/* Biography */}
-
             <Box className="description">
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Biography
@@ -349,6 +403,22 @@ const UpdateArtist = () => {
               />
               {error.biography && (
                 <FormHelperText error> {error.biography}</FormHelperText>
+              )}
+            </Box>
+
+            {/* Biography */}
+            <Box className="description">
+              <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+                Biography
+              </InputLabel>
+              <RichTextEditor
+                className="description-text"
+                onChange={onChangeMM}
+                value={textValueMM}
+                toolbarConfig={toolbarConfig}
+              />
+              {error.biography_mm && (
+                <FormHelperText error> {error.biography_mm}</FormHelperText>
               )}
             </Box>
           </Box>

@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
-import { IMAGE_UPLOAD } from "../../gql/image";
+import { DELETE_IMAGE, IMAGE_UPLOAD } from "../../gql/image";
 import RichTextEditor from "react-rte";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
@@ -74,6 +74,8 @@ const UpdateArtWork = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [imageFile, setImageFile] = useState("");
   const [imageFileUrl, setImageFileUrl] = useState("");
+  const [isImageChange, setImageChange] = useState(false);
+  const [oldImageName, setOldImageName] = useState();
 
   const [height, setheight] = useState();
   const [width, setWidth] = useState();
@@ -154,6 +156,11 @@ const UpdateArtWork = () => {
           "html"
         )
       );
+      let image =
+        resultArtwork.data.traditional_art_work_by_pk.artwork_image_url;
+      setOldImageName(
+        image.substring(image.lastIndexOf("/") + 1, image.lenght)
+      );
     }
   }, [resultArtwork]);
 
@@ -168,6 +175,7 @@ const UpdateArtWork = () => {
     },
     onCompleted: (result) => {
       setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
+      setImageChange(true);
       setValues({
         ...values,
         artwork_image_url: `https://axra.sgp1.digitaloceanspaces.com/Mula/${result.getImageUploadUrl.imageName}`,
@@ -222,60 +230,21 @@ const UpdateArtWork = () => {
     setValues({ ...values, description_mm: value.toString("html") });
   };
 
+  const [delete_image] = useMutation(DELETE_IMAGE, {
+    onError: (err) => {
+      alert("Error on Server");
+      setLoading(false);
+    },
+  });
+
   const handleUpdate = async () => {
     setLoading(true);
-    // let isErrorExit = false;
-    // let errorObject = {};
-    // if (!values.artwork_name) {
-    //   isErrorExit = true;
-    //   errorObject.artwork_name = "artwork name is required";
-    // }
-    // if (!values.artwork_image_url) {
-    //   isErrorExit = true;
-    //   errorObject.artwork_image_url = "artwork_image_url is required";
-    // }
-    // if (!values.current_price) {
-    //   isErrorExit = true;
-    //   errorObject.current_price = "current_price is required";
-    // }
-    // if (!values.update_price) {
-    //   isErrorExit = true;
-    //   errorObject.update_price = "update_price is required";
-    // }
 
-    // if (!values.artwork_year) {
-    //   isErrorExit = true;
-    //   errorObject.artwork_year = "artwork_year is required";
-    // }
-    // if (!values.fk_medium_type_id) {
-    //   isErrorExit = true;
-    //   errorObject.fk_medium_type_id = "artwork_type is required";
-    // }
-    // if (!values.fk_ownership_id) {
-    //   isErrorExit = true;
-    //   errorObject.fk_ownership_id = "ownership is required";
-    // }
-    // if (!values.fk_artist_id) {
-    //   isErrorExit = true;
-    //   errorObject.fk_artist_id = "artist name  is required";
-    // }
-    // if (!values.height) {
-    //   isErrorExit = true;
-    //   errorObject.height = "height is required";
-    // }
-    // if (!values.width) {
-    //   isErrorExit = true;
-    //   errorObject.width = "width is required";
-    // }
-
-    // if (isErrorExit) {
-    //   setErrors(errorObject);
-    //   setLoading(false);
-    //   return;
-    // }
-    console.log("values", values);
     try {
-      await imageService.uploadImage(imageFileUrl, imageFile);
+      if (isImageChange) {
+        await imageService.uploadImage(imageFileUrl, imageFile);
+        await delete_image({ variables: { image_name: oldImageName } });
+      }
       await update_artwork({
         variables: {
           ...values,
@@ -302,17 +271,6 @@ const UpdateArtWork = () => {
       newCheckedItems.splice(currentIndex, 1);
     }
     setCheckedItems(newCheckedItems);
-  };
-  const handleCheckboxChangeMM = (id) => {
-    const currentIndex = checkedItemsMM.indexOf(id);
-    const newCheckedItems = [...checkedItemsMM];
-
-    if (currentIndex === -1) {
-      newCheckedItems.push(id);
-    } else {
-      newCheckedItems.splice(currentIndex, 1);
-    }
-    setCheckedItemsMM(newCheckedItems);
   };
 
   if (!typeData || !dimensionData || !ownershipData || !nameData) {
@@ -503,35 +461,7 @@ const UpdateArtWork = () => {
              )} */}
               </FormControl>
             )}
-            {/* artwork_type */}
-            {values.fk_medium_type_id && (
-              <FormControl>
-                <InputLabel id="sub_type">artwork_type_MM</InputLabel>
-                <Select
-                  labelId="fk_medium_type_id"
-                  label="Artwork_type_MM"
-                  variant="filled"
-                  defaultValue=""
-                  value={values.fk_medium_type_id}
-                  onChange={handleChange("fk_medium_type_id")}
-                >
-                  <MenuItem value="" disabled>
-                    Value
-                  </MenuItem>
-                  {Array.isArray(typeData.artwork_medium_type)
-                    ? typeData.artwork_medium_type.map((type) => (
-                        <MenuItem key={type.id} value={type.id}>
-                          {type.medium_name_mm}
-                        </MenuItem>
-                      ))
-                    : null}
-                </Select>
 
-                {/* {error.fk_medium_type_id && (
-             <FormHelperText error>{error.fk_medium_type_id}</FormHelperText>
-           )} */}
-              </FormControl>
-            )}
             {/* artist */}
             {values.fk_artist_id && (
               <FormControl>
@@ -560,34 +490,7 @@ const UpdateArtWork = () => {
       )} */}
               </FormControl>
             )}
-            {/* artist_MM */}
-            {values.fk_artist_id && (
-              <FormControl>
-                <InputLabel id="sub_type">Artist Name MM</InputLabel>
-                <Select
-                  labelId="artist"
-                  label="artist"
-                  variant="filled"
-                  defaultValue=""
-                  value={values.fk_artist_id}
-                  onChange={(e) => setArtistNameMMId(e.target.value)}
-                >
-                  <MenuItem value="" disabled>
-                    Value
-                  </MenuItem>
-                  {Array.isArray(nameData.artist)
-                    ? nameData.artist.map((ast) => (
-                        <MenuItem key={ast.id} value={ast.id}>
-                          {ast.artist_name_mm}
-                        </MenuItem>
-                      ))
-                    : null}
-                </Select>
-                {/* {error.fk_artist_id && (
-          <FormHelperText error>{error.fk_artist_id}</FormHelperText>
-        )} */}
-              </FormControl>
-            )}
+
             {/* ownership */}
             {values.fk_ownership_id && (
               <FormControl>
@@ -617,35 +520,7 @@ const UpdateArtWork = () => {
           )} */}
               </FormControl>
             )}
-            {/* ownership_MM */}
-            {values.fk_ownership_id && (
-              <FormControl>
-                <InputLabel id="sub_type">Ownership MM</InputLabel>
-                <Select
-                  labelId="fk_ownership_id"
-                  label="artist"
-                  variant="filled"
-                  defaultValue=""
-                  value={values.fk_ownership_id}
-                  onChange={handleChange("fk_ownership_id")}
-                >
-                  <MenuItem value="" disabled>
-                    Value
-                  </MenuItem>
 
-                  {Array.isArray(ownershipData.users)
-                    ? ownershipData.users.map((user) => (
-                        <MenuItem key={user.id} value={user.id}>
-                          {user.fullname_mm}
-                        </MenuItem>
-                      ))
-                    : null}
-                </Select>
-                {/* {error.fk_ownership_id && (
- <FormHelperText error>{error.fk_ownership_id}</FormHelperText>
-)} */}
-              </FormControl>
-            )}
             {/* dimensions */}
             {values.fk_dimension && (
               <FormControl sx={{ width: "100%" }}>
@@ -706,25 +581,6 @@ const UpdateArtWork = () => {
                 <FormControlLabel
                   control={<Checkbox name={series.series_name} />}
                   label={series.series_name}
-                  onChange={() => handleCheckboxChangeMM(series.id)}
-                />
-              ))}
-          </Box>
-          {/* art_series_mm*/}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-              my: "2rem",
-              px: "1rem",
-              flexWrap: "wrap",
-            }}
-          >
-            {seriesDataMM &&
-              seriesDataMM.art_series.map((series, index) => (
-                <FormControlLabel
-                  control={<Checkbox name={series.series_name_mm} />}
-                  label={series.series_name_mm}
                   onChange={() => handleCheckboxChange(series.id)}
                 />
               ))}

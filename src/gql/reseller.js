@@ -38,6 +38,8 @@ export const RESELLER_ID = gql`
     }
   }
 `;
+
+//add reseller
 export const ADD_RESELLER = gql`
   mutation add_reseller(
     $biography: String
@@ -100,12 +102,22 @@ export const DELETE_RESELLER = gql`
 
 //update reseller
 export const UPDATE_RESELLER = gql`
-  mutation update_reseller($id: Int!, $biography: String, $fk_user_id: Int!) {
+  mutation update_reseller(
+    $id: Int!
+    $biography: String!
+    $biography_mm: String!
+    $fk_user_id: Int!
+  ) {
     update_reseller_by_pk(
       pk_columns: { id: $id }
-      _set: { biography: $biography, fk_user_id: $fk_user_id }
+      _set: {
+        biography: $biography
+        biography_mm: $biography_mm
+        fk_user_id: $fk_user_id
+      }
     ) {
       biography
+      biography_mm
       created_at
       fk_user_id
       id

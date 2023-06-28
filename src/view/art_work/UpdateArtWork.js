@@ -31,6 +31,9 @@ import {
   ADD_ARTWORK,
   UPDATE_ARTWORK,
   ARTWORKS,
+  ADD_ART_SERIES,
+  ART_SERIES_BY_ARTWORK_ID,
+  DELETE_ART_SERIES,
 } from "../../gql/artwork";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import imageService from "../../services/image";
@@ -70,6 +73,7 @@ const UpdateArtWork = () => {
   const [values, setValues] = useState({});
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [open, setOpen] = useState(true);
 
   const [imagePreview, setImagePreview] = useState("");
   const [imageFile, setImageFile] = useState("");
@@ -82,30 +86,33 @@ const UpdateArtWork = () => {
   const [unit, setUnit] = useState();
 
   const [artistNameId, setArtistNameId] = useState();
-  const [artistNameMMId, setArtistNameMMId] = useState();
 
   const [textValue, setTextValue] = useState(RichTextEditor.createEmptyValue());
   const [textValueMM, setTextValueMM] = useState(
     RichTextEditor.createEmptyValue()
   );
   const [checkedItems, setCheckedItems] = useState([]);
-  const [checkedItemsMM, setCheckedItemsMM] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
 
   const { data: dimensionData } = useQuery(DIMENSIONS);
   const { data: typeData } = useQuery(ARTWORK_TYPE);
   const { data: ownershipData } = useQuery(OWNERSHIP);
-
   const { data: nameData } = useQuery(ARTIST_NAME);
+  const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORK_ID);
 
   const { data: seriesData } = useQuery(ART_SERIES, {
     variables: { fk_artist_id: artistNameId },
   });
 
-  const { data: seriesDataMM } = useQuery(ART_SERIES, {
-    variables: { fk_artist_id: artistNameMMId },
-  });
+  const [seriesByArtworkItems, setSeriesByArtworkItems] = useState();
+  const [loadSeriesDataByArtwork, resultSeriesDataByArtwork] = useLazyQuery(
+    ART_SERIES_BY_ARTWORK_ID
+  );
 
-  const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORK_ID);
+  const [valueChange, setValueChange] = useState();
+
+  // const [seriesItems, setSeriesItems] = useState();
+  // const [loadSeriesData, resultSeriesData] = useLazyQuery(ART_SERIES);
 
   useEffect(() => {
     loadArtwork({ variables: { id: id } });
@@ -113,6 +120,7 @@ const UpdateArtWork = () => {
 
   useEffect(() => {
     if (resultArtwork.data) {
+      console.log("result artwork", resultArtwork);
       setValues({
         id: resultArtwork.data.traditional_art_work_by_pk.id ?? "",
         artwork_image_url:
@@ -121,6 +129,10 @@ const UpdateArtWork = () => {
           resultArtwork.data.traditional_art_work_by_pk.artwork_name ?? "",
         artwork_name_mm:
           resultArtwork.data.traditional_art_work_by_pk.artwork_name_mm ?? "",
+        description:
+          resultArtwork.data.traditional_art_work_by_pk.description ?? "",
+        description_mm:
+          resultArtwork.data.traditional_art_work_by_pk.description_mm ?? "",
         artwork_year:
           resultArtwork.data.traditional_art_work_by_pk.artwork_year ?? "",
         current_price:
@@ -139,6 +151,10 @@ const UpdateArtWork = () => {
         fk_dimension:
           resultArtwork.data.traditional_art_work_by_pk.fk_dimension ?? "",
       });
+      // setArtistNameId(
+      //   resultArtwork.data.traditional_art_work_by_pk
+      //     .traditional_art_work_artist.id
+      // );
       setheight(resultArtwork.data.traditional_art_work_by_pk.height ?? "");
       setWidth(resultArtwork.data.traditional_art_work_by_pk.width ?? "");
       setImagePreview(
@@ -163,6 +179,37 @@ const UpdateArtWork = () => {
       );
     }
   }, [resultArtwork]);
+
+  useEffect(() => {
+    // if (resultArtwork.data) {
+    //   loadSeriesData({
+    //     variables: {
+    //       fk_artist_id:
+    //         resultArtwork.data.traditional_art_work_by_pk
+    //           .traditional_art_work_artist.id,
+    //     },
+    //   });
+    // }
+
+    if (resultArtwork.data) {
+      loadSeriesDataByArtwork({
+        variables: {
+          fk_traditional_art_work_id:
+            resultArtwork?.data.traditional_art_work_by_pk.id,
+        },
+      });
+    }
+  }, [loadSeriesDataByArtwork, resultArtwork]);
+
+  useEffect(() => {
+    // if (resultSeriesData.data) {
+    //   setSeriesItems(resultSeriesData.data.art_series);
+    // }
+    if (resultSeriesDataByArtwork.data) {
+      setSeriesByArtworkItems(resultSeriesDataByArtwork.data.artist_art_series);
+      setIsChecked(true);
+    }
+  }, [resultSeriesDataByArtwork]);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -206,12 +253,48 @@ const UpdateArtWork = () => {
     }
   };
 
+  const [add_art_series] = useMutation(ADD_ART_SERIES, {
+    onError: (err) => {
+      setLoading(false);
+      console.log("art series error ");
+      alert("Error on Server");
+    },
+  });
+
+  const [delete_art_series] = useMutation(DELETE_ART_SERIES, {
+    onError: (err) => {
+      console.log("Delete Error ", err);
+      setLoading(false);
+    },
+  });
+  console.log("checked item", checkedItems);
+
   const [update_artwork] = useMutation(UPDATE_ARTWORK, {
     onError: (err) => {
       alert("Error on server");
       setLoading(false);
+      console.log("update artwork error", err);
     },
     onCompleted: (result) => {
+      checkedItems.map((checkedItem) => {
+        add_art_series({
+          variables: {
+            fk_art_series_id: checkedItem,
+            fk_traditional_art_work_id:
+              result.update_traditional_art_work_by_pk.id,
+          },
+        });
+
+        if (resultArtwork.data) {
+          delete_art_series({
+            variables: {
+              fk_traditional_art_work_id:
+                resultArtwork?.data.traditional_art_work_by_pk.id,
+            },
+          });
+        }
+      });
+      console.log("object", resultArtwork?.data.traditional_art_work_by_pk.id);
       setLoading(false);
       setTextValue(RichTextEditor.createEmptyValue());
       setValues({});
@@ -239,12 +322,12 @@ const UpdateArtWork = () => {
 
   const handleUpdate = async () => {
     setLoading(true);
-
     try {
       if (isImageChange) {
         await imageService.uploadImage(imageFileUrl, imageFile);
         await delete_image({ variables: { image_name: oldImageName } });
       }
+
       await update_artwork({
         variables: {
           ...values,
@@ -257,6 +340,7 @@ const UpdateArtWork = () => {
         },
       });
     } catch (error) {
+      console.log("catch error");
       console.log("Error ", error);
     }
   };
@@ -273,13 +357,25 @@ const UpdateArtWork = () => {
     setCheckedItems(newCheckedItems);
   };
 
-  if (!typeData || !dimensionData || !ownershipData || !nameData) {
-    return "no data";
-  }
+  const changeArtistName = (e) => {
+    e.preventDefault();
+    setArtistNameId(e.target.value);
+    setSeriesByArtworkItems("");
+    setValueChange(artistNameId);
+  };
 
-  if (!resultArtwork) {
+  if (
+    !typeData ||
+    !dimensionData ||
+    !ownershipData ||
+    !nameData ||
+    !resultArtwork ||
+    !resultSeriesDataByArtwork
+  ) {
     return "no data";
   }
+  console.log("values ", values);
+
   return (
     <>
       <Box
@@ -368,7 +464,6 @@ const UpdateArtWork = () => {
             }}
           >
             {/* Artwork Name */}
-
             <FormControl>
               <TextField
                 variant="filled"
@@ -410,7 +505,7 @@ const UpdateArtWork = () => {
             <FormControl>
               <TextField
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="current_price"
                 label="current_price"
                 value={values.current_price}
@@ -423,7 +518,7 @@ const UpdateArtWork = () => {
             <FormControl>
               <TextField
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="update_price"
                 label="update_price"
                 value={values.update_price}
@@ -463,33 +558,34 @@ const UpdateArtWork = () => {
             )}
 
             {/* artist */}
-            {values.fk_artist_id && (
-              <FormControl>
-                <InputLabel id="sub_type">Artist Name</InputLabel>
-                <Select
-                  labelId="artist"
-                  label="artist"
-                  variant="filled"
-                  defaultValue=""
-                  value={values.fk_artist_id}
-                  onChange={(e) => setArtistNameId(e.target.value)}
-                >
-                  <MenuItem value="" disabled>
-                    Value
-                  </MenuItem>
-                  {Array.isArray(nameData.artist)
-                    ? nameData.artist.map((ast) => (
-                        <MenuItem key={ast.id} value={ast.id}>
-                          {ast.artist_name}
-                        </MenuItem>
-                      ))
-                    : null}
-                </Select>
-                {/* {error.fk_artist_id && (
-        <FormHelperText error>{error.fk_artist_id}</FormHelperText>
-      )} */}
-              </FormControl>
-            )}
+            <FormControl>
+              <InputLabel id="sub_type">Artist Name</InputLabel>
+              <Select
+                labelId="artist"
+                label="artist"
+                variant="filled"
+                defaultValue=""
+                // value={values.fk_artist_id}
+                value={
+                  resultArtwork?.data?.traditional_art_work_by_pk
+                    .traditional_art_work_artist.id
+                    ? values.fk_artist_id ?? values.fk_artist_id
+                    : valueChange
+                }
+                onChange={changeArtistName}
+              >
+                <MenuItem value="" disabled>
+                  Value
+                </MenuItem>
+                {Array.isArray(nameData.artist)
+                  ? nameData.artist.map((ast) => (
+                      <MenuItem key={ast.id} value={ast.id}>
+                        {ast.artist_name}
+                      </MenuItem>
+                    ))
+                  : null}
+              </Select>
+            </FormControl>
 
             {/* ownership */}
             {values.fk_ownership_id && (
@@ -547,6 +643,7 @@ const UpdateArtWork = () => {
                     labelId="width"
                     label="Width"
                     variant="filled"
+                    value={values.fk_dimension}
                     defaultValue=""
                     onChange={(e) => setUnit(e.target.value)}
                   >
@@ -576,6 +673,32 @@ const UpdateArtWork = () => {
               flexWrap: "wrap",
             }}
           >
+            {resultArtwork?.data?.traditional_art_work_by_pk
+              .traditional_art_work_artist.id &&
+              Array.isArray(seriesByArtworkItems) &&
+              seriesByArtworkItems.map((series) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name={series.artist_art_series_art_sery.series_name}
+                    />
+                  }
+                  checked={isChecked}
+                  open={open}
+                  label={series.artist_art_series_art_sery.series_name}
+                  onChange={() =>
+                    handleCheckboxChange(series.artist_art_series_art_sery.id)
+                  }
+                />
+              ))}
+            {/* {Array.isArray(seriesItems) &&
+              seriesItems.map((series) => (
+                <FormControlLabel
+                  control={<Checkbox name={series.series_name} />}
+                  label={series.series_name}
+                  onChange={() => handleCheckboxChange(series.id)}
+                />
+              ))} */}
             {seriesData &&
               seriesData.art_series.map((series, index) => (
                 <FormControlLabel

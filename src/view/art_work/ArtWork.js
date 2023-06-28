@@ -165,7 +165,12 @@ const ArtWork = () => {
                 <ListItem>
                   <ListItemText
                     primary="Art Series"
-                    // secondary={data.traditional_art_work_by_pk.artwork_year}
+                    secondary={data.traditional_art_work_by_pk?.traditional_art_work_artist_art_series
+                      .map(
+                        (series) =>
+                          series.artist_art_series_art_sery.series_name
+                      )
+                      .join(" , ")}
                   ></ListItemText>
                 </ListItem>
               </Box>

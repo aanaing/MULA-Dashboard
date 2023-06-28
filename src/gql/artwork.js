@@ -82,6 +82,11 @@ export const ARTWORK_ID = gql`
         artist_name_mm
         id
       }
+      traditional_art_work_artist_art_series {
+        artist_art_series_art_sery {
+          series_name
+        }
+      }
     }
   }
 `;
@@ -118,16 +123,60 @@ export const OWNERSHIP = gql`
   }
 `;
 
-//get art_series
+//get art_series for create artwork
+// export const ART_SERIES = gql`
+//   query art_series($fk_artist_id: Int!) {
+//     art_series(where: { fk_artist_id: { _eq: $fk_artist_id } }) {
+//       series_name
+//       series_name_mm
+//       id
+//       art_series_artist_art_series {
+//         fk_art_series_id
+//         fk_traditional_art_work_id
+//       }
+//     }
+//   }
+// `;
 export const ART_SERIES = gql`
-  query art_series($fk_artist_id: Int!) {
+  query MyQuery($fk_artist_id: Int!) {
     art_series(where: { fk_artist_id: { _eq: $fk_artist_id } }) {
       series_name
-      series_name_mm
       id
       art_series_artist_art_series {
         fk_art_series_id
         fk_traditional_art_work_id
+      }
+    }
+  }
+`;
+
+//get art_series for update artwork
+export const ART_SERIES_BY_ARTWORK_ID = gql`
+  query MyQuery($fk_traditional_art_work_id: Int!) {
+    artist_art_series(
+      where: {
+        fk_traditional_art_work_id: { _eq: $fk_traditional_art_work_id }
+      }
+    ) {
+      fk_art_series_id
+      artist_art_series_art_sery {
+        series_name
+        id
+      }
+    }
+  }
+`;
+
+//delete art_series by artwork id
+export const DELETE_ART_SERIES = gql`
+  mutation delete_art_series($fk_traditional_art_work_id: Int!) {
+    delete_artist_art_series(
+      where: {
+        fk_traditional_art_work_id: { _eq: $fk_traditional_art_work_id }
+      }
+    ) {
+      returning {
+        id
       }
     }
   }

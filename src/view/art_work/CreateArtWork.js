@@ -87,6 +87,7 @@ const CreateArtWork = () => {
   const [textValueMM, setTextValueMM] = useState(
     RichTextEditor.createEmptyValue()
   );
+  const [checkedItems, setCheckedItems] = useState([]);
 
   const { data: dimensionData } = useQuery(DIMENSIONS);
   const { data: typeData } = useQuery(ARTWORK_TYPE);
@@ -94,12 +95,8 @@ const CreateArtWork = () => {
   const { data: seriesData } = useQuery(ART_SERIES, {
     variables: { fk_artist_id: artistNameId },
   });
-  console.log("series data", seriesData);
-  console.log("artist id", artistNameId);
 
   const { data: nameData } = useQuery(ARTIST_NAME);
-
-  const [checkedItems, setCheckedItems] = useState([]);
 
   const handleCheckboxChange = (id) => {
     const currentIndex = checkedItems.indexOf(id);
@@ -113,7 +110,6 @@ const CreateArtWork = () => {
 
     setCheckedItems(newCheckedItems);
   };
-  console.log("check item id", checkedItems);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -164,7 +160,6 @@ const CreateArtWork = () => {
     },
 
     onCompleted: (result) => {
-      console.log("result id ", result);
       checkedItems.map((checkedItem, index) => {
         add_art_series({
           variables: {
@@ -189,9 +184,6 @@ const CreateArtWork = () => {
       setLoading(false);
       console.log("Error ", err);
       alert("Error on Server");
-    },
-    onCompleted: (result) => {
-      console.log("add art_series result ", result);
     },
   });
 
@@ -368,16 +360,18 @@ const CreateArtWork = () => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              gridTemplateColumns: "1fr 1fr",
               columnGap: "2rem",
-              rowGap: "3rem",
+              rowGap: "1rem",
               px: "0.5rem",
             }}
           >
             {/* Artwork Name */}
             <FormControl>
               <TextField
-                variant="filled"
+                sx={{ width: "300px", margin: "auto" }}
+                variant="outlined"
+                size="small"
                 id="artwork_name"
                 label="Artwork Name"
                 value={values.artwork_name}
@@ -390,7 +384,9 @@ const CreateArtWork = () => {
             {/* Artwork Name */}
             <FormControl>
               <TextField
-                variant="filled"
+                sx={{ width: "300px", margin: "auto" }}
+                size="small"
+                variant="outlined"
                 id="artwork_name_mm"
                 label="Artwork Name MM"
                 value={values.artwork_name_mm}
@@ -402,8 +398,10 @@ const CreateArtWork = () => {
             {/* artwork_year */}
             <FormControl>
               <TextField
+                sx={{ width: "300px", margin: "auto" }}
+                size="small"
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="artwork_year"
                 label="artwork_year"
                 value={values.artwork_year}
@@ -428,8 +426,10 @@ const CreateArtWork = () => {
             {/* update_price */}
             <FormControl>
               <TextField
+                sx={{ width: "300px", margin: "auto" }}
+                size="small"
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="update_price"
                 label="update_price"
                 value={values.update_price}
@@ -467,12 +467,12 @@ const CreateArtWork = () => {
             </FormControl>
 
             {/* artist */}
-            <FormControl>
+            <FormControl sx={{ width: "300px", margin: "auto" }} size="small">
               <InputLabel id="sub_type">Artist Name</InputLabel>
               <Select
                 labelId="artist"
                 label="artist"
-                variant="filled"
+                variant="outlined"
                 defaultValue=""
                 value={artistNameId}
                 onChange={(e) => setArtistNameId(e.target.value)}
@@ -526,7 +526,7 @@ const CreateArtWork = () => {
               <div className="grid_3_cols">
                 <TextField
                   id="sub_type"
-                  variant="filled"
+                  variant="outlined"
                   placeholder="height"
                   value={height}
                   onChange={(e) => setheight(e.target.value)}

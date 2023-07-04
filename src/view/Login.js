@@ -71,9 +71,7 @@ const Login = () => {
       });
       // console.log("data", data);
       window.localStorage.setItem("loggedUser", data);
-      if (data) {
-        navigate("*");
-      }
+      navigate("*");
     },
   });
 

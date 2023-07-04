@@ -99,15 +99,15 @@ const Admin = () => {
   //   }, 3000);
   // };
 
-  useEffect(() => {
-    const loggedUser = window.localStorage.getItem("loggedUser");
-    if (loggedUser) {
-      const parsedLoggedUser = JSON.parse(loggedUser);
-      setAuth(parsedLoggedUser);
-    } else {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const loggedUser = window.localStorage.getItem("loggedUser");
+  //   if (loggedUser) {
+  //     const parsedLoggedUser = JSON.parse(loggedUser);
+  //     setAuth(parsedLoggedUser);
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <Box

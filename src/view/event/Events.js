@@ -1,56 +1,56 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import { makeStyles } from "@material-ui/core";
-import DirectionsIcon from "@mui/icons-material/Directions";
-import "../../style/App.css";
+import { useEffect, useState } from "react";
+
 import {
+  Button,
   Box,
   Breadcrumbs,
-  Button,
+  InputBase,
+  TableRow,
   TablePagination,
-  TableContainer,
-  Table,
   TableHead,
   TableBody,
-  tableCellClasses,
-  styled,
-  TableRow,
-  TableCell,
-  TextField,
-  FormControl,
+  TableContainer,
+  Paper,
   Avatar,
-  Typography,
+  Table,
+  styled,
+  TableCell,
 } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
+import SearchIcon from "@mui/icons-material/Search";
+import DirectionsIcon from "@mui/icons-material/Directions";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { ARTWORKS } from "../../gql/artwork";
-import SideBarContext from "../../context/SideBarContext";
+import { ALL_EVENTS } from "../../gql/event";
+import { makeStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 500,
   },
 });
-const ArtWork = () => {
+
+const Events = () => {
   const classes = useStyles();
-  const { setNav } = useContext(SideBarContext);
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
+  const [search, setSearch] = useState("");
+
   const [count, setCount] = useState(0);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [offset, setOffset] = useState(0);
-  const [search, setSearch] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const [artwork, setArtwork] = useState("");
-  // const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
-  const { data } = useQuery(ARTWORKS, {
+
+  const { data } = useQuery(ALL_EVENTS, {
     variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
     fetchPolicy: "network-only",
   });
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearch(searchValue);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -62,11 +62,6 @@ const ArtWork = () => {
     setPage(0);
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setSearch(searchValue);
-  };
-
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
@@ -76,13 +71,12 @@ const ArtWork = () => {
       border: 0,
     },
   }));
-
   if (!data) {
-    return "no data";
+    return;
   }
-
+  console.log("event", data);
   return (
-    <div>
+    <>
       <div
         style={{
           display: "flex",
@@ -96,7 +90,7 @@ const ArtWork = () => {
             <Link to="/" className="dashboard">
               Dashboard
             </Link>
-            <span>ArtWork</span>
+            <span>Event</span>
           </Breadcrumbs>
         </div>
         {/* search */}
@@ -151,7 +145,7 @@ const ArtWork = () => {
               fontWeight: "bold",
             }}
             color="secondary"
-            onClick={() => navigate("/create_artWork")}
+            onClick={() => navigate("/create_event")}
           >
             Add
           </Button>
@@ -169,7 +163,9 @@ const ArtWork = () => {
           },
         }}
       >
+        {/* <TableContainer sx={{ maxHeight: "60vh", Width: "100px" }}> */}
         <TableContainer component={Paper}>
+          {/* <Table stickyHeader aria-label="sticky table"> */}
           <Table
             stickyHeader
             aria-label="sticky table , responsive table"
@@ -180,68 +176,42 @@ const ArtWork = () => {
                 <TableCell
                   style={{
                     minWidth: 100,
-                    fontWeight: "bold",
                   }}
                 >
                   ID
                 </TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Image</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Name</TableCell>
-
-                <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Type</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Status</TableCell>
-                <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
+                <TableCell>Image</TableCell>
+                <TableCell>Event Name</TableCell>
+                <TableCell>Event Time</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Actions</TableCell>
               </StyledTableRow>
             </TableHead>
 
             <TableBody>
-              {data.traditional_art_work.length === 0 && <h1>No Artwork</h1>}
-              {data.traditional_art_work &&
-                data.traditional_art_work.map((row, index) => (
-                  <StyledTableRow hover role="checkbox" tabIndex={-1}>
+              {data.event.length === 0 && <h1>No events</h1>}
+
+              {Array.isArray(data.event) &&
+                data.event.map((row, index) => (
+                  <StyledTableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={index}
+                  >
                     <TableCell>{row.id}</TableCell>
 
                     <TableCell>
                       <Avatar
                         width="52px"
                         height="52px"
-                        src={row.artwork_image_url}
+                        src={row.event_thumbnail_url}
                       ></Avatar>
                     </TableCell>
-                    <TableCell>{row.artwork_name}</TableCell>
-                    <TableCell>{row.artwork_year}</TableCell>
-                    <TableCell>
-                      {
-                        row.traditional_art_work_artwork_medium_type
-                          ?.medium_name
-                      }
-                    </TableCell>
-                    <TableCell>
-                      {row.pending === true ? (
-                        <Typography
-                          style={{
-                            backgroundColor: "green",
-                            padding: "0.5rem",
-                            color: "#fff",
-                            borderRadius: "10px",
-                          }}
-                        >
-                          Approve
-                        </Typography>
-                      ) : (
-                        <Typography
-                          style={{
-                            backgroundColor: "orange",
-                            padding: "0.5rem",
-                            color: "#fff",
-                            borderRadius: "10px",
-                          }}
-                        >
-                          Pending
-                        </Typography>
-                      )}
-                    </TableCell>
+                    <TableCell>{row.event_name}</TableCell>
+
+                    <TableCell>{row.event_date_time}</TableCell>
+                    <TableCell>{row.event_location}</TableCell>
                     <TableCell>
                       <Button
                         size="small"
@@ -249,7 +219,7 @@ const ArtWork = () => {
                         // color="warning"
                         // variant="contained"
                         fontWeight="bold"
-                        onClick={() => navigate(`/art_work/${row.id}`)}
+                        onClick={() => navigate(`/event/${row.id}`)}
                       >
                         Detail
                       </Button>
@@ -263,15 +233,15 @@ const ArtWork = () => {
           sx={{ color: "black" }}
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={data?.traditional_art_work_aggregate.aggregate.count}
+          count={data?.event_aggregate.aggregate.count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
-    </div>
+    </>
   );
 };
 
-export default ArtWork;
+export default Events;

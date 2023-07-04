@@ -358,3 +358,16 @@ export const ADD_ART_SERIES = gql`
     }
   }
 `;
+
+//pending status
+export const PENDING_STATUS = gql`
+  mutation pending_status($id: Int!, $pending: Boolean!) {
+    update_traditional_art_work_by_pk(
+      pk_columns: { id: $id }
+      _set: { pending: $pending }
+    ) {
+      id
+      pending
+    }
+  }
+`;

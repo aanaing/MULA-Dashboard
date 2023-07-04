@@ -19,7 +19,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { DELETE_IMAGE } from "../../gql/image";
 import { ARTIST_ID } from "../../gql/artist";
-import { ARTWORK_ID, DELETE_ARTWORK, ARTWORKS } from "../../gql/artwork";
+import {
+  ARTWORK_ID,
+  DELETE_ARTWORK,
+  ARTWORKS,
+  PENDING_STATUS,
+} from "../../gql/artwork";
 const styleR = {
   position: "absolute",
   top: "50%",
@@ -48,6 +53,13 @@ const ArtWork = () => {
       alert("Artwork has been deleted");
     },
     refetchQueries: [ARTWORKS],
+  });
+
+  const [pending_status] = useMutation(PENDING_STATUS, {
+    onError: (err) => {
+      alert("Pending Error");
+      setLoading(false);
+    },
   });
 
   // const [deleteImage] = useMutation(DELETE_IMAGE, {
@@ -101,9 +113,11 @@ const ArtWork = () => {
         <CardContent>
           <Box
             sx={{
-              maxWidth: "40%",
+              width: "100%",
+              height: "300px",
               display: "grid",
               justifyContent: "center",
+              // p: "2rem",
               margin: "auto",
               borderRadius: 2,
               boxShadow: 2,
@@ -111,12 +125,11 @@ const ArtWork = () => {
           >
             <CardMedia
               component="img"
-              height="320"
+              height="300px"
               image={data.traditional_art_work_by_pk.artwork_image_url}
-              sx={{ my: 2 }}
             />
           </Box>
-          <Typography
+          {/* <Typography
             variant="p"
             fontSize="12px"
             mt="0.5rem"
@@ -125,96 +138,102 @@ const ArtWork = () => {
             justifyContent="center"
           >
             Artwork Image
-          </Typography>
-          <Paper sx={{ p: "2rem", m: "2rem" }}>
+          </Typography> */}
+          <Box sx={{ p: "2rem" }}>
             <CardActions
               sx={{
-                display: "flex",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
+                gap: "2rem",
+
                 // justifyContent: "center",
               }}
             >
-              <Box display="grid" rowGap="1rem">
-                <ListItem sx={{ width: "600px" }}>
-                  <ListItemText
-                    primary="ID"
-                    secondary={data.traditional_art_work_by_pk.id}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Artwork Name"
-                    secondary={data.traditional_art_work_by_pk.artwork_name}
-                  ></ListItemText>
-                </ListItem>
+              {/* <Box display="grid" rowGap="1rem"> */}
+              <ListItem>
+                <ListItemText
+                  primary="ID"
+                  secondary={data.traditional_art_work_by_pk.id}
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Artwork Name"
+                  secondary={data.traditional_art_work_by_pk.artwork_name}
+                ></ListItemText>
+              </ListItem>
 
-                <ListItem>
-                  <ListItemText
-                    primary="Artwork Type"
-                    secondary={
-                      data.traditional_art_work_by_pk
-                        .traditional_art_work_artwork_medium_type?.medium_name
-                    }
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Artwork Year"
-                    secondary={data.traditional_art_work_by_pk.artwork_year}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Art Series"
-                    secondary={data.traditional_art_work_by_pk?.traditional_art_work_artist_art_series
-                      .map(
-                        (series) =>
-                          series.artist_art_series_art_sery.series_name
-                      )
-                      .join(" , ")}
-                  ></ListItemText>
-                </ListItem>
-              </Box>
+              <ListItem>
+                <ListItemText
+                  primary="Artwork Type"
+                  secondary={
+                    data.traditional_art_work_by_pk
+                      .traditional_art_work_artwork_medium_type?.medium_name
+                  }
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Artwork Year"
+                  secondary={data.traditional_art_work_by_pk.artwork_year}
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Art Series"
+                  secondary={data.traditional_art_work_by_pk?.traditional_art_work_artist_art_series
+                    .map(
+                      (series) => series.artist_art_series_art_sery.series_name
+                    )
+                    .join(" , ")}
+                ></ListItemText>
+              </ListItem>
+              {/* </Box> */}
 
-              <Box display="grid" rowGap="1rem">
-                <ListItem>
-                  <ListItemText
-                    primary="Artist Name"
-                    secondary={
-                      data.traditional_art_work_by_pk
-                        .traditional_art_work_artist?.artist_name
-                    }
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Dimensions"
-                    secondary={`${data.traditional_art_work_by_pk.height}${data.traditional_art_work_by_pk.traditional_artwork_dimension?.dimension_name} × ${data.traditional_art_work_by_pk.width}${data.traditional_art_work_by_pk.traditional_artwork_dimension?.dimension_name}`}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Pending"
-                    secondary={data.traditional_art_work_by_pk.pending}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Current Price"
-                    secondary={data.traditional_art_work_by_pk.current_price}
-                  ></ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Update Price"
-                    secondary={data.traditional_art_work_by_pk.update_price}
-                  ></ListItemText>
-                </ListItem>
-              </Box>
+              {/* <Box display="grid" rowGap="1rem"> */}
+              <ListItem>
+                <ListItemText
+                  primary="Artist Name"
+                  secondary={
+                    data.traditional_art_work_by_pk.traditional_art_work_artist
+                      ?.artist_name
+                  }
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Dimensions"
+                  secondary={`${data.traditional_art_work_by_pk.height}${data.traditional_art_work_by_pk.traditional_artwork_dimension?.dimension_name} × ${data.traditional_art_work_by_pk.width}${data.traditional_art_work_by_pk.traditional_artwork_dimension?.dimension_name}`}
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Pending"
+                  secondary={
+                    data.traditional_art_work_by_pk.pending === true
+                      ? "Approve"
+                      : "Pending"
+                  }
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Current Price"
+                  secondary={data.traditional_art_work_by_pk.current_price}
+                ></ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Update Price"
+                  secondary={data.traditional_art_work_by_pk.update_price}
+                ></ListItemText>
+              </ListItem>
+              {/* </Box> */}
             </CardActions>
 
             <Box
               display="grid"
-              gridTemplateColumns="50% 50%"
+              // gridTemplateColumns="50% 50%"
               columnGap="1rem"
               mx="2rem"
             >
@@ -225,6 +244,7 @@ const ArtWork = () => {
 
                 <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
                   <div
+                    style={{ color: "#495057", padding: "1rem" }}
                     dangerouslySetInnerHTML={{
                       __html: data.traditional_art_work_by_pk.description,
                     }}
@@ -238,6 +258,7 @@ const ArtWork = () => {
 
                 <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
                   <div
+                    style={{ color: "#495057", padding: "1rem" }}
                     dangerouslySetInnerHTML={{
                       __html: data.traditional_art_work_by_pk.description,
                     }}
@@ -245,25 +266,63 @@ const ArtWork = () => {
                 </Box>
               </Box>
             </Box>
-          </Paper>
+          </Box>
         </CardContent>
-        <Box display="flex" justifyContent="end" columnGap="3rem" m="2rem">
-          <Button
-            variant="contained"
-            onClick={() =>
-              navigate(`/update_artwork/${data.traditional_art_work_by_pk.id}`)
-            }
-            // to={`/art_work/${data.traditional_art_work_by_pk.id}`}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => handleRemoveOpen(data.traditional_art_work_by_pk)}
-          >
-            Remove
-          </Button>
+        <Box display="flex" justifyContent="space-between" m="2rem">
+          <Box>
+            {data.traditional_art_work_by_pk.pending ? (
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() =>
+                  pending_status({
+                    variables: {
+                      id: data.traditional_art_work_by_pk.id,
+                      pending: false,
+                    },
+                  })
+                }
+              >
+                Approve
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="warning"
+                onClick={() =>
+                  pending_status({
+                    variables: {
+                      id: data.traditional_art_work_by_pk.id,
+                      pending: true,
+                    },
+                  })
+                }
+              >
+                Pending
+              </Button>
+            )}
+          </Box>
+
+          <Box>
+            <Button
+              sx={{ mr: "2rem" }}
+              variant="contained"
+              onClick={() =>
+                navigate(
+                  `/update_artwork/${data.traditional_art_work_by_pk.id}`
+                )
+              }
+            >
+              Edit
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleRemoveOpen(data.traditional_art_work_by_pk)}
+            >
+              Remove
+            </Button>
+          </Box>
         </Box>
       </Card>
       <Modal

@@ -5,6 +5,7 @@ import {
   Typography,
   Box,
   CardContent,
+  Breadcrumbs,
   CardMedia,
   Card,
   FormControl,
@@ -15,6 +16,7 @@ import {
   FormHelperText,
   Select,
   MenuItem,
+  FormLabel,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -199,7 +201,7 @@ const CreateArtistByPhone = () => {
 
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -213,25 +215,35 @@ const CreateArtistByPhone = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
 
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Artist)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Artist</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: 3 }} elevation={4}>
-          <Box
-            sx={{
-              maxWidth: "40%",
-              display: "grid",
-              justifyContent: "center",
-              margin: "auto",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
+          <Box className="image">
             <CardMedia
               component="img"
-              height="320"
+              height="200px"
               image={imagePreview}
-              sx={{ my: 2 }}
+              // sx={{ my: 2 }}
             />
           </Box>
           {/* image */}
@@ -254,12 +266,7 @@ const CreateArtistByPhone = () => {
             >
               Rendered size must be 1920 * 1080 px and Aspect ratio must be 16:9
             </Typography>
-            <Button
-              variant="contained"
-              component="label"
-              size="large"
-              sx={{ py: "0.5rem" }}
-            >
+            <Button variant="contained" component="label" sx={{ py: "0.5rem" }}>
               <PhotoCamera />
               <Typography sx={{ ml: 1 }}>Upload Image</Typography>
               <input
@@ -278,17 +285,22 @@ const CreateArtistByPhone = () => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              gap: "3rem",
+              gridTemplateColumns: "1fr 1fr",
               px: "0.5rem",
+              rowGap: "1rem",
+              columnGap: "5rem",
             }}
           >
             {/* Artist Name */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artist Name (Eng)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artist_name"
-                label="Artist Name"
+                placeholder="Enter Value"
                 value={values.artist_name}
                 onChange={handleChange("artist_name")}
                 error={error.artist_name ? true : false}
@@ -298,10 +310,14 @@ const CreateArtistByPhone = () => {
 
             {/* Artist Name MM */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artist Name (MM)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artist_name"
-                label="Artist Name MM"
+                placeholder="Enter Value"
                 value={values.artist_name_mm}
                 onChange={handleChange("artist_name_mm")}
                 error={error.artist_name_mm ? true : false}
@@ -311,11 +327,13 @@ const CreateArtistByPhone = () => {
 
             {/* Year_born */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Year Born</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="year_born"
-                label="Year Born"
+                placeholder="Year Born"
                 value={values.year_born}
                 onChange={handleChange("year_born")}
                 error={error.year_born ? true : false}
@@ -325,11 +343,13 @@ const CreateArtistByPhone = () => {
 
             {/* Year_died */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Year Died</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="year_died"
-                label="Year Died"
+                placeholder="Enter Value"
                 value={values.year_died}
                 onChange={handleChange("year_died")}
                 error={error.year_died ? true : false}
@@ -338,19 +358,20 @@ const CreateArtistByPhone = () => {
             </FormControl>
 
             {/* User phone */}
-
             <FormControl>
-              <InputLabel id="sub_type">Phone</InputLabel>
+              <FormLabel style={{ fontWeight: "bold" }}>User phone</FormLabel>
               <Select
+                style={{ height: "50px" }}
                 labelId="Phone"
-                label="Phone"
-                variant="filled"
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                variant="outlined"
                 defaultValue=""
                 value={values.fk_user_id}
                 onChange={handleChange("fk_user_id")}
               >
                 <MenuItem value="" disabled>
-                  Value
+                  Enter Value
                 </MenuItem>
                 {Array.isArray(data.users)
                   ? data.users
@@ -368,13 +389,15 @@ const CreateArtistByPhone = () => {
             </FormControl>
           </Box>
           <Box
-            display="flex"
-            justifyContent="space-between"
+            display="grid"
+            gridTemplateColumns="1fr 1fr"
+            rowGap="1rem"
+            columnGap="5rem"
             px="0.5rem"
             py="2rem"
           >
             {/* Biography */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Biography
               </InputLabel>
@@ -389,7 +412,7 @@ const CreateArtistByPhone = () => {
               )}
             </Box>
             {/* Biography MM */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Biography MM
               </InputLabel>

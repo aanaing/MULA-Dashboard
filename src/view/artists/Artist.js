@@ -78,7 +78,7 @@ const Artist = () => {
   if (!data) {
     return "no data";
   }
-  console.log("data ", data.artist_by_pk.artist_name);
+
   return (
     <>
       <div role="presentation" className="align">
@@ -98,52 +98,13 @@ const Artist = () => {
 
       <Card>
         <CardContent>
-          {/* <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "2rem",
-              px: "3rem",
-              pb: "2rem",
-            }}
-          >
-            <div>
-              <CardMedia
-                sx={{
-                  flex: 1,
-                  bgcolor: "#cecece",
-                  height: 250,
-                  objectFit: "contain",
-                  width: 250,
-                  mt: 4,
-                  boxShadow: 5,
-                  borderRadius: 2,
-                  borderColor: "white",
-                }}
-                component="img"
-                height="300"
-                image={data.artist_by_pk.artist_profile_image_url}
-                alt="profile image"
-              />
-              <Typography
-                variant="p"
-                fontSize="12px"
-                mt="0.5rem"
-                color="blue"
-                display="flex"
-                justifyContent="center"
-              >
-                Profile Image
-              </Typography>
-            </div>
-          </Box> */}
-
           <Box
             sx={{
-              maxWidth: "40%",
+              width: "100%",
+              height: "300px",
               display: "grid",
               justifyContent: "center",
-
+              // p: "2rem",
               margin: "auto",
               borderRadius: 2,
               boxShadow: 2,
@@ -151,12 +112,12 @@ const Artist = () => {
           >
             <CardMedia
               component="img"
-              height="320"
+              height="300px"
               image={data.artist_by_pk.artist_profile_image_url}
               sx={{ my: 2 }}
             />
           </Box>
-          <Typography
+          {/* <Typography
             variant="p"
             fontSize="12px"
             mt="0.5rem"
@@ -165,81 +126,81 @@ const Artist = () => {
             justifyContent="center"
           >
             Artwork Image
-          </Typography>
+          </Typography> */}
 
-          <Paper sx={{ m: "2rem", p: "2rem" }}>
-            <CardActions
-              sx={{
-                display: "flex",
-                mx: "2rem",
-              }}
-            >
-              <ListItem sx={{ width: "600px" }}>
-                <ListItemText
-                  primary="ID"
-                  secondary={data.artist_by_pk.id}
-                ></ListItemText>
-              </ListItem>
+          <CardActions
+            sx={{
+              display: "flex",
+              mt: "2rem",
+            }}
+          >
+            <ListItem sx={{ width: "600px" }}>
+              <ListItemText
+                primary="ID"
+                secondary={data.artist_by_pk.id}
+              ></ListItemText>
+            </ListItem>
 
-              <ListItem>
-                <ListItemText
-                  primary="Artist Name"
-                  secondary={data.artist_by_pk.artist_name}
-                ></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Artist Name"
-                  secondary={data.artist_by_pk.artist_name_mm}
-                ></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Year Born"
-                  secondary={data.artist_by_pk.year_born}
-                ></ListItemText>
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Year Died"
-                  secondary={data.artist_by_pk.year_died}
-                ></ListItemText>
-              </ListItem>
-            </CardActions>
-            <Box
-              display="grid"
-              gridTemplateColumns="50% 50%"
-              columnGap="1rem"
-              mx="2rem"
-            >
-              <Box>
-                <Typography display="flex" justifyContent="center" mt="2rem">
-                  Biography Eng
-                </Typography>
+            <ListItem>
+              <ListItemText
+                primary="Artist Name"
+                secondary={data.artist_by_pk.artist_name}
+              ></ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="User Phone"
+                // secondary={data.artist_by_pk?.artist_user?.fullname}
+              ></ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Year Born"
+                secondary={data.artist_by_pk.year_born}
+              ></ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Year Died"
+                secondary={data.artist_by_pk.year_died}
+              ></ListItemText>
+            </ListItem>
+          </CardActions>
+          <Box
+            display="grid"
+            // gridTemplateColumns="50% 50%"
+            columnGap="1rem"
+            mx="2rem"
+          >
+            <Box>
+              <Typography display="flex" justifyContent="center" mt="2rem">
+                Biography Eng
+              </Typography>
 
-                <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: data.artist_by_pk.biography,
-                    }}
-                  ></div>
-                </Box>
-              </Box>
-              <Box>
-                <Typography display="flex" justifyContent="center" mt="2rem">
-                  Biography MM
-                </Typography>
-
-                <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: data.artist_by_pk.biography,
-                    }}
-                  ></div>
-                </Box>
+              <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                <div
+                  style={{ color: "#495057", padding: "1rem" }}
+                  dangerouslySetInnerHTML={{
+                    __html: data.artist_by_pk.biography,
+                  }}
+                ></div>
               </Box>
             </Box>
-          </Paper>
+            <Box>
+              <Typography display="flex" justifyContent="center" mt="2rem">
+                Biography MM
+              </Typography>
+
+              <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
+                <div
+                  style={{ color: "#495057", padding: "1rem" }}
+                  dangerouslySetInnerHTML={{
+                    __html: data.artist_by_pk.biography,
+                  }}
+                ></div>
+              </Box>
+            </Box>
+          </Box>
         </CardContent>
         <Box display="flex" justifyContent="end" columnGap="3rem" m="2rem">
           <Button
@@ -282,7 +243,6 @@ const Artist = () => {
         </Box>
       </Modal>
     </>
-    // <h1>hello</h1>
   );
 };
 export default Artist;

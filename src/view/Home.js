@@ -18,6 +18,7 @@ import SideBar from "../layout/SideBar";
 import Dashboard from "../view/dashboard/Dashboard";
 import Users from "../view/user/Users";
 import User from "../view/user/User";
+import CreateUser from "../view/user/CreateUser";
 
 import Artists from "../view/artists/Artists";
 import Artist from "../view/artists/Artist";
@@ -35,6 +36,16 @@ import ArtWorks from "../view/art_work/ArtWorks";
 import ArtWork from "../view/art_work/ArtWork";
 import CreateArtWork from "../view/art_work/CreateArtWork";
 import UpdateArtWork from "../view/art_work/UpdateArtWork";
+
+import Events from "../view/event/Events";
+import Event from "../view/event/Event";
+import CreateEvent from "../view/event/CreateEvent";
+import UpdateEvent from "../view/event/UpdateEvent";
+
+import DigitalArtworks from "../view/digital artwork/DigitalArtworks";
+import DigitalArtwork from "../view/digital artwork/DigitalArtwork";
+import CreateDigitalArtwork from "../view/digital artwork/CreateDigitalArtwork";
+import update_digital_artwork from "../view/digital artwork/UpdateDigitalArtwork";
 
 const drawerWidth = 260;
 
@@ -67,7 +78,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Admin = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [showAlert, setShowAlert] = useState({ message: "", isError: false });
   const navigate = useNavigate();
   const AuthContext = createContext();
@@ -81,23 +92,22 @@ const Admin = () => {
     setOpen(false);
   };
 
-  const homeAlert = (message, isError = false) => {
-    setShowAlert({ message: message, isError: isError });
-    setTimeout(() => {
-      setShowAlert({ message: "", isError: false });
-    }, 3000);
-  };
+  // const homeAlert = (message, isError = false) => {
+  //   setShowAlert({ message: message, isError: isError });
+  //   setTimeout(() => {
+  //     setShowAlert({ message: "", isError: false });
+  //   }, 3000);
+  // };
 
-  // useEffect(() => {
-  //   const loggedUser = window.localStorage.getItem("loggedUser");
-  //   if (loggedUser) {
-  //     const parsedLoggedUser = JSON.parse(loggedUser);
-  //     setAuth(parsedLoggedUser);
-  //   } else {
-  //     navigate("/login");
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("loggedUser");
+    if (loggedUser) {
+      const parsedLoggedUser = JSON.parse(loggedUser);
+      setAuth(parsedLoggedUser);
+    } else {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <Box
@@ -117,9 +127,10 @@ const Admin = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <AuthContext.Provider value={auth}>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/user" element={<Users />} />
               <Route path="/user/:id" element={<User />} />
+              <Route path="/create_user" element={<CreateUser />} />
 
               <Route path="/artist" element={<Artists />} />
               <Route path="/artist/:id" element={<Artist />} />
@@ -143,6 +154,22 @@ const Admin = () => {
               <Route path="/art_work/:id" element={<ArtWork />} />
               <Route path="/create_artWork" element={<CreateArtWork />} />
               <Route path="/update_artWork/:id" element={<UpdateArtWork />} />
+
+              <Route path="/event" element={<Events />} />
+              <Route path="/event/:id" element={<Event />} />
+              <Route path="/create_event" element={<CreateEvent />} />
+              <Route path="/update_event/:id" element={<UpdateEvent />} />
+
+              <Route path="/digital_artwork" element={<DigitalArtworks />} />
+              <Route path="/digital_artwork/:id" element={<DigitalArtwork />} />
+              {/* <Route
+                path="/create_digital_artwork"
+                element={<CreateDigitalArtwork />}
+              />
+              <Route
+                path="/update_digital_artwork/:id"
+                element={<CreateDigitalArtwork />}
+              /> */}
             </Routes>
           </AuthContext.Provider>
         </Suspense>

@@ -38,7 +38,6 @@ const Index = () => {
   const [user, setUser] = useState("");
   const [loadUser, resultUser] = useLazyQuery(ALL_USERS);
 
-  console.log("user data", resultUser);
   useEffect(() => {
     loadUser({
       variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
@@ -50,7 +49,7 @@ const Index = () => {
       setCount(Number(resultUser.data?.users_aggregate.aggregate.count));
     }
   }, [resultUser]);
-  console.log("user", user);
+
   if (!user) {
     return "no user";
   }
@@ -145,6 +144,23 @@ const Index = () => {
           </form>
         </div>
       </div>
+
+      <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+        <Button
+          variant="contained"
+          sx={{
+            width: 90,
+            height: 60,
+            p: 1,
+            my: 2,
+            fontWeight: "bold",
+          }}
+          color="secondary"
+          onClick={() => navigate("/create_user")}
+        >
+          Add
+        </Button>
+      </Box>
 
       <Box
         sx={{

@@ -4,6 +4,8 @@ import {
   Typography,
   Box,
   CardContent,
+  FormLabel,
+  Breadcrumbs,
   CardMedia,
   Card,
   FormControl,
@@ -179,40 +181,253 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
   };
 
   return (
+    // <>
+    //   <Box
+    //     role="presentation"
+    //     sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
+    //   >
+    //     <Typography fontWeight="bold" variant="h6">
+    //       Create Artist
+    //     </Typography>
+    //     <Button
+    //       color="warning"
+    //       variant="contained"
+    //       onClick={() => navigate("/artist")}
+    //     >
+    //       Close
+    //     </Button>
+    //   </Box>
+
+    //   <Card>
+    //     <CardContent sx={{ p: 3 }} elevation={4}>
+    //       <Box
+    //         sx={{
+    //           maxWidth: "40%",
+    //           display: "grid",
+    //           justifyContent: "center",
+    //           margin: "auto",
+    //           borderRadius: 2,
+    //           boxShadow: 2,
+    //         }}
+    //       >
+    //         <CardMedia
+    //           component="img"
+    //           height="320"
+    //           image={imagePreview}
+    //           sx={{ my: 2 }}
+    //         />
+    //       </Box>
+    //       {/* image */}
+    //       <FormControl
+    //         sx={{
+    //           maxWidth: "30%",
+    //           display: "flex",
+    //           margin: "auto",
+    //           mb: "2rem",
+    //           mt: "1rem",
+    //         }}
+    //         className="photoCamera"
+    //       >
+    //         <Typography
+    //           sx={{
+    //             mb: 1,
+    //             fontSize: "12px",
+    //             textAlign: "center",
+    //           }}
+    //         >
+    //           Rendered size must be 1920 * 1080 px and Aspect ratio must be 16:9
+    //         </Typography>
+    //         <Button
+    //           variant="contained"
+    //           component="label"
+    //           size="large"
+    //           sx={{ py: "0.5rem" }}
+    //         >
+    //           <PhotoCamera />
+    //           <Typography sx={{ ml: 1 }}>Upload Image</Typography>
+    //           <input
+    //             hidden
+    //             onChange={chooseImage}
+    //             accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
+    //             type="file"
+    //             error={error["artist_profile_image_url"]}
+    //             FormHelperText={error["artist_profile_image_url"]}
+    //           />
+    //         </Button>
+    //         <FormHelperText error>
+    //           {error["artist_profile_image_url"]}
+    //         </FormHelperText>
+    //       </FormControl>
+    //       <Box
+    //         sx={{
+    //           display: "grid",
+    //           gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    //           gap: "2rem",
+    //           px: "1rem",
+    //         }}
+    //       >
+    //         {/* Artist Name */}
+    //         <FormControl>
+    //           <TextField
+    //             variant="filled"
+    //             id="artist_name"
+    //             label="Artist Name"
+    //             value={values.artist_name}
+    //             onChange={handleChange("artist_name")}
+    //             error={error.artist_name ? true : false}
+    //             helperText={error.artist_name}
+    //           />
+    //         </FormControl>
+    //         {/* Artist Name */}
+    //         <FormControl>
+    //           <TextField
+    //             variant="filled"
+    //             id="artist_name_mm"
+    //             label="Artist Name"
+    //             value={values.artist_name_mm}
+    //             onChange={handleChange("artist_name_mm")}
+    //             error={error.artist_name_mm ? true : false}
+    //             helperText={error.artist_name_mm}
+    //           />
+    //         </FormControl>
+
+    //         {/* Year_born */}
+    //         <FormControl>
+    //           <TextField
+    //             type="number"
+    //             variant="filled"
+    //             id="year_born"
+    //             label="Year Born"
+    //             value={values.year_born}
+    //             onChange={handleChange("year_born")}
+    //             error={error.year_born ? true : false}
+    //             helperText={error.year_born}
+    //           />
+    //         </FormControl>
+
+    //         {/* Year_died */}
+    //         <FormControl>
+    //           <TextField
+    //             type="number"
+    //             variant="filled"
+    //             id="year_died"
+    //             label="Year Died"
+    //             value={values.year_died}
+    //             onChange={handleChange("year_died")}
+    //             error={error.year_died ? true : false}
+    //             helperText={error.year_died}
+    //           />
+    //         </FormControl>
+
+    //         {/* User phone */}
+
+    //         <FormControl>
+    //           <TextField
+    //             variant="filled"
+    //             id="phone"
+    //             label="Phone"
+    //             value={data.users_by_pk.phone}
+    //             // value={values.year_died}
+    //             // onChange={handleChange("phone")}
+    //             // error={error.year_died ? true : false}
+    //             // helperText={error.year_died}
+    //           />
+    //         </FormControl>
+    //       </Box>
+    //       <Box
+    //         display="flex"
+    //         justifyContent="space-between"
+    //         my="2rem"
+    //         px="1rem"
+    //       >
+    //         {/* Biography */}
+    //         <Box className="description">
+    //           <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+    //             Biography
+    //           </InputLabel>
+    //           <RichTextEditor
+    //             className="description-text"
+    //             onChange={onChange}
+    //             value={textValue}
+    //             toolbarConfig={toolbarConfig}
+    //           />
+    //           {error.biography && (
+    //             <FormHelperText error> {error.biography}</FormHelperText>
+    //           )}
+    //         </Box>
+
+    //         {/* Biography MM */}
+    //         <Box className="description">
+    //           <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
+    //             Biography MM
+    //           </InputLabel>
+    //           <RichTextEditor
+    //             className="description-text"
+    //             onChange={onChangeMM}
+    //             value={textValueMM}
+    //             toolbarConfig={toolbarConfig}
+    //           />
+    //           {error.biography_mm && (
+    //             <FormHelperText error> {error.biography_mm}</FormHelperText>
+    //           )}
+    //         </Box>
+    //       </Box>
+    //       <Box sx={{ display: "flex", justifyContent: "end", m: "2rem" }}>
+    //         <LoadingButton
+    //           variant="contained"
+    //           onClick={handleCreate}
+    //           loading={loading}
+    //         >
+    //           Create
+    //         </LoadingButton>
+    //       </Box>
+    //     </CardContent>
+    //   </Card>
+    // </>
     <>
-      <Box
-        role="presentation"
-        sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
+      {/* <Box
+      role="presentation"
+      sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
+    >
+      <Typography fontWeight="bold" variant="h6">
+        Create Artist
+      </Typography>
+      <Button
+        color="warning"
+        variant="contained"
+        onClick={() => navigate("/artist")}
       >
-        <Typography fontWeight="bold" variant="h6">
-          Create Artist
-        </Typography>
-        <Button
-          color="warning"
-          variant="contained"
-          onClick={() => navigate("/artist")}
-        >
-          Close
-        </Button>
-      </Box>
+        Close
+      </Button>
+    </Box> */}
 
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Artist)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Artist</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: 3 }} elevation={4}>
-          <Box
-            sx={{
-              maxWidth: "40%",
-              display: "grid",
-              justifyContent: "center",
-              margin: "auto",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
+          <Box className="image">
             <CardMedia
               component="img"
-              height="320"
+              height="200px"
               image={imagePreview}
-              sx={{ my: 2 }}
+              // sx={{ my: 2 }}
             />
           </Box>
           {/* image */}
@@ -235,12 +450,7 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
             >
               Rendered size must be 1920 * 1080 px and Aspect ratio must be 16:9
             </Typography>
-            <Button
-              variant="contained"
-              component="label"
-              size="large"
-              sx={{ py: "0.5rem" }}
-            >
+            <Button variant="contained" component="label" sx={{ py: "0.5rem" }}>
               <PhotoCamera />
               <Typography sx={{ ml: 1 }}>Upload Image</Typography>
               <input
@@ -259,29 +469,39 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              gap: "2rem",
-              px: "1rem",
+              gridTemplateColumns: "1fr 1fr",
+              px: "0.5rem",
+              rowGap: "1rem",
+              columnGap: "5rem",
             }}
           >
             {/* Artist Name */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artist Name (Eng)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artist_name"
-                label="Artist Name"
+                placeholder="Enter Value"
                 value={values.artist_name}
                 onChange={handleChange("artist_name")}
                 error={error.artist_name ? true : false}
                 helperText={error.artist_name}
               />
             </FormControl>
-            {/* Artist Name */}
+
+            {/* Artist Name MM */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artist Name (MM)
+              </FormLabel>
               <TextField
-                variant="filled"
-                id="artist_name_mm"
-                label="Artist Name"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
+                id="artist_name"
+                placeholder="Enter Value"
                 value={values.artist_name_mm}
                 onChange={handleChange("artist_name_mm")}
                 error={error.artist_name_mm ? true : false}
@@ -291,11 +511,13 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
 
             {/* Year_born */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Year Born</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="year_born"
-                label="Year Born"
+                placeholder="Year Born"
                 value={values.year_born}
                 onChange={handleChange("year_born")}
                 error={error.year_born ? true : false}
@@ -305,11 +527,13 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
 
             {/* Year_died */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Year Died</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="year_died"
-                label="Year Died"
+                placeholder="Enter Value"
                 value={values.year_died}
                 onChange={handleChange("year_died")}
                 error={error.year_died ? true : false}
@@ -317,13 +541,12 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
               />
             </FormControl>
 
-            {/* User phone */}
-
+            {/* phone */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>User Phone</FormLabel>
               <TextField
-                variant="filled"
-                id="phone"
-                label="Phone"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 value={data.users_by_pk.phone}
                 // value={values.year_died}
                 // onChange={handleChange("phone")}
@@ -333,13 +556,15 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
             </FormControl>
           </Box>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            my="2rem"
-            px="1rem"
+            display="grid"
+            gridTemplateColumns="1fr 1fr"
+            rowGap="1rem"
+            columnGap="5rem"
+            px="0.5rem"
+            py="2rem"
           >
             {/* Biography */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Biography
               </InputLabel>
@@ -353,9 +578,8 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
                 <FormHelperText error> {error.biography}</FormHelperText>
               )}
             </Box>
-
             {/* Biography MM */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Biography MM
               </InputLabel>
@@ -370,7 +594,7 @@ const CreateArtistByPhone = ({ phone, handleClose }) => {
               )}
             </Box>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "end", m: "2rem" }}>
+          <Box sx={{ display: "flex", justifyContent: "end", m: "1rem" }}>
             <LoadingButton
               variant="contained"
               onClick={handleCreate}

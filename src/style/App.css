@@ -156,7 +156,7 @@ thead .MuiTableCell-root:last-child {
 .align {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 .loading {
   color: black;
@@ -186,7 +186,7 @@ thead .MuiTableCell-root:last-child {
   justify-content: space-between;
   margin: 1rem 2rem;
 }
-.first--cols-box {
+/* .first--cols-box {
   display: flex;
   gap: 8rem;
 }
@@ -194,9 +194,9 @@ thead .MuiTableCell-root:last-child {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
+} */
 
-.user-text-box {
+/* .user-text-box {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.5rem;
@@ -205,20 +205,33 @@ thead .MuiTableCell-root:last-child {
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .grid_3_cols {
   display: grid;
   grid-template-columns: 1fr 1fr 23%;
   column-gap: 1rem;
 }
-.description {
-  grid-column: 1/-2;
-}
+
 .photoCamera {
   grid-column: 1/-1;
 }
 .description-text {
-  height: 400px;
+  height: 200px;
   overflow-y: scroll;
+}
+.image {
+  width: 400px;
+  height: 200px;
+  margin: auto;
+  background-color: #f8f9fa;
+  box-shadow: 2;
+  border: 1px dotted black;
+  border-left: none;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
+.image_center {
+  display: flex;
+  justify-content: center;
 }

@@ -10,8 +10,8 @@ function App() {
   return (
     <SideBarContextProvider>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="*" element={<Home />} />
-        <Route path="/login" element={<Login />} />
       </Routes>
     </SideBarContextProvider>
   );

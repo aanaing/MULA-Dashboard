@@ -8,10 +8,12 @@ import {
 } from "../../gql/artist";
 import { IMAGE_UPLOAD, DELETE_IMAGE } from "../../gql/image";
 import imageService from "../../services/image";
+import CloudUploadSharpIcon from "@mui/icons-material/CloudUploadSharp";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {
   Button,
   Typography,
+  Breadcrumbs,
   Box,
   CardContent,
   CardMedia,
@@ -23,6 +25,7 @@ import {
   FormHelperText,
   Select,
   MenuItem,
+  FormLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -83,6 +86,7 @@ const UpdateArtist = () => {
 
   useEffect(() => {
     if (getArtistData.data) {
+      console.log("get attribute data", getArtistData.data);
       setImagePreview(
         getArtistData.data.artist_by_pk.artist_profile_image_url ?? ""
       );
@@ -94,8 +98,8 @@ const UpdateArtist = () => {
         artist_name_mm: getArtistData.data.artist_by_pk.artist_name_mm ?? "",
         biography: getArtistData.data.artist_by_pk.biography ?? "",
         biography_mm: getArtistData.data.artist_by_pk.biography_mm ?? "",
-        year_born: getArtistData.data.artist_by_pk.year_born ?? "",
-        year_died: getArtistData.data.artist_by_pk.year_died ?? "",
+        year_born: Number(getArtistData.data.artist_by_pk.year_born ?? ""),
+        year_died: Number(getArtistData.data.artist_by_pk.year_died ?? ""),
         fk_user_id: getArtistData.data.artist_by_pk.fk_user_id ?? "",
       });
       setTextValue(
@@ -117,6 +121,7 @@ const UpdateArtist = () => {
     }
   }, [getArtistData]);
 
+  console.log("values", values);
   //for image upload
   const [getImageUrl] = useMutation(IMAGE_UPLOAD, {
     onError: (error) => {
@@ -215,7 +220,7 @@ const UpdateArtist = () => {
   }
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -229,82 +234,95 @@ const UpdateArtist = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
 
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Artwork)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Artwork</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: 3 }} elevation={4}>
-          <Box
-            sx={{
-              maxWidth: "40%",
-              display: "grid",
-              justifyContent: "center",
-              margin: "auto",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
+          <Box className="image">
             <CardMedia
               component="img"
-              height="320"
+              height="200px"
               image={imagePreview}
-              sx={{ my: 2 }}
+              // sx={{ my: 2 }}
             />
           </Box>
-          {/* image */}
-          <FormControl
-            sx={{
-              maxWidth: "30%",
-              display: "flex",
-              margin: "auto",
-              mb: "2rem",
-              mt: "1rem",
-            }}
-            className="photoCamera"
-          >
-            <Typography
+          <Box display="flex" justifyContent="center" mb="1rem">
+            {/* image */}
+            <FormControl
               sx={{
-                mb: 1,
-                fontSize: "12px",
-                textAlign: "center",
+                maxWidth: "20%",
               }}
+              className="photoCamera"
             >
-              Rendered size must be 1920 * 1080 px and Aspect ratio must be 16:9
-            </Typography>
-            <Button
-              variant="contained"
-              component="label"
-              size="large"
-              sx={{ py: "0.5rem" }}
-            >
-              <PhotoCamera />
-              <Typography sx={{ ml: 1 }}>Upload Image</Typography>
-              <input
-                hidden
-                onChange={chooseImage}
-                accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
-                type="file"
-                error={error["artist_profile_image_url"]}
-                FormHelperText={error["artist_profile_image_url"]}
-              />
-            </Button>
-            <FormHelperText error>
-              {error["artist_profile_image_url"]}
-            </FormHelperText>
-          </FormControl>
+              <Typography
+                sx={{
+                  mb: 1,
+                  fontSize: "12px",
+                  textAlign: "center",
+                }}
+              >
+                Rendered size must be 1920 * 1080 px and Aspect ratio must be
+                16:9Cli
+              </Typography>
+              <Button
+                variant="contained"
+                component="label"
+                size="large"
+                // sx={{ py: "0.5rem" }}
+              >
+                {/* <PhotoCamera /> */}
+                <CloudUploadSharpIcon />
+                <Typography sx={{ ml: 1 }}>Upload Image</Typography>
+                <input
+                  hidden
+                  onChange={chooseImage}
+                  accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
+                  type="file"
+                  error={error["artwork_image_url"]}
+                />
+              </Button>
+              <FormHelperText error>
+                {error["artwork_image_url"]}
+              </FormHelperText>
+            </FormControl>
+          </Box>
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              gridTemplateColumns: "1fr 1fr ",
               gap: 3,
               px: "1rem",
             }}
           >
             {/* Artist Name */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artist Name (Eng)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artist_name"
-                label="Artist Name"
+                placeholder="Enter Value"
                 value={values.artist_name}
                 onChange={handleChange("artist_name")}
                 error={error.artist_name ? true : false}
@@ -312,12 +330,16 @@ const UpdateArtist = () => {
               />
             </FormControl>
 
-            {/* Artist Name */}
+            {/* Artist Name  mm*/}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artist Name (MM)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artist_name_mm"
-                label="Artist Name MM"
+                placeholder="Enter Value"
                 value={values.artist_name_mm}
                 onChange={handleChange("artist_name_mm")}
                 error={error.artist_name_mm ? true : false}
@@ -327,11 +349,13 @@ const UpdateArtist = () => {
 
             {/* Year_born */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Year Born</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="year_born"
-                label="Year Born"
+                placeholder="Enter Value"
                 value={values.year_born}
                 onChange={handleChange("year_born")}
                 error={error.year_born ? true : false}
@@ -341,11 +365,13 @@ const UpdateArtist = () => {
 
             {/* Year_died */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Year died</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="year_died"
-                label="Year Died"
+                placeholder="Enter Value"
                 value={values.year_died}
                 onChange={handleChange("year_died")}
                 error={error.year_died ? true : false}
@@ -354,20 +380,21 @@ const UpdateArtist = () => {
             </FormControl>
 
             {/* User phone */}
-
             {values.fk_user_id && (
               <FormControl>
-                <InputLabel id="sub_type">Phone</InputLabel>
+                <FormLabel style={{ fontWeight: "bold" }}>User Phone</FormLabel>
                 <Select
+                  style={{ height: "50px" }}
                   labelId="Phone"
-                  label="Phone"
-                  variant="filled"
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  variant="outlined"
                   defaultValue=""
                   value={values.fk_user_id}
                   onChange={handleChange("fk_user_id")}
                 >
                   <MenuItem value="" disabled>
-                    Value
+                    Enter Value
                   </MenuItem>
                   {Array.isArray(data.users)
                     ? data.users.map((user) => (

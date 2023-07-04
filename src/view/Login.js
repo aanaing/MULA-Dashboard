@@ -64,15 +64,16 @@ const Login = () => {
         return;
       }
       const decodedToken = jose.decodeJwt(result.AdminLogIn.accessToken);
-      // console.log(decodedToken);
+
       const data = JSON.stringify({
         token: result.AdminLogIn.accessToken,
-        // userID: decodedToken.hasura['x-hasura-user-id']
         userID: decodedToken.user_id,
       });
       // console.log("data", data);
       window.localStorage.setItem("loggedUser", data);
-      navigate("/");
+      if (data) {
+        navigate("*");
+      }
     },
   });
 
@@ -218,9 +219,9 @@ const Login = () => {
                 onClick={handleClick}
                 loading={loading}
                 size="large"
-                variant="outlined"
+                variant="contained"
                 // sx={{ backgroundColor: "#000", height: 55 }}
-                className="login_btn"
+                //className="login_btn"
               >
                 Login
               </LoadingButton>

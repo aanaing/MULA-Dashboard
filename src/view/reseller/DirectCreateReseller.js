@@ -11,6 +11,7 @@ import {
   FormHelperText,
   TextField,
   Select,
+  Breadcrumbs,
   Box,
   MenuItem,
   useScrollTrigger,
@@ -127,7 +128,7 @@ const DirectCreateReseller = () => {
   }
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -141,7 +142,26 @@ const DirectCreateReseller = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
+      <div
+        style={{
+          // display: "flex",
+          // justifyContent: "space-between",
+          padding: "1rem",
+        }}
+      >
+        {/* dashboard */}
+        <div>
+          <Breadcrumbs aria-label="breadcrumb">
+            {/* <Link to="/" className="dashboard"> */}
+            <Typography variant="h5">Mula Dashboard (Reseller)</Typography>
+
+            {/* </Link> */}
+            {/* <span>ArtWork</span> */}
+          </Breadcrumbs>
+          <Typography>Main / Reseller</Typography>
+        </div>
+      </div>
       <Card>
         <CardContent sx={{ p: "2rem" }}>
           {/* user id */}
@@ -153,7 +173,8 @@ const DirectCreateReseller = () => {
           >
             <FormControl>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="fk_user_id"
                 label="Reseller User"
                 value={userDataPK.users_by_pk.fullname}

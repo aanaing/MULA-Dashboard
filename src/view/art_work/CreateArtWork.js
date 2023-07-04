@@ -12,16 +12,21 @@ import {
   MenuItem,
   FormHelperText,
   InputLabel,
+  Breadcrumbs,
+  Paper,
   TextareaAutosize,
   FormControlLabel,
   Checkbox,
+  FormLabel,
 } from "@mui/material";
+import CloudUploadSharpIcon from "@mui/icons-material/CloudUploadSharp";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { IMAGE_UPLOAD } from "../../gql/image";
 import RichTextEditor from "react-rte";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import { Link } from "react-router-dom";
 import {
   ARTIST_NAME,
   DIMENSIONS,
@@ -264,6 +269,8 @@ const CreateArtWork = () => {
           ...values,
           pending: false,
           height,
+          current_price: Number(values.current_price),
+          update_price: Number(values.update_price),
           width,
           fk_dimension: unit,
           disabled: false,
@@ -282,7 +289,7 @@ const CreateArtWork = () => {
 
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -296,84 +303,97 @@ const CreateArtWork = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
 
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Artwork)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Artwork</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: 3 }} elevation={4}>
-          <Box
-            sx={{
-              maxWidth: "40%",
-              display: "grid",
-              justifyContent: "center",
-              margin: "auto",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
+          <Box className="image">
             <CardMedia
               component="img"
-              height="320"
+              height="200px"
               image={imagePreview}
-              sx={{ my: 2 }}
+              // sx={{ my: 2 }}
             />
           </Box>
-          {/* image */}
-          <FormControl
-            sx={{
-              maxWidth: "30%",
-              display: "flex",
-              margin: "auto",
-              mb: "2rem",
-              mt: "1rem",
-            }}
-            className="photoCamera"
-          >
-            <Typography
+          <Box display="flex" justifyContent="center" mb="1rem">
+            {/* image */}
+            <FormControl
               sx={{
-                mb: 1,
-                fontSize: "12px",
-                textAlign: "center",
+                maxWidth: "20%",
               }}
+              className="photoCamera"
             >
-              Rendered size must be 1920 * 1080 px and Aspect ratio must be 16:9
-            </Typography>
-            <Button
-              variant="contained"
-              component="label"
-              size="large"
-              sx={{ py: "0.5rem" }}
-            >
-              <PhotoCamera />
-              <Typography sx={{ ml: 1 }}>Upload Image</Typography>
-              <input
-                hidden
-                onChange={chooseImage}
-                accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
-                type="file"
-                error={error["artwork_image_url"]}
-                FormHelperText={error["artwork_image_url"]}
-              />
-            </Button>
-            <FormHelperText error>{error["artwork_image_url"]}</FormHelperText>
-          </FormControl>
+              <Typography
+                sx={{
+                  mb: 1,
+                  fontSize: "12px",
+                  textAlign: "center",
+                }}
+              >
+                Rendered size must be 1920 * 1080 px and Aspect ratio must be
+                16:9Cli
+              </Typography>
+              <Button
+                variant="contained"
+                component="label"
+
+                // sx={{ py: "0.5rem" }}
+              >
+                {/* <PhotoCamera /> */}
+                <CloudUploadSharpIcon />
+                <Typography sx={{ ml: 1 }}>Upload Image</Typography>
+                <input
+                  hidden
+                  onChange={chooseImage}
+                  accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
+                  type="file"
+                  error={error["artwork_image_url"]}
+                />
+              </Button>
+              <FormHelperText error>
+                {error["artwork_image_url"]}
+              </FormHelperText>
+            </FormControl>
+          </Box>
 
           <Box
             sx={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              columnGap: "2rem",
-              rowGap: "1rem",
               px: "0.5rem",
+              rowGap: "1rem",
+              columnGap: "5rem",
             }}
           >
-            {/* Artwork Name */}
+            {/* Artwork Name Eng */}
             <FormControl>
+              <FormLabel sx={{ fontWeight: "bold" }}>
+                Artwork Name Eng
+              </FormLabel>
               <TextField
-                sx={{ width: "300px", margin: "auto" }}
+                InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
-                size="small"
                 id="artwork_name"
-                label="Artwork Name"
+                placeholder="Enter Value"
                 value={values.artwork_name}
                 onChange={handleChange("artwork_name")}
                 error={error.artwork_name ? true : false}
@@ -381,76 +401,128 @@ const CreateArtWork = () => {
               />
             </FormControl>
 
-            {/* Artwork Name */}
+            <Box display="grid" gridTemplateColumns="60% 1fr" columnGap="3rem">
+              {/* artist */}
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>
+                  Artist Name
+                </FormLabel>
+                {/* <InputLabel placeholder="Enter Value">Enter Value</InputLabel> */}
+                <Select
+                  style={{ height: "50px" }}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  variant="outlined"
+                  defaultValue=""
+                  value={artistNameId}
+                  onChange={(e) => setArtistNameId(e.target.value)}
+                >
+                  <MenuItem value="" disabled={true}>
+                    Enter Value
+                  </MenuItem>
+                  {Array.isArray(nameData.artist)
+                    ? nameData.artist.map((ast) => (
+                        <MenuItem key={ast.id} value={ast.id}>
+                          {ast.artist_name}
+                        </MenuItem>
+                      ))
+                    : null}
+                </Select>
+                {error.fk_artist_id && (
+                  <FormHelperText error>{error.fk_artist_id}</FormHelperText>
+                )}
+              </FormControl>
+
+              {/* artwork_year */}
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>
+                  Artwork Year
+                </FormLabel>
+                <TextField
+                  InputProps={{ sx: { height: 50 } }}
+                  type="number"
+                  variant="outlined"
+                  id="artwork_year"
+                  placeholder="Enter Value"
+                  value={values.artwork_year}
+                  onChange={handleChange("artwork_year")}
+                  error={error.artwork_year ? true : false}
+                  helperText={error.artwork_year}
+                />
+              </FormControl>
+            </Box>
+            {/* Artwork Name MM */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artwork Name (MM)
+              </FormLabel>
               <TextField
-                sx={{ width: "300px", margin: "auto" }}
-                size="small"
+                InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artwork_name_mm"
-                label="Artwork Name MM"
+                placeholder="Enter Value"
                 value={values.artwork_name_mm}
                 onChange={handleChange("artwork_name_mm")}
                 error={error.artwork_name_mm ? true : false}
                 helperText={error.artwork_name_mm}
               />
             </FormControl>
-            {/* artwork_year */}
-            <FormControl>
-              <TextField
-                sx={{ width: "300px", margin: "auto" }}
-                size="small"
-                type="number"
-                variant="outlined"
-                id="artwork_year"
-                label="artwork_year"
-                value={values.artwork_year}
-                onChange={handleChange("artwork_year")}
-                error={error.artwork_year ? true : false}
-                helperText={error.artwork_year}
-              />
-            </FormControl>
-            {/* current_price */}
-            <FormControl>
-              <TextField
-                type="number"
-                variant="filled"
-                id="current_price"
-                label="current_price"
-                value={values.current_price}
-                onChange={handleChange("current_price")}
-                error={error.current_price ? true : false}
-                helperText={error.current_price}
-              />
-            </FormControl>
-            {/* update_price */}
-            <FormControl>
-              <TextField
-                sx={{ width: "300px", margin: "auto" }}
-                size="small"
-                type="number"
-                variant="outlined"
-                id="update_price"
-                label="update_price"
-                value={values.update_price}
-                onChange={handleChange("update_price")}
-                error={error.update_price ? true : false}
-                helperText={error.update_price}
-              />
-            </FormControl>
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              columnGap="3.5rem"
+            >
+              {/* current_price */}
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>
+                  Current Price
+                </FormLabel>
+                <TextField
+                  InputProps={{ sx: { height: 50 } }}
+                  type="number"
+                  variant="outlined"
+                  id="current_price"
+                  // label="Current Price"
+                  value={values.current_price}
+                  onChange={handleChange("current_price")}
+                  error={error.current_price ? true : false}
+                  helperText={error.current_price}
+                />
+              </FormControl>
+              {/* update_price */}
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>
+                  Update Price
+                </FormLabel>
+                <TextField
+                  InputProps={{ sx: { height: 50 } }}
+                  type="number"
+                  variant="outlined"
+                  id="update_price"
+                  // label="Update Price"
+                  value={values.update_price}
+                  onChange={handleChange("update_price")}
+                  error={error.update_price ? true : false}
+                  helperText={error.update_price}
+                />
+              </FormControl>
+            </Box>
             {/* artwork_type */}
             <FormControl>
-              <InputLabel id="sub_type">Artwork_type</InputLabel>
+              <FormLabel style={{ fontWeight: "bold" }}>Artwork Type</FormLabel>
+
               <Select
+                style={{ height: "50px" }}
                 labelId="fk_medium_type_id"
-                label="artwork_type"
-                variant="filled"
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                variant="outlined"
                 defaultValue=""
                 value={values.fk_medium_type_id}
                 onChange={handleChange("fk_medium_type_id")}
               >
-                <MenuItem value="" disabled>
-                  Value
+                <MenuItem value="" disabled={true}>
+                  Enter Value
                 </MenuItem>
                 {Array.isArray(typeData.artwork_medium_type)
                   ? typeData.artwork_medium_type.map((type) => (
@@ -465,87 +537,43 @@ const CreateArtWork = () => {
                 <FormHelperText error>{error.fk_medium_type_id}</FormHelperText>
               )}
             </FormControl>
-
-            {/* artist */}
-            <FormControl sx={{ width: "300px", margin: "auto" }} size="small">
-              <InputLabel id="sub_type">Artist Name</InputLabel>
-              <Select
-                labelId="artist"
-                label="artist"
-                variant="outlined"
-                defaultValue=""
-                value={artistNameId}
-                onChange={(e) => setArtistNameId(e.target.value)}
-              >
-                <MenuItem value="" disabled>
-                  Value
-                </MenuItem>
-                {Array.isArray(nameData.artist)
-                  ? nameData.artist.map((ast) => (
-                      <MenuItem key={ast.id} value={ast.id}>
-                        {ast.artist_name}
-                      </MenuItem>
-                    ))
-                  : null}
-              </Select>
-              {error.fk_artist_id && (
-                <FormHelperText error>{error.fk_artist_id}</FormHelperText>
-              )}
-            </FormControl>
-
-            {/* ownership */}
-            <FormControl>
-              <InputLabel id="sub_type">Ownership</InputLabel>
-              <Select
-                labelId="fk_ownership_id"
-                label="artist"
-                variant="filled"
-                defaultValue=""
-                value={values.fk_ownership_id}
-                onChange={handleChange("fk_ownership_id")}
-              >
-                <MenuItem value="" disabled>
-                  Value
-                </MenuItem>
-
-                {Array.isArray(ownershipData.users)
-                  ? ownershipData.users.map((user) => (
-                      <MenuItem key={user.id} value={user.id}>
-                        {user.fullname}
-                      </MenuItem>
-                    ))
-                  : null}
-              </Select>
-              {error.fk_ownership_id && (
-                <FormHelperText error>{error.fk_ownership_id}</FormHelperText>
-              )}
-            </FormControl>
-
             {/* dimensions */}
-            <FormControl sx={{ width: "100%" }}>
-              <div className="grid_3_cols">
+            <div className="grid_3_cols">
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>Width</FormLabel>
                 <TextField
+                  InputProps={{ sx: { height: 50 } }}
                   id="sub_type"
                   variant="outlined"
-                  placeholder="height"
-                  value={height}
-                  onChange={(e) => setheight(e.target.value)}
-                  error={error.height ? true : false}
-                  helperText={error.height}
-                />
-                <TextField
-                  id="sub_type"
-                  variant="filled"
-                  placeholder="Width"
+                  // placeholder="Width"
                   value={width}
                   onChange={(e) => setWidth(e.target.value)}
                   error={error.width ? true : false}
                   helperText={error.width}
                 />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>Height</FormLabel>
+                <TextField
+                  InputProps={{ sx: { height: 50 } }}
+                  id="sub_type"
+                  variant="outlined"
+                  // placeholder="height"
+                  value={height}
+                  onChange={(e) => setheight(e.target.value)}
+                  error={error.height ? true : false}
+                  helperText={error.height}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel style={{ fontWeight: "bold" }}>Unit</FormLabel>
+                {/* <InputLabel>Unit</InputLabel> */}
                 <Select
+                  style={{ height: "50px" }}
                   labelId="width"
-                  label="Width"
-                  variant="filled"
+                  // placeholder="Unit"
+                  variant="outlined"
                   defaultValue=""
                   onChange={(e) => setUnit(e.target.value)}
                 >
@@ -560,35 +588,70 @@ const CreateArtWork = () => {
                       ))
                     : null}
                 </Select>
-              </div>
+              </FormControl>
+            </div>
+
+            {/* ownership */}
+            <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Ownership</FormLabel>
+              {/* <InputLabel id="sub_type">Ownership</InputLabel> */}
+              <Select
+                style={{ height: "50px" }}
+                variant="outlined"
+                defaultValue=""
+                value={values.fk_ownership_id}
+                onChange={handleChange("fk_ownership_id")}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+              >
+                <MenuItem value="" disabled={true} hidden>
+                  Enter Value
+                </MenuItem>
+
+                {Array.isArray(ownershipData.users)
+                  ? ownershipData.users.map((user) => (
+                      <MenuItem key={user.id} value={user.id}>
+                        {user.fullname}
+                      </MenuItem>
+                    ))
+                  : null}
+              </Select>
+              {error.fk_ownership_id && (
+                <FormHelperText error>{error.fk_ownership_id}</FormHelperText>
+              )}
             </FormControl>
+            {/* art_series */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+                px: "1rem",
+                flexWrap: "wrap",
+              }}
+            >
+              {seriesData &&
+                seriesData.art_series.map((series, index) => (
+                  <FormControlLabel
+                    control={<Checkbox name={series.series_name} />}
+                    label={series.series_name}
+                    onChange={() => handleCheckboxChange(series.id)}
+                  />
+                ))}
+            </Box>
           </Box>
 
-          {/* art_series */}
           <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-              my: "2rem",
-              px: "1rem",
-              flexWrap: "wrap",
-            }}
+            display="grid"
+            gridTemplateColumns="1fr 1fr"
+            rowGap="1rem"
+            columnGap="5rem"
+            px="0.5rem"
+            py="2rem"
           >
-            {seriesData &&
-              seriesData.art_series.map((series, index) => (
-                <FormControlLabel
-                  control={<Checkbox name={series.series_name} />}
-                  label={series.series_name}
-                  onChange={() => handleCheckboxChange(series.id)}
-                />
-              ))}
-          </Box>
-
-          <Box display="flex" justifyContent="space-between" px="0.5rem">
-            {/* description */}
-            <Box className="description">
+            {/* description Eng */}
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
-                Description
+                Description (Eng)
               </InputLabel>
               <RichTextEditor
                 className="description-text"
@@ -602,9 +665,9 @@ const CreateArtWork = () => {
             </Box>
 
             {/* description_mm */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
-                Description MM
+                Description (MM)
               </InputLabel>
               <RichTextEditor
                 className="description-text"
@@ -618,7 +681,7 @@ const CreateArtWork = () => {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "end", m: "2rem" }}>
+          <Box sx={{ display: "flex", justifyContent: "end", m: "1rem" }}>
             <LoadingButton
               variant="contained"
               onClick={handleCreate}

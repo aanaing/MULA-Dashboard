@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { styled } from "@mui/material/styles";
+import EventAvailableSharpIcon from "@mui/icons-material/EventAvailableSharp";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -82,7 +83,6 @@ const SideBar = ({ open }) => {
             Dashboard
           </ListItem>
         </Link>
-
         <Link to="/user" onClick={() => setNav("user")} className="nav-link">
           <ListItem
             button
@@ -94,7 +94,6 @@ const SideBar = ({ open }) => {
             Users
           </ListItem>
         </Link>
-
         <Link
           to="/art_work"
           onClick={() => setNav("art_work")}
@@ -126,7 +125,6 @@ const SideBar = ({ open }) => {
             Artist
           </ListItem>
         </Link>
-
         <Link
           to="/reseller"
           onClick={() => setNav("reseller")}
@@ -140,6 +138,34 @@ const SideBar = ({ open }) => {
               <SellIcon className="nav-link-icon" />
             </ListItemIcon>
             Reseller
+          </ListItem>
+        </Link>
+        {/* Event */}
+        <Link to="/event" onClick={() => setNav("event")} className="nav-link">
+          <ListItem
+            button
+            className={`${nav === "event" ? "nav-btn active" : "nav-btn"}`}
+          >
+            <ListItemIcon>
+              <EventAvailableSharpIcon className="nav-link-icon" />
+            </ListItemIcon>
+            Event
+          </ListItem>
+        </Link>{" "}
+        {/* Digital artwork */}
+        <Link
+          to="/digital_artwork"
+          onClick={() => setNav("event")}
+          className="nav-link"
+        >
+          <ListItem
+            button
+            className={`${nav === "event" ? "nav-btn active" : "nav-btn"}`}
+          >
+            <ListItemIcon>
+              <PaletteIcon className="nav-link-icon" />
+            </ListItemIcon>
+            Digital Artwork
           </ListItem>
         </Link>
       </List>

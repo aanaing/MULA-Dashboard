@@ -42,7 +42,9 @@ export const ARTIST_ID = gql`
       year_born
       year_died
       artist_user {
+        id
         phone
+        fullname
       }
     }
   }

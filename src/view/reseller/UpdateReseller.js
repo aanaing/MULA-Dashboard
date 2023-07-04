@@ -5,6 +5,7 @@ import {
   FormControl,
   InputLabel,
   Card,
+  Breadcrumbs,
   Typography,
   Button,
   CardActions,
@@ -130,7 +131,7 @@ const UpdateReseller = () => {
   console.log("values", values);
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -144,9 +145,28 @@ const UpdateReseller = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
 
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Reseller)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Reseller</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: "2rem" }}>
           {/* user id */}
           <Box

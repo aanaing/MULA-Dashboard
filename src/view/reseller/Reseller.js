@@ -100,8 +100,8 @@ const Reseller = () => {
           </CardActions>
           <Box
             display="grid"
-            gridTemplateColumns="50% 50%"
-            columnGap="1rem"
+            // gridTemplateColumns="50% 50%"
+            // columnGap="1rem"
             mx="2rem"
           >
             <Box>
@@ -111,6 +111,7 @@ const Reseller = () => {
 
               <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
                 <div
+                  style={{ color: "#495057", padding: "1rem" }}
                   dangerouslySetInnerHTML={{
                     __html: data.reseller_by_pk.biography,
                   }}
@@ -124,6 +125,7 @@ const Reseller = () => {
 
               <Box sx={{ mt: "1rem", bgcolor: "#f8f9fa" }}>
                 <div
+                  style={{ color: "#495057", padding: "1rem" }}
                   dangerouslySetInnerHTML={{
                     __html: data.reseller_by_pk.biography_mm,
                   }}

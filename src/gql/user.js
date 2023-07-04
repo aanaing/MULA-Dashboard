@@ -2,20 +2,24 @@ import { gql } from "@apollo/client";
 
 //get all users
 export const ALL_USERS = gql`
-  query MyQuery($limit: Int!, $offset: Int!, $search: String!) {
+  query all_users($limit: Int!, $offset: Int!, $search: String!) {
     users(
       limit: $limit
       offset: $offset
       where: { fullname: { _ilike: $search } }
+      order_by: { created_at: desc }
     ) {
       address
       created_at
       date_of_birth
-      disabled
+      address_mm
       email
+      disabled
       fullname
+      fullname_mm
       gender
       id
+      gender_mm
       otp
       password
       phone
@@ -29,6 +33,15 @@ export const ALL_USERS = gql`
     }
   }
 `;
+// export const ALL_USERS = gql`
+// users(
+//   distinct_on: [users_select_column!]
+//   limit: Int
+//   offset: Int
+//   order_by: [users_order_by!]
+//   where: users_bool_exp
+//   ): [users!]!
+// `;
 
 //get one user
 export const USER = gql`
@@ -74,6 +87,24 @@ export const EDIT_USER = gql`
       phone
       profile_image_url
       updated_at
+    }
+  }
+`;
+
+//Create User
+export const CREATE_USER = gql`
+  mutation create_user(
+    $fullname: String!
+    $phone: String!
+    $password: String!
+  ) {
+    insert_users_one(
+      object: { fullname: $fullname, phone: $phone, password: $password }
+    ) {
+      fullname
+      phone
+      password
+      id
     }
   }
 `;

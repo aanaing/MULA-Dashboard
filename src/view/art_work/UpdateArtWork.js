@@ -7,6 +7,7 @@ import {
   Card,
   FormControl,
   TextField,
+  Breadcrumbs,
   Checkbox,
   FormControlLabel,
   Modal,
@@ -15,9 +16,10 @@ import {
   FormHelperText,
   InputLabel,
   TextareaAutosize,
+  FormLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useFetcher, useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { DELETE_IMAGE, IMAGE_UPLOAD } from "../../gql/image";
 import RichTextEditor from "react-rte";
@@ -35,6 +37,7 @@ import {
   ART_SERIES_BY_ARTWORK_ID,
   DELETE_ART_SERIES,
 } from "../../gql/artwork";
+import CloudUploadSharpIcon from "@mui/icons-material/CloudUploadSharp";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import imageService from "../../services/image";
 import { ARTWORK_ID } from "../../gql/artwork";
@@ -104,6 +107,20 @@ const UpdateArtWork = () => {
     variables: { fk_artist_id: artistNameId },
   });
 
+  // const [seriesData, setSeriesData] = useState("");
+  // const [loadSeriesData, resultSeriesData] = useLazyQuery(ART_SERIES);
+  // useEffect(() => {
+  //   if (artistNameId) {
+  //     loadSeriesData({ variables: { fk_artist_id: artistNameId } });
+  //   }
+  // }, [loadSeriesData, artistNameId]);
+
+  // useEffect(() => {
+  //   if (resultSeriesData.data) {
+  //     setSeriesData(resultSeriesData.data.art_series);
+  //   }
+  // }, [resultSeriesData]);
+
   const [seriesByArtworkItems, setSeriesByArtworkItems] = useState();
   const [loadSeriesDataByArtwork, resultSeriesDataByArtwork] = useLazyQuery(
     ART_SERIES_BY_ARTWORK_ID
@@ -120,7 +137,6 @@ const UpdateArtWork = () => {
 
   useEffect(() => {
     if (resultArtwork.data) {
-      console.log("result artwork", resultArtwork);
       setValues({
         id: resultArtwork.data.traditional_art_work_by_pk.id ?? "",
         artwork_image_url:
@@ -135,8 +151,9 @@ const UpdateArtWork = () => {
           resultArtwork.data.traditional_art_work_by_pk.description_mm ?? "",
         artwork_year:
           resultArtwork.data.traditional_art_work_by_pk.artwork_year ?? "",
-        current_price:
-          resultArtwork.data.traditional_art_work_by_pk.current_price ?? "",
+        current_price: Number(
+          resultArtwork.data.traditional_art_work_by_pk.current_price ?? ""
+        ),
         disabled: false,
         fk_artist_id:
           resultArtwork.data.traditional_art_work_by_pk.fk_artist_id ?? "",
@@ -144,9 +161,10 @@ const UpdateArtWork = () => {
           resultArtwork.data.traditional_art_work_by_pk.fk_medium_type_id ?? "",
         fk_ownership_id:
           resultArtwork.data.traditional_art_work_by_pk.fk_ownership_id ?? "",
-        pending: true,
-        update_price:
-          resultArtwork.data.traditional_art_work_by_pk.update_price ?? "",
+        pending: false,
+        update_price: Number(
+          resultArtwork.data.traditional_art_work_by_pk.update_price ?? ""
+        ),
         width: resultArtwork.data.traditional_art_work_by_pk.width ?? "",
         fk_dimension:
           resultArtwork.data.traditional_art_work_by_pk.fk_dimension ?? "",
@@ -256,7 +274,6 @@ const UpdateArtWork = () => {
   const [add_art_series] = useMutation(ADD_ART_SERIES, {
     onError: (err) => {
       setLoading(false);
-      console.log("art series error ");
       alert("Error on Server");
     },
   });
@@ -267,7 +284,6 @@ const UpdateArtWork = () => {
       setLoading(false);
     },
   });
-  console.log("checked item", checkedItems);
 
   const [update_artwork] = useMutation(UPDATE_ARTWORK, {
     onError: (err) => {
@@ -284,6 +300,7 @@ const UpdateArtWork = () => {
               result.update_traditional_art_work_by_pk.id,
           },
         });
+        // setSeriesByArtworkItems("");
 
         if (resultArtwork.data) {
           delete_art_series({
@@ -294,7 +311,7 @@ const UpdateArtWork = () => {
           });
         }
       });
-      console.log("object", resultArtwork?.data.traditional_art_work_by_pk.id);
+
       setLoading(false);
       setTextValue(RichTextEditor.createEmptyValue());
       setValues({});
@@ -348,13 +365,14 @@ const UpdateArtWork = () => {
   const handleCheckboxChange = (id) => {
     const currentIndex = checkedItems.indexOf(id);
     const newCheckedItems = [...checkedItems];
-
+    console.log("index of current index", currentIndex);
     if (currentIndex === -1) {
       newCheckedItems.push(id);
     } else {
       newCheckedItems.splice(currentIndex, 1);
     }
     setCheckedItems(newCheckedItems);
+    console.log("check item", checkedItems);
   };
 
   const changeArtistName = (e) => {
@@ -378,7 +396,7 @@ const UpdateArtWork = () => {
 
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -392,83 +410,97 @@ const UpdateArtWork = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
 
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Artwork)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Artwork</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: 3 }} elevation={4}>
-          <Box
-            sx={{
-              maxWidth: "40%",
-              display: "grid",
-              justifyContent: "center",
-              margin: "auto",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}
-          >
+          <Box className="image">
             <CardMedia
               component="img"
-              height="320"
+              height="200px"
               image={imagePreview}
-              sx={{ my: 2 }}
+              // sx={{ my: 2 }}
             />
           </Box>
-
-          {/* image */}
-          <FormControl
-            sx={{
-              maxWidth: "30%",
-              display: "flex",
-              margin: "auto",
-              mb: "2rem",
-              mt: "1rem",
-            }}
-            className="photoCamera"
-          >
-            <Typography
+          <Box display="flex" justifyContent="center" mb="1rem">
+            {/* image */}
+            <FormControl
               sx={{
-                mb: 1,
-                fontSize: "12px",
-                textAlign: "center",
+                maxWidth: "20%",
               }}
+              className="photoCamera"
             >
-              Rendered size must be 1920 * 1080 px and Aspect ratio must be 16:9
-            </Typography>
-            <Button
-              variant="contained"
-              component="label"
-              size="large"
-              sx={{ py: "0.5rem" }}
-            >
-              <PhotoCamera />
-              <Typography sx={{ ml: 1 }}>Upload Image</Typography>
-              <input
-                hidden
-                onChange={chooseImage}
-                accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
-                type="file"
-                error={errors["artwork_image_url"]}
-                FormHelperText={errors["artwork_image_url"]}
-              />
-            </Button>
-            <FormHelperText error>{errors["artwork_image_url"]}</FormHelperText>
-          </FormControl>
+              <Typography
+                sx={{
+                  mb: 1,
+                  fontSize: "12px",
+                  textAlign: "center",
+                }}
+              >
+                Rendered size must be 1920 * 1080 px and Aspect ratio must be
+                16:9Cli
+              </Typography>
+              <Button
+                variant="contained"
+                component="label"
+                size="large"
+                // sx={{ py: "0.5rem" }}
+              >
+                {/* <PhotoCamera /> */}
+                <CloudUploadSharpIcon />
+                <Typography sx={{ ml: 1 }}>Upload Image</Typography>
+                <input
+                  hidden
+                  onChange={chooseImage}
+                  accept="image/png, image/jpeg, image/jpg, image/gif, image/svg+xml"
+                  type="file"
+                  error={errors["artwork_image_url"]}
+                />
+              </Button>
+              <FormHelperText error>
+                {errors["artwork_image_url"]}
+              </FormHelperText>
+            </FormControl>
+          </Box>
 
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              columnGap: "2rem",
-              rowGap: "3rem",
+              gridTemplateColumns: "1fr 1fr",
               px: "0.5rem",
+              rowGap: "1rem",
+              columnGap: "5rem",
             }}
           >
             {/* Artwork Name */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artwork Name (Eng)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artwork_name"
-                label="Artwork Name"
+                //placeholder="Artwork Name"
                 value={values.artwork_name}
                 onChange={handleChange("artwork_name")}
                 // error={error.artwork_name ? true : false}
@@ -478,10 +510,14 @@ const UpdateArtWork = () => {
 
             {/* Artwork Name */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Artwork Name (MM)
+              </FormLabel>
               <TextField
-                variant="filled"
+                InputProps={{ sx: { height: 50 } }}
+                variant="outlined"
                 id="artwork_name_mm"
-                label="Artwork Name MM"
+                placeholder="Artwork Name MM"
                 value={values.artwork_name_mm}
                 onChange={handleChange("artwork_name_mm")}
                 // error={error.artwork_name_mm ? true : false}
@@ -490,11 +526,13 @@ const UpdateArtWork = () => {
             </FormControl>
             {/* artwork_year */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Artwork Year</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
-                variant="filled"
+                variant="outlined"
                 id="artwork_year"
-                label="artwork_year"
+                //label="artwork_year"
                 value={values.artwork_year}
                 onChange={handleChange("artwork_year")}
                 // error={error.artwork_year ? true : false}
@@ -503,11 +541,15 @@ const UpdateArtWork = () => {
             </FormControl>
             {/* current_price */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Current Price
+              </FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
                 variant="outlined"
                 id="current_price"
-                label="current_price"
+                //label="current_price"
                 value={values.current_price}
                 onChange={handleChange("current_price")}
                 // error={error.current_price ? true : false}
@@ -516,11 +558,13 @@ const UpdateArtWork = () => {
             </FormControl>
             {/* update_price */}
             <FormControl>
+              <FormLabel style={{ fontWeight: "bold" }}>Update Price</FormLabel>
               <TextField
+                InputProps={{ sx: { height: 50 } }}
                 type="number"
                 variant="outlined"
                 id="update_price"
-                label="update_price"
+                //label="update_price"
                 value={values.update_price}
                 onChange={handleChange("update_price")}
                 // error={error.update_price ? true : false}
@@ -530,11 +574,14 @@ const UpdateArtWork = () => {
             {/* artwork_type */}
             {values.fk_medium_type_id && (
               <FormControl>
-                <InputLabel id="sub_type">Artwork_type</InputLabel>
+                <FormLabel style={{ fontWeight: "bold" }}>
+                  Artwork Type
+                </FormLabel>
                 <Select
+                  style={{ height: "50px" }}
                   labelId="fk_medium_type_id"
-                  label="artwork_type"
-                  variant="filled"
+                  // placeholder="artwork_type"
+                  variant="outlined"
                   defaultValue=""
                   value={values.fk_medium_type_id}
                   onChange={handleChange("fk_medium_type_id")}
@@ -559,19 +606,20 @@ const UpdateArtWork = () => {
 
             {/* artist */}
             <FormControl>
-              <InputLabel id="sub_type">Artist Name</InputLabel>
+              <FormLabel style={{ fontWeight: "bold" }}>Artist</FormLabel>
               <Select
+                style={{ height: "50px" }}
                 labelId="artist"
-                label="artist"
-                variant="filled"
+                placeholder="artist"
+                variant="outlined"
                 defaultValue=""
-                // value={values.fk_artist_id}
-                value={
-                  resultArtwork?.data?.traditional_art_work_by_pk
-                    .traditional_art_work_artist.id
-                    ? values.fk_artist_id ?? values.fk_artist_id
-                    : valueChange
-                }
+                value={values.fk_artist_id}
+                // value={
+                //   resultArtwork?.data?.traditional_art_work_by_pk
+                //     .traditional_art_work_artist.id
+                //     ? values.fk_artist_id ?? values.fk_artist_id
+                //     : valueChange
+                // }
                 onChange={changeArtistName}
               >
                 <MenuItem value="" disabled>
@@ -590,11 +638,11 @@ const UpdateArtWork = () => {
             {/* ownership */}
             {values.fk_ownership_id && (
               <FormControl>
-                <InputLabel id="sub_type">Ownership</InputLabel>
+                <FormLabel style={{ fontWeight: "bold" }}>Ownership</FormLabel>
                 <Select
+                  style={{ height: "50px" }}
                   labelId="fk_ownership_id"
-                  label="artist"
-                  variant="filled"
+                  variant="outlined"
                   defaultValue=""
                   value={values.fk_ownership_id}
                   onChange={handleChange("fk_ownership_id")}
@@ -619,30 +667,41 @@ const UpdateArtWork = () => {
 
             {/* dimensions */}
             {values.fk_dimension && (
-              <FormControl sx={{ width: "100%" }}>
-                <div className="grid_3_cols">
+              <div className="grid_3_cols">
+                <FormControl>
+                  <FormLabel style={{ fontWeight: "bold" }}>Width</FormLabel>
                   <TextField
+                    InputProps={{ sx: { height: 50 } }}
                     id="sub_type"
                     type="number"
-                    variant="filled"
+                    variant="outlined"
+                    placeholder="Width"
+                    value={width}
+                    onChange={(e) => setWidth(e.target.value)}
+                  />
+                </FormControl>
+                {/* Height  */}
+                <FormControl>
+                  <FormLabel style={{ fontWeight: "bold" }}>Height</FormLabel>
+                  <TextField
+                    InputProps={{ sx: { height: 50 } }}
+                    id="sub_type"
+                    type="number"
+                    variant="outlined"
                     placeholder="height"
                     value={height}
                     onChange={(e) => setheight(e.target.value)}
                     // error={error.height ? true : false}
                     // helperText={error.height}
                   />
-                  <TextField
-                    id="sub_type"
-                    type="number"
-                    variant="filled"
-                    placeholder="Width"
-                    value={width}
-                    onChange={(e) => setWidth(e.target.value)}
-                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel style={{ fontWeight: "bold" }}>Unit</FormLabel>
                   <Select
-                    labelId="width"
-                    label="Width"
-                    variant="filled"
+                    style={{ height: "50px" }}
+                    labelId="unit"
+                    placeholder="Unit"
+                    variant="outlined"
                     value={values.fk_dimension}
                     defaultValue=""
                     onChange={(e) => setUnit(e.target.value)}
@@ -658,40 +717,38 @@ const UpdateArtWork = () => {
                         ))
                       : null}
                   </Select>
-                </div>
-              </FormControl>
+                </FormControl>
+              </div>
             )}
-          </Box>
 
-          {/* art_series */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
-              my: "2rem",
-              px: "1rem",
-              flexWrap: "wrap",
-            }}
-          >
-            {resultArtwork?.data?.traditional_art_work_by_pk
-              .traditional_art_work_artist.id &&
-              Array.isArray(seriesByArtworkItems) &&
-              seriesByArtworkItems.map((series) => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name={series.artist_art_series_art_sery.series_name}
-                    />
-                  }
-                  checked={isChecked}
-                  open={open}
-                  label={series.artist_art_series_art_sery.series_name}
-                  onChange={() =>
-                    handleCheckboxChange(series.artist_art_series_art_sery.id)
-                  }
-                />
-              ))}
-            {/* {Array.isArray(seriesItems) &&
+            {/* art_series */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+
+                flexWrap: "wrap",
+              }}
+            >
+              {resultArtwork?.data?.traditional_art_work_by_pk
+                .traditional_art_work_artist.id &&
+                Array.isArray(seriesByArtworkItems) &&
+                seriesByArtworkItems.map((series) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name={series.artist_art_series_art_sery.series_name}
+                      />
+                    }
+                    checked={isChecked}
+                    open={open}
+                    label={series.artist_art_series_art_sery.series_name}
+                    onChange={() =>
+                      handleCheckboxChange(series.artist_art_series_art_sery.id)
+                    }
+                  />
+                ))}
+              {/* {Array.isArray(seriesItems) &&
               seriesItems.map((series) => (
                 <FormControlLabel
                   control={<Checkbox name={series.series_name} />}
@@ -699,19 +756,27 @@ const UpdateArtWork = () => {
                   onChange={() => handleCheckboxChange(series.id)}
                 />
               ))} */}
-            {seriesData &&
-              seriesData.art_series.map((series, index) => (
-                <FormControlLabel
-                  control={<Checkbox name={series.series_name} />}
-                  label={series.series_name}
-                  onChange={() => handleCheckboxChange(series.id)}
-                />
-              ))}
+              {seriesData &&
+                seriesData.art_series.map((series, index) => (
+                  <FormControlLabel
+                    control={<Checkbox name={series.series_name} />}
+                    label={series.series_name}
+                    onChange={() => handleCheckboxChange(series.id)}
+                  />
+                ))}
+            </Box>
           </Box>
 
-          <Box display="flex" justifyContent="space-between" px="0.5rem">
+          <Box
+            display="grid"
+            gridTemplateColumns="1fr 1fr"
+            rowGap="1rem"
+            columnGap="5rem"
+            px="0.5rem"
+            py="2rem"
+          >
             {/* description */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Description
               </InputLabel>
@@ -727,7 +792,7 @@ const UpdateArtWork = () => {
             </Box>
 
             {/* description_mm */}
-            <Box className="description">
+            <Box>
               <InputLabel style={{ marginBottom: 10, fontWeight: "bold" }}>
                 Description MM
               </InputLabel>

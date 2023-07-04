@@ -7,12 +7,14 @@ import {
   Typography,
   Button,
   Card,
+  Breadcrumbs,
   CardActions,
   FormHelperText,
   Select,
   Box,
   MenuItem,
   useScrollTrigger,
+  FormLabel,
 } from "@mui/material";
 import { useDebugValue, useState } from "react";
 import { ADD_RESELLER, ALL_RESELLER, USERID } from "../../gql/reseller";
@@ -114,7 +116,7 @@ const CreateReseller = () => {
   }
   return (
     <>
-      <Box
+      {/* <Box
         role="presentation"
         sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
       >
@@ -128,8 +130,27 @@ const CreateReseller = () => {
         >
           Close
         </Button>
-      </Box>
+      </Box> */}
       <Card>
+        <div
+          style={{
+            // display: "flex",
+            // justifyContent: "space-between",
+            padding: "1rem",
+          }}
+        >
+          {/* dashboard */}
+          <div>
+            <Breadcrumbs aria-label="breadcrumb">
+              {/* <Link to="/" className="dashboard"> */}
+              <Typography variant="h6">Mula Dashboard (Reseller)</Typography>
+
+              {/* </Link> */}
+              {/* <span>ArtWork</span> */}
+            </Breadcrumbs>
+            <Typography>Main / Reseller</Typography>
+          </div>
+        </div>
         <CardContent sx={{ p: "2rem" }}>
           <Box
             sx={{
@@ -139,17 +160,21 @@ const CreateReseller = () => {
           >
             {/* Reseller User  */}
             <FormControl>
-              <InputLabel id="fk_user_id">Reseller User</InputLabel>
+              <FormLabel style={{ fontWeight: "bold" }}>
+                Reseller User
+              </FormLabel>
               <Select
+                style={{ height: "50px" }}
                 labelId="fk_user_id"
-                label="Reseller User"
-                variant="filled"
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+                variant="outlined"
                 defaultValue=""
                 //value={values.fk_medium_type_id}
                 onChange={handleChange("fk_user_id")}
               >
                 <MenuItem value="" disabled>
-                  Value
+                  Enter Value
                 </MenuItem>
                 {Array.isArray(userData.users)
                   ? userData.users

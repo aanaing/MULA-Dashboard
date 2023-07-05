@@ -12,7 +12,7 @@ import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../style/App.css";
 
-const drawerWidth = 260;
+const drawerWidth = 230;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -46,7 +46,7 @@ const Header = ({ handleDrawerOpen, open }) => {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedUser");
     //   history.push('/login')
-    navigate("/login");
+    navigate("/");
   };
 
   // if (loading) {
@@ -74,7 +74,6 @@ const Header = ({ handleDrawerOpen, open }) => {
         </Typography>
 
         <div>
-          {/* <span color="info">Dr.P</span> */}
           <IconButton
             size="large"
             aria-label="account of current user"

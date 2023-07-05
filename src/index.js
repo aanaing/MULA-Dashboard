@@ -12,21 +12,21 @@ import { onError } from "@apollo/client/link/error";
 
 const authLink = setContext((_, { headers }) => {
   const loggedUserJSON = window.localStorage.getItem("loggedUser");
-  // if (loggedUserJSON) {
-  //   return JSON.parse(loggedUserJSON);
-  // }
   const loggedUserParsed = JSON.parse(loggedUserJSON);
-  // if (loggedUserParsed) {
+  if (loggedUserParsed) {
+    return {
+      headers: {
+        ...headers,
+        Authorization: loggedUserParsed
+          ? `Bearer ${loggedUserParsed.token}`
+          : null,
+        // "x-hasura-admin-secret": "mula is very good",
+      },
+    };
+  }
   return {
-    headers: {
-      ...headers,
-      Authorization: loggedUserParsed
-        ? `Bearer ${loggedUserParsed.token}`
-        : null,
-      "x-hasura-admin-secret": "mula is very good",
-    },
+    headers: { ...headers },
   };
-  // }
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -47,7 +47,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-const httpLink = new HttpLink({ uri: "http://146.190.4.124:8080/v1/graphql" });
+const httpLink = new HttpLink({ uri: "https://mula.axra.app/v1/graphql" });
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: errorLink.concat(authLink).concat(httpLink),

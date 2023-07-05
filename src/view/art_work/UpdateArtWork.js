@@ -103,23 +103,23 @@ const UpdateArtWork = () => {
   const { data: nameData } = useQuery(ARTIST_NAME);
   const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORK_ID);
 
-  const { data: seriesData } = useQuery(ART_SERIES, {
-    variables: { fk_artist_id: artistNameId },
-  });
+  // const { data: seriesData } = useQuery(ART_SERIES, {
+  //   variables: { fk_artist_id: artistNameId },
+  // });
 
-  // const [seriesData, setSeriesData] = useState("");
-  // const [loadSeriesData, resultSeriesData] = useLazyQuery(ART_SERIES);
-  // useEffect(() => {
-  //   if (artistNameId) {
-  //     loadSeriesData({ variables: { fk_artist_id: artistNameId } });
-  //   }
-  // }, [loadSeriesData, artistNameId]);
+  const [seriesData, setSeriesData] = useState("");
+  const [loadSeriesData, resultSeriesData] = useLazyQuery(ART_SERIES);
+  useEffect(() => {
+    if (artistNameId) {
+      loadSeriesData({ variables: { fk_artist_id: artistNameId } });
+    }
+  }, [loadSeriesData, artistNameId]);
 
-  // useEffect(() => {
-  //   if (resultSeriesData.data) {
-  //     setSeriesData(resultSeriesData.data.art_series);
-  //   }
-  // }, [resultSeriesData]);
+  useEffect(() => {
+    if (resultSeriesData.data) {
+      setSeriesData(resultSeriesData.data.art_series);
+    }
+  }, [resultSeriesData]);
 
   const [seriesByArtworkItems, setSeriesByArtworkItems] = useState();
   const [loadSeriesDataByArtwork, resultSeriesDataByArtwork] = useLazyQuery(
@@ -332,7 +332,7 @@ const UpdateArtWork = () => {
 
   const [delete_image] = useMutation(DELETE_IMAGE, {
     onError: (err) => {
-      alert("Error on Server");
+      // alert("Error on Server");
       setLoading(false);
     },
   });

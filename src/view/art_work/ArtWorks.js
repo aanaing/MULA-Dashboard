@@ -116,7 +116,7 @@ const ArtWork = () => {
               <InputBase
                 id="search-by-phone"
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="Search By Name or Phone"
+                placeholder="Search By Artwork Name"
                 type="search"
                 onChange={(e) => setSearchValue(e.target.value)}
               />

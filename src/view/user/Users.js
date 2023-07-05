@@ -21,6 +21,7 @@ import {
   styled,
   TableRow,
   TableCell,
+  Avatar,
 } from "@mui/material";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { ALL_USERS } from "../../gql/user";
@@ -122,7 +123,7 @@ const Index = () => {
               <InputBase
                 id="search-by-phone"
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="Search By Name or Phone"
+                placeholder="Search By Fullname"
                 type="search"
                 onChange={(e) => setSearchValue(e.target.value)}
               />
@@ -185,11 +186,12 @@ const Index = () => {
                 >
                   ID
                 </TableCell>
-                <TableCell style={{ minWidth: 70 }}>Name</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Phone</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Created At</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Updated At</TableCell>
-                <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
+                <TableCell>Profile Image</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Created At</TableCell>
+                <TableCell>Updated At</TableCell>
+                <TableCell>Actions</TableCell>
               </StyledTableRow>
             </TableHead>
 
@@ -198,6 +200,13 @@ const Index = () => {
               {user.map((row, index) => (
                 <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
                   <TableCell>{row.id}</TableCell>
+                  <TableCell>
+                    <Avatar
+                      width="52px"
+                      height="52px"
+                      src={row.profile_image_url}
+                    ></Avatar>
+                  </TableCell>
                   <TableCell>{row.fullname}</TableCell>
                   <TableCell>{row.phone}</TableCell>
                   <TableCell>{row.created_at.substring(0, 10)}</TableCell>

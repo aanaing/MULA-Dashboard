@@ -93,7 +93,7 @@ const Events = () => {
             <span>Event</span>
           </Breadcrumbs>
         </div>
-        {/* search */}
+        {/* search
         <div>
           <form onSubmit={handleSearch}>
             <Paper
@@ -105,7 +105,7 @@ const Events = () => {
                 width: 350,
               }}
             >
-              {/* Search Box */}
+              Search Box
 
               <InputBase
                 id="search-by-phone"
@@ -130,7 +130,7 @@ const Events = () => {
               </IconButton>
             </Paper>
           </form>
-        </div>
+        </div> */}
       </div>
 
       <div>
@@ -210,7 +210,9 @@ const Events = () => {
                     </TableCell>
                     <TableCell>{row.event_name}</TableCell>
 
-                    <TableCell>{row.event_date_time}</TableCell>
+                    <TableCell>
+                      {row.event_date_time.substring(0, 10)}
+                    </TableCell>
                     <TableCell>{row.event_location}</TableCell>
                     <TableCell>
                       <Button

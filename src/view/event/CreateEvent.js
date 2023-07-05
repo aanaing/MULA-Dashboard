@@ -90,11 +90,12 @@ const CreateEvent = () => {
       console.log("error ", error);
     },
     onCompleted: (result) => {
-      setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
-      setValues({
-        ...values,
-        event_thumbnail_url: `https://axra.sgp1.digitaloceanspaces.com/Mula/${result.getImageUploadUrl.imageName}`,
-      });
+      return result;
+      // setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
+      // setValues({
+      //   ...values,
+      //   event_thumbnail_url: `https://axra.sgp1.digitaloceanspaces.com/Mula/${result.getImageUploadUrl.imageName}`,
+      // });
     },
   });
 
@@ -117,16 +118,16 @@ const CreateEvent = () => {
       }
       setImageFile(image);
       setImagePreview(URL.createObjectURL(image));
-      getImageUrl({ variables: { contentType: "image/*" } });
+      setValues({ ...values, event_thumbnail_url: URL.createObjectURL(image) });
+      // getImageUrl({ variables: { contentType: "image/*" } });
     }
   };
-
+  console.log("values", values);
   const [add_event] = useMutation(CREATE_EVENT, {
     onError: (err) => {
       alert("Error on server");
       setLoading(false);
     },
-
     onCompleted: (result) => {
       setLoading(false);
       setTextValue(RichTextEditor.createEmptyValue());
@@ -134,7 +135,6 @@ const CreateEvent = () => {
       alert("New Event has been added");
       navigate(-1);
     },
-
     refetchQueries: [ALL_EVENTS],
   });
 
@@ -197,11 +197,20 @@ const CreateEvent = () => {
     }
 
     try {
-      await imageService.uploadImage(imageFileUrl, imageFile);
-      console.log("date ", values);
+      // await getImageUrl({ variables: { contentType: "image/*" } });
+      // await imageService.uploadImage(imageFileUrl, imageFile);
+      const uploadUrl = await getImageUrl({
+        variables: { contentType: "image/*" },
+      });
+      await imageService.uploadImage(
+        uploadUrl.data.getImageUploadUrl.imageUploadUrl,
+        imageFile
+      );
+
       await add_event({
         variables: {
           ...values,
+          artwork_image_url: `https://axra.sgp1.digitaloceanspaces.com/Mula/${uploadUrl.data.getImageUploadUrl.imageName}`,
         },
       });
     } catch (error) {
@@ -389,7 +398,7 @@ const CreateEvent = () => {
                 <MenuItem value="" disabled={true}>
                   Enter Value
                 </MenuItem>
-                {console.log("object", data.admin)}
+
                 {data.admin && Array.isArray(data.admin)
                   ? data.admin.map((row) => (
                       <MenuItem key={row.id} value={row.id}>

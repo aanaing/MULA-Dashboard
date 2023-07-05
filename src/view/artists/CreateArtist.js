@@ -188,7 +188,11 @@ const CreateArtistByPhone = () => {
     try {
       await imageService.uploadImage(imageFileUrl, imageFile);
       await add_artist({
-        variables: { ...values },
+        variables: {
+          ...values,
+          year_born: Number(values.year_born),
+          year_died: Number(values.year_died),
+        },
       });
     } catch (error) {
       console.log("Error ", error);

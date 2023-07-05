@@ -93,7 +93,7 @@ const Resellers = () => {
             <span>Reseller</span>
           </Breadcrumbs>
         </div>
-        {/* search */}
+        {/* search
         <div>
           <Paper
             component="form"
@@ -104,7 +104,7 @@ const Resellers = () => {
               width: 350,
             }}
           >
-            {/* Search Box */}
+            Search Box
 
             <InputBase
               id="search-by-phone"
@@ -128,7 +128,7 @@ const Resellers = () => {
               <DirectionsIcon />
             </IconButton>
           </Paper>
-        </div>
+        </div> */}
       </div>
 
       <div>

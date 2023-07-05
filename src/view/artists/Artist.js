@@ -114,7 +114,6 @@ const Artist = () => {
               component="img"
               height="300px"
               image={data.artist_by_pk.artist_profile_image_url}
-              sx={{ my: 2 }}
             />
           </Box>
           {/* <Typography
@@ -150,7 +149,7 @@ const Artist = () => {
             <ListItem>
               <ListItemText
                 primary="User Phone"
-                // secondary={data.artist_by_pk?.artist_user?.fullname}
+                secondary={data.artist_by_pk?.artist_user?.phone}
               ></ListItemText>
             </ListItem>
             <ListItem>
@@ -195,7 +194,7 @@ const Artist = () => {
                 <div
                   style={{ color: "#495057", padding: "1rem" }}
                   dangerouslySetInnerHTML={{
-                    __html: data.artist_by_pk.biography,
+                    __html: data.artist_by_pk.biography_mm,
                   }}
                 ></div>
               </Box>

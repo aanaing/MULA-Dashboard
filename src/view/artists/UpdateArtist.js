@@ -98,8 +98,8 @@ const UpdateArtist = () => {
         artist_name_mm: getArtistData.data.artist_by_pk.artist_name_mm ?? "",
         biography: getArtistData.data.artist_by_pk.biography ?? "",
         biography_mm: getArtistData.data.artist_by_pk.biography_mm ?? "",
-        year_born: Number(getArtistData.data.artist_by_pk.year_born ?? ""),
-        year_died: Number(getArtistData.data.artist_by_pk.year_died ?? ""),
+        year_born: Number(getArtistData.data.artist_by_pk.year_born) ?? "",
+        year_died: Number(getArtistData.data.artist_by_pk.year_died) ?? "",
         fk_user_id: getArtistData.data.artist_by_pk.fk_user_id ?? "",
       });
       setTextValue(
@@ -126,6 +126,7 @@ const UpdateArtist = () => {
   const [getImageUrl] = useMutation(IMAGE_UPLOAD, {
     onError: (error) => {
       alert("Error on Server");
+      setLoading(false);
     },
     onCompleted: (result) => {
       console.log("result", result);
@@ -149,7 +150,6 @@ const UpdateArtist = () => {
   };
 
   const chooseImage = async (e) => {
-    console.log("mmmmmmmmmm");
     if (e.target.files && e.target.files[0]) {
       let image = e.target.files[0];
       console.log("image", image);
@@ -181,7 +181,7 @@ const UpdateArtist = () => {
     onCompleted: (data) => {
       setLoading(false);
 
-      setValues({ ...values });
+      setValues({});
       alert("Artist had been updated");
       navigate(`/artist`);
     },
@@ -202,11 +202,18 @@ const UpdateArtist = () => {
   const handleUpdate = async () => {
     setLoading(true);
     try {
+      // await getImageUrl({ variables: { contentType: "image/*" } });
       if (isImageChange) {
         await imageService.uploadImage(imageFileUrl, imageFile);
         await deleteImage({ variables: { image_name: oldImageName } });
       }
-      await update_artist({ variables: { ...values } });
+      await update_artist({
+        variables: {
+          ...values,
+          year_born: Number(values.year_born),
+          year_died: Number(values.year_died),
+        },
+      });
     } catch (error) {
       console.log("Error ", error);
     }

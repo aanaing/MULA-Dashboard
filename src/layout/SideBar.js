@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { styled } from "@mui/material/styles";
 import EventAvailableSharpIcon from "@mui/icons-material/EventAvailableSharp";
 import Drawer from "@mui/material/Drawer";
+import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import PlayCircleSharpIcon from "@mui/icons-material/PlayCircleSharp";
@@ -21,7 +22,7 @@ import SideBarContext from "../context/SideBarContext";
 import { makeStyles } from "@mui/styles";
 import { Icon } from "@mui/material";
 
-const drawerWidth = 260;
+const drawerWidth = 230;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -71,8 +72,9 @@ const SideBar = ({ open }) => {
           <img src={icons.logo} alt="mula" width="50px" height="50px" />
         </Box>
       </DrawerHeader>
+      <Divider />
       <List className="nav-list">
-        <Link to="/" onClick={() => setNav("")} className="nav-link">
+        <Link to="/dashboard" onClick={() => setNav("")} className="nav-link">
           <ListItem
             button
             className={`${nav === "" ? "nav-btn active" : "nav-btn"}`}
@@ -152,15 +154,18 @@ const SideBar = ({ open }) => {
             Event
           </ListItem>
         </Link>{" "}
+        <Divider sx={{ my: "1.5rem" }} />
         {/* Digital artwork */}
         <Link
           to="/digital_artwork"
-          onClick={() => setNav("event")}
+          onClick={() => setNav("digital_artwork")}
           className="nav-link"
         >
           <ListItem
             button
-            className={`${nav === "event" ? "nav-btn active" : "nav-btn"}`}
+            className={`${
+              nav === "digital_artwork" ? "nav-btn active" : "nav-btn"
+            }`}
           >
             <ListItemIcon>
               <PaletteIcon className="nav-link-icon" />

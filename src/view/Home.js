@@ -47,7 +47,7 @@ import DigitalArtwork from "../view/digital artwork/DigitalArtwork";
 import CreateDigitalArtwork from "../view/digital artwork/CreateDigitalArtwork";
 import update_digital_artwork from "../view/digital artwork/UpdateDigitalArtwork";
 
-const drawerWidth = 260;
+const drawerWidth = 230;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -162,14 +162,14 @@ const Admin = () => {
 
               <Route path="/digital_artwork" element={<DigitalArtworks />} />
               <Route path="/digital_artwork/:id" element={<DigitalArtwork />} />
-              {/* <Route
+              <Route
                 path="/create_digital_artwork"
                 element={<CreateDigitalArtwork />}
               />
               <Route
                 path="/update_digital_artwork/:id"
                 element={<CreateDigitalArtwork />}
-              /> */}
+              />
             </Routes>
           </AuthContext.Provider>
         </Suspense>

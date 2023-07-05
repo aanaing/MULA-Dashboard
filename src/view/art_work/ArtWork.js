@@ -91,7 +91,7 @@ const ArtWork = () => {
   if (!data) {
     return "no data";
   }
-
+  console.log("data", data);
   return (
     <>
       <div role="presentation" className="align">
@@ -260,7 +260,7 @@ const ArtWork = () => {
                   <div
                     style={{ color: "#495057", padding: "1rem" }}
                     dangerouslySetInnerHTML={{
-                      __html: data.traditional_art_work_by_pk.description,
+                      __html: data.traditional_art_work_by_pk.description_mm,
                     }}
                   ></div>
                 </Box>

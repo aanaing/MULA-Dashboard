@@ -81,198 +81,192 @@ const DigitalArtworks = () => {
   if (!data) {
     return "no data";
   }
-
+  console.log("data", data);
   return (
-    // <div>
-    //   <div
-    //     style={{
-    //       display: "flex",
-    //       justifyContent: "space-between",
-    //       padding: "1rem",
-    //     }}
-    //   >
-    //     {/* dashboard */}
-    //     <div>
-    //       <Breadcrumbs aria-label="breadcrumb">
-    //         <Link to="/" className="dashboard">
-    //           Dashboard
-    //         </Link>
-    //         <span>ArtWork</span>
-    //       </Breadcrumbs>
-    //     </div>
-    //     {/* search */}
-    //     <div>
-    //       <form onSubmit={handleSearch}>
-    //         <Paper
-    //           component="form"
-    //           sx={{
-    //             p: "2px 4px",
-    //             display: "flex",
-    //             alignItems: "center",
-    //             width: 350,
-    //           }}
-    //         >
-    //           {/* Search Box */}
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "1rem",
+        }}
+      >
+        {/* dashboard */}
+        <div>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link to="/" className="dashboard">
+              Dashboard
+            </Link>
+            <span>ArtWork</span>
+          </Breadcrumbs>
+        </div>
+        {/* search */}
+        <div>
+          <form onSubmit={handleSearch}>
+            <Paper
+              component="form"
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                alignItems: "center",
+                width: 350,
+              }}
+            >
+              {/* Search Box */}
 
-    //           <InputBase
-    //             id="search-by-phone"
-    //             sx={{ ml: 1, flex: 1 }}
-    //             placeholder="Search By Name or Phone"
-    //             type="search"
-    //             onChange={(e) => setSearchValue(e.target.value)}
-    //           />
-    //           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-    //             <SearchIcon />
-    //           </IconButton>
-    //           <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-    //           <IconButton
-    //             //   color="warning"
-    //             sx={{ p: "10px" }}
-    //             aria-label="directions"
-    //             type="submit"
-    //             value={search}
-    //             onClick={handleSearch}
-    //           >
-    //             <DirectionsIcon />
-    //           </IconButton>
-    //         </Paper>
-    //       </form>
-    //     </div>
-    //   </div>
+              <InputBase
+                id="search-by-phone"
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Search By Name or Phone"
+                type="search"
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+              <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+              <IconButton
+                //   color="warning"
+                sx={{ p: "10px" }}
+                aria-label="directions"
+                type="submit"
+                value={search}
+                onClick={handleSearch}
+              >
+                <DirectionsIcon />
+              </IconButton>
+            </Paper>
+          </form>
+        </div>
+      </div>
 
-    //   <div>
-    //     <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-    //       <Button
-    //         variant="contained"
-    //         sx={{
-    //           width: 90,
-    //           height: 60,
-    //           p: 1,
-    //           my: 2,
-    //           fontWeight: "bold",
-    //         }}
-    //         color="secondary"
-    //         onClick={() => navigate("/create_artWork")}
-    //       >
-    //         Add
-    //       </Button>
-    //     </Box>
-    //   </div>
+      <div>
+        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+          <Button
+            variant="contained"
+            sx={{
+              width: 90,
+              height: 60,
+              p: 1,
+              my: 2,
+              fontWeight: "bold",
+            }}
+            color="secondary"
+            onClick={() => navigate("/create_digital_artwork")}
+          >
+            Add
+          </Button>
+        </Box>
+      </div>
 
-    //   <Box
-    //     sx={{
-    //       display: "flex",
-    //       flexFlow: "wrap row",
-    //       "& > :not(style)": {
-    //         m: 1,
-    //         width: "100%",
-    //         minHeight: "25vh",
-    //       },
-    //     }}
-    //   >
-    //     <TableContainer component={Paper}>
-    //       <Table
-    //         stickyHeader
-    //         aria-label="sticky table , responsive table"
-    //         className={classes.table}
-    //       >
-    //         <TableHead>
-    //           <StyledTableRow>
-    //             <TableCell
-    //               style={{
-    //                 minWidth: 100,
-    //                 fontWeight: "bold",
-    //               }}
-    //             >
-    //               ID
-    //             </TableCell>
-    //             <TableCell style={{ minWidth: 70 }}>Artwork Image</TableCell>
-    //             <TableCell style={{ minWidth: 70 }}>Artwork Name</TableCell>
+      <Box
+        sx={{
+          display: "flex",
+          flexFlow: "wrap row",
+          "& > :not(style)": {
+            m: 1,
+            width: "100%",
+            minHeight: "25vh",
+          },
+        }}
+      >
+        <TableContainer component={Paper}>
+          <Table
+            stickyHeader
+            aria-label="sticky table , responsive table"
+            className={classes.table}
+          >
+            <TableHead>
+              <StyledTableRow>
+                <TableCell
+                  style={{
+                    minWidth: 100,
+                    fontWeight: "bold",
+                  }}
+                >
+                  ID
+                </TableCell>
+                <TableCell style={{ minWidth: 70 }}>Artwork Image</TableCell>
+                <TableCell style={{ minWidth: 70 }}>Artwork Name</TableCell>
 
-    //             <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
-    //             <TableCell style={{ minWidth: 70 }}>Artwork Type</TableCell>
-    //             <TableCell style={{ minWidth: 70 }}>Status</TableCell>
-    //             <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
-    //           </StyledTableRow>
-    //         </TableHead>
+                <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
 
-    //         <TableBody>
-    //           {data.traditional_art_work.length === 0 && <h1>No Artwork</h1>}
-    //           {data.traditional_art_work &&
-    //             data.traditional_art_work.map((row, index) => (
-    //               <StyledTableRow hover role="checkbox" tabIndex={-1}>
-    //                 <TableCell>{row.id}</TableCell>
+                <TableCell style={{ minWidth: 70 }}>Status</TableCell>
+                <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
+              </StyledTableRow>
+            </TableHead>
 
-    //                 <TableCell>
-    //                   <Avatar
-    //                     width="52px"
-    //                     height="52px"
-    //                     src={row.artwork_image_url}
-    //                   ></Avatar>
-    //                 </TableCell>
-    //                 <TableCell>{row.artwork_name}</TableCell>
-    //                 <TableCell>{row.artwork_year}</TableCell>
-    //                 <TableCell>
-    //                   {
-    //                     row.traditional_art_work_artwork_medium_type
-    //                       ?.medium_name
-    //                   }
-    //                 </TableCell>
-    //                 <TableCell>
-    //                   {row.pending === true ? (
-    //                     <Typography
-    //                       style={{
-    //                         backgroundColor: "green",
-    //                         padding: "0.5rem",
-    //                         color: "#fff",
-    //                         borderRadius: "10px",
-    //                       }}
-    //                     >
-    //                       Approve
-    //                     </Typography>
-    //                   ) : (
-    //                     <Typography
-    //                       style={{
-    //                         backgroundColor: "orange",
-    //                         padding: "0.5rem",
-    //                         color: "#fff",
-    //                         borderRadius: "10px",
-    //                       }}
-    //                     >
-    //                       Pending
-    //                     </Typography>
-    //                   )}
-    //                 </TableCell>
-    //                 <TableCell>
-    //                   <Button
-    //                     size="small"
-    //                     sx={{ color: "red" }}
-    //                     // color="warning"
-    //                     // variant="contained"
-    //                     fontWeight="bold"
-    //                     onClick={() => navigate(`/art_work/${row.id}`)}
-    //                   >
-    //                     Detail
-    //                   </Button>
-    //                 </TableCell>
-    //               </StyledTableRow>
-    //             ))}
-    //         </TableBody>
-    //       </Table>
-    //     </TableContainer>
-    //     <TablePagination
-    //       sx={{ color: "black" }}
-    //       rowsPerPageOptions={[10, 25, 100]}
-    //       component="div"
-    //       count={data?.traditional_art_work_aggregate.aggregate.count}
-    //       rowsPerPage={rowsPerPage}
-    //       page={page}
-    //       onPageChange={handleChangePage}
-    //       onRowsPerPageChange={handleChangeRowsPerPage}
-    //     />
-    //   </Box>
-    // </div>
-    <>hello</>
+            <TableBody>
+              {data.digital_art_work.length === 0 && <h1>No Artwork</h1>}
+              {data.digital_art_work &&
+                data.digital_art_work.map((row, index) => (
+                  <StyledTableRow hover role="checkbox" tabIndex={-1}>
+                    <TableCell>{row.id}</TableCell>
+
+                    <TableCell>
+                      <Avatar
+                        width="52px"
+                        height="52px"
+                        src={row.artwork_image_url}
+                      ></Avatar>
+                    </TableCell>
+                    <TableCell>{row.artwork_name}</TableCell>
+                    <TableCell>{row.artwork_year}</TableCell>
+
+                    <TableCell>
+                      {row.pending === true ? (
+                        <Typography
+                          style={{
+                            backgroundColor: "green",
+                            padding: "0.5rem",
+                            color: "#fff",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          Approve
+                        </Typography>
+                      ) : (
+                        <Typography
+                          style={{
+                            backgroundColor: "orange",
+                            padding: "0.5rem",
+                            color: "#fff",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          Pending
+                        </Typography>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        sx={{ color: "red" }}
+                        // color="warning"
+                        // variant="contained"
+                        fontWeight="bold"
+                        onClick={() => navigate(`/digital_artwork/${row.id}`)}
+                      >
+                        Detail
+                      </Button>
+                    </TableCell>
+                  </StyledTableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          sx={{ color: "black" }}
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data?.digital_art_work_aggregate.aggregate.count}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
+    </div>
   );
 };
 

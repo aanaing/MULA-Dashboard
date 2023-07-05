@@ -162,6 +162,7 @@ const CreateArtWork = () => {
   const [add_artwork] = useMutation(ADD_ARTWORK, {
     onError: (err) => {
       alert("Error on server");
+      setLoading(false);
     },
 
     onCompleted: (result) => {

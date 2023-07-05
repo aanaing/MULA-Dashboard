@@ -133,16 +133,15 @@ const UpdateEvent = () => {
     }
   }, [resultEvent]);
 
-  console.log("values", values);
-
   //for image upload
   const [getImageUrl] = useMutation(IMAGE_UPLOAD, {
     onError: (error) => {
-      alert("Error on Server");
+      // alert("Error on Server");
       console.log("error ", error);
     },
     onCompleted: (result) => {
       setImageFileUrl(result.getImageUploadUrl.imageUploadUrl);
+      setIsImageChange(true);
       setValues({
         ...values,
         event_thumbnail_url: `https://axra.sgp1.digitaloceanspaces.com/Mula/${result.getImageUploadUrl.imageName}`,
@@ -175,7 +174,7 @@ const UpdateEvent = () => {
 
   const [delete_image] = useMutation(DELETE_IMAGE, {
     onError: (err) => {
-      alert("Error on Server");
+      // alert("Error on Server");
       setLoading(false);
     },
   });
@@ -260,7 +259,6 @@ const UpdateEvent = () => {
         await imageService.uploadImage(imageFileUrl, imageFile);
         await delete_image({ variables: { image_name: oldImageName } });
       }
-
       await update_event({
         variables: {
           ...values,
@@ -543,7 +541,7 @@ const UpdateEvent = () => {
               onClick={handleUpdate}
               loading={loading}
             >
-              Create
+              Update
             </LoadingButton>
           </Box>
         </CardContent>

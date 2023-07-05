@@ -76,7 +76,7 @@ export const ADD_ARTIST = gql`
     $biography: String!
     $biography_mm: String!
     $fk_user_id: Int!
-    $year_died: Int!
+    $year_died: Int
     $year_born: Int!
   ) {
     insert_artist_one(

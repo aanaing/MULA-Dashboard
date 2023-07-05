@@ -20,7 +20,6 @@ const authLink = setContext((_, { headers }) => {
         Authorization: loggedUserParsed
           ? `Bearer ${loggedUserParsed.token}`
           : null,
-        // "x-hasura-admin-secret": "mula is very good",
       },
     };
   }

@@ -394,7 +394,7 @@ const CreateArtWork = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artwork_name"
-                placeholder="Enter Value"
+                placeholder="Enter Artwork Name (Eng)"
                 value={values.artwork_name}
                 onChange={handleChange("artwork_name")}
                 error={error.artwork_name ? true : false}
@@ -419,7 +419,7 @@ const CreateArtWork = () => {
                   onChange={(e) => setArtistNameId(e.target.value)}
                 >
                   <MenuItem value="" disabled={true}>
-                    Enter Value
+                    Enter Artist Name
                   </MenuItem>
                   {Array.isArray(nameData.artist)
                     ? nameData.artist.map((ast) => (
@@ -444,7 +444,7 @@ const CreateArtWork = () => {
                   type="number"
                   variant="outlined"
                   id="artwork_year"
-                  placeholder="Enter Value"
+                  placeholder="Enter Artwork Year"
                   value={values.artwork_year}
                   onChange={handleChange("artwork_year")}
                   error={error.artwork_year ? true : false}
@@ -461,7 +461,7 @@ const CreateArtWork = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artwork_name_mm"
-                placeholder="Enter Value"
+                placeholder="Enter Artwork Name (MM)"
                 value={values.artwork_name_mm}
                 onChange={handleChange("artwork_name_mm")}
                 error={error.artwork_name_mm ? true : false}
@@ -483,7 +483,7 @@ const CreateArtWork = () => {
                   type="number"
                   variant="outlined"
                   id="current_price"
-                  // label="Current Price"
+                  placeholder="Enter Current Price"
                   value={values.current_price}
                   onChange={handleChange("current_price")}
                   error={error.current_price ? true : false}
@@ -500,7 +500,7 @@ const CreateArtWork = () => {
                   type="number"
                   variant="outlined"
                   id="update_price"
-                  // label="Update Price"
+                  placeholder="Enter Update Price"
                   value={values.update_price}
                   onChange={handleChange("update_price")}
                   error={error.update_price ? true : false}
@@ -523,7 +523,7 @@ const CreateArtWork = () => {
                 onChange={handleChange("fk_medium_type_id")}
               >
                 <MenuItem value="" disabled={true}>
-                  Enter Value
+                  Enter Artwork Type
                 </MenuItem>
                 {Array.isArray(typeData.artwork_medium_type)
                   ? typeData.artwork_medium_type.map((type) => (
@@ -546,7 +546,7 @@ const CreateArtWork = () => {
                   InputProps={{ sx: { height: 50 } }}
                   id="sub_type"
                   variant="outlined"
-                  // placeholder="Width"
+                  placeholder="Width"
                   value={width}
                   onChange={(e) => setWidth(e.target.value)}
                   error={error.width ? true : false}
@@ -560,7 +560,7 @@ const CreateArtWork = () => {
                   InputProps={{ sx: { height: 50 } }}
                   id="sub_type"
                   variant="outlined"
-                  // placeholder="height"
+                  placeholder="height"
                   value={height}
                   onChange={(e) => setheight(e.target.value)}
                   error={error.height ? true : false}
@@ -571,15 +571,17 @@ const CreateArtWork = () => {
                 <FormLabel style={{ fontWeight: "bold" }}>Unit</FormLabel>
                 {/* <InputLabel>Unit</InputLabel> */}
                 <Select
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
                   style={{ height: "50px" }}
-                  labelId="width"
+                  // labelId="width"
                   // placeholder="Unit"
                   variant="outlined"
                   defaultValue=""
                   onChange={(e) => setUnit(e.target.value)}
                 >
                   <MenuItem value="" disabled>
-                    Value
+                    Unit
                   </MenuItem>
                   {Array.isArray(dimensionData.artwork_dimensions)
                     ? dimensionData.artwork_dimensions.map((dimension) => (
@@ -606,7 +608,7 @@ const CreateArtWork = () => {
                 inputProps={{ "aria-label": "Without label" }}
               >
                 <MenuItem value="" disabled={true} hidden>
-                  Enter Value
+                  Enter Ownership
                 </MenuItem>
 
                 {Array.isArray(ownershipData.users)

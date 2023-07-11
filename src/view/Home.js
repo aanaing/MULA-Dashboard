@@ -45,7 +45,8 @@ import UpdateEvent from "../view/event/UpdateEvent";
 import DigitalArtworks from "../view/digital artwork/DigitalArtworks";
 import DigitalArtwork from "../view/digital artwork/DigitalArtwork";
 import CreateDigitalArtwork from "../view/digital artwork/CreateDigitalArtwork";
-import update_digital_artwork from "../view/digital artwork/UpdateDigitalArtwork";
+import Update_digital_artwork from "../view/digital artwork/UpdateDigitalArtwork";
+import UpdateDigitalArtwork from "../view/digital artwork/UpdateDigitalArtwork";
 
 const drawerWidth = 230;
 
@@ -99,15 +100,15 @@ const Admin = () => {
   //   }, 3000);
   // };
 
-  // useEffect(() => {
-  //   const loggedUser = window.localStorage.getItem("loggedUser");
-  //   if (loggedUser) {
-  //     const parsedLoggedUser = JSON.parse(loggedUser);
-  //     setAuth(parsedLoggedUser);
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("loggedUser");
+    if (loggedUser) {
+      const parsedLoggedUser = JSON.parse(loggedUser);
+      setAuth(parsedLoggedUser);
+    } else {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <Box
@@ -168,7 +169,7 @@ const Admin = () => {
               />
               <Route
                 path="/update_digital_artwork/:id"
-                element={<CreateDigitalArtwork />}
+                element={<UpdateDigitalArtwork />}
               />
             </Routes>
           </AuthContext.Provider>

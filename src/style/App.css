@@ -105,20 +105,19 @@
 } */
 
 .MuiTableCell-head {
-  /* background: rgb(199, 221, 233) !important; */
-  /* background: #616161 !important; */
-  background-color: #d7d7dc !important;
+  /* background-color: #d7d7dc !important; */
   font-size: 1rem !important;
   padding: 1.3rem !important;
   /* color: white !important; */
+  font-weight: bold;
 }
-thead .MuiTableCell-root:first-child {
+/* thead .MuiTableCell-root:first-child {
   border-top-left-radius: 5px;
 }
 
 thead .MuiTableCell-root:last-child {
   border-top-right-radius: 5px;
-}
+} */
 
 .MuiTableRow-root.MuiTableRow-hover:hover {
   border: none !important;

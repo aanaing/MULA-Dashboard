@@ -13,6 +13,7 @@ import { onError } from "@apollo/client/link/error";
 const authLink = setContext((_, { headers }) => {
   const loggedUserJSON = window.localStorage.getItem("loggedUser");
   const loggedUserParsed = JSON.parse(loggedUserJSON);
+
   if (loggedUserParsed) {
     return {
       headers: {
@@ -36,7 +37,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         extensions.code === "invalid-headers" ||
         extensions.code === "invalid-jwt"
       ) {
-        window.location.assign(`${window.location.origin}/login`);
+        window.location.assign(`${window.location.origin}/`);
       }
     });
   }

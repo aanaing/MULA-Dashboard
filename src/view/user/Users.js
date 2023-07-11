@@ -14,6 +14,7 @@ import {
   Breadcrumbs,
   Button,
   TablePagination,
+  Typography,
   TableContainer,
   Table,
   TableHead,
@@ -27,7 +28,7 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { ALL_USERS } from "../../gql/user";
 import SideBarContext from "../../context/SideBarContext";
 
-const Index = () => {
+const Users = () => {
   const { setNav } = useContext(SideBarContext);
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
@@ -42,6 +43,7 @@ const Index = () => {
   useEffect(() => {
     loadUser({
       variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+      fetchPolicy: "network-only",
     });
   }, [loadUser, rowsPerPage, offset, search]);
   useEffect(() => {
@@ -55,6 +57,13 @@ const Index = () => {
     return "no user";
   }
 
+  const idsFromDatabase = Array.isArray(user) && user.map((u) => u.id);
+  console.log("ids from database", idsFromDatabase);
+  // const orderedIds = idsFromDatabase.sort((a, b) => a - b);
+
+  // const newSequentialIds = orderedIds.map((id, index) => index + 1);
+
+  // setUser({ ...user, id: newSequentialIds });
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     setOffset(rowsPerPage * newPage);
@@ -68,6 +77,16 @@ const Index = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(searchValue);
+    if (searchValue === "") {
+      loadUser({
+        variables: {
+          limit: rowsPerPage,
+          offset: offset,
+          search: `%${search}%`,
+        },
+        fetchPolicy: "network-only",
+      });
+    }
   };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -90,11 +109,16 @@ const Index = () => {
 
   return (
     <div>
-      <div
-        style={{
+      <Box
+        sx={{
           display: "flex",
           justifyContent: "space-between",
           padding: "1rem",
+          "@media (max-width: 480px)": {
+            display: "grid",
+            gap: "1rem",
+            padding: "0",
+          },
         }}
       >
         {/* dashboard */}
@@ -115,11 +139,13 @@ const Index = () => {
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width: 350,
+                width: "auto",
+                // "@media (max-width: 320px)": {
+                //   width: "auto",
+                // },
               }}
             >
               {/* Search Box */}
-
               <InputBase
                 id="search-by-phone"
                 sx={{ ml: 1, flex: 1 }}
@@ -144,17 +170,13 @@ const Index = () => {
             </Paper>
           </form>
         </div>
-      </div>
+        {/* add */}
 
-      <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
         <Button
           variant="contained"
           sx={{
-            width: 90,
-            height: 60,
-            p: 1,
-            my: 2,
-            fontWeight: "bold",
+            px: 3,
+            py: 1,
           }}
           color="secondary"
           onClick={() => navigate("/create_user")}
@@ -174,56 +196,92 @@ const Index = () => {
           },
         }}
       >
-        <TableContainer sx={{ maxHeight: "60vh", Width: "100px" }}>
-          <Table stickyHeader aria-label="sticky table">
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "70vh",
+            Width: "100px",
+            border: "1px groove rgba(0,0,0,0.2)",
+          }}
+        >
+          <Table stickyHeader aria-label="sticky table , responsive table">
             <TableHead>
               <StyledTableRow>
                 <TableCell
                   style={{
-                    minWidth: 100,
+                    minWidth: 70,
                     fontWeight: "bold",
                   }}
                 >
                   ID
                 </TableCell>
-                <TableCell>Profile Image</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Created At</TableCell>
-                <TableCell>Updated At</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Profile Image
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Name
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Phone
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Created At
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Updated At
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Actions
+                </TableCell>
               </StyledTableRow>
             </TableHead>
 
-            <TableBody>
-              {user.length === 0 && <h1>No Users</h1>}
-              {user.map((row, index) => (
-                <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>
-                    <Avatar
-                      width="52px"
-                      height="52px"
-                      src={row.profile_image_url}
-                    ></Avatar>
+            {user.length === 0 ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={7} style={{ textAlign: "center" }}>
+                    <Typography variant="h6" color="error">
+                      No Users Data
+                    </Typography>
                   </TableCell>
-                  <TableCell>{row.fullname}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
-                  <TableCell>{row.created_at.substring(0, 10)}</TableCell>
-                  <TableCell>{row.updated_at.substring(0, 10)}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      color="warning"
-                      fontWeight="bold"
-                      onClick={() => navigate(`/user/${row.id}`)}
-                    >
-                      Detail
-                    </Button>
-                  </TableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
+                </TableRow>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {user.map((row, index) => (
+                  <StyledTableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={index}
+                  >
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      <Avatar
+                        width="52px"
+                        height="52px"
+                        src={row.profile_image_url}
+                      ></Avatar>
+                    </TableCell>
+                    <TableCell>{row.fullname}</TableCell>
+                    <TableCell>{row.phone}</TableCell>
+                    <TableCell>{row.created_at.slice(0, 10)}</TableCell>
+                    <TableCell>{row.updated_at.slice(0, 10)}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        sx={{ color: "white", p: 1, mr: 1 }}
+                        onClick={() => navigate(`/user/${row.id}`)}
+                      >
+                        Detail
+                      </Button>
+                    </TableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
         <TablePagination
@@ -241,4 +299,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Users;

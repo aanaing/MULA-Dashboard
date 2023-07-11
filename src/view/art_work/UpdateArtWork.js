@@ -138,7 +138,7 @@ const UpdateArtWork = () => {
   useEffect(() => {
     if (resultArtwork.data) {
       setValues({
-        id: resultArtwork.data.traditional_art_work_by_pk.id ?? "",
+        id: resultArtwork?.data.traditional_art_work_by_pk.id ?? "",
         artwork_image_url:
           resultArtwork.data.traditional_art_work_by_pk.artwork_image_url ?? "",
         artwork_name:

@@ -14,7 +14,7 @@ import {
   Alert,
   Paper,
 } from "@mui/material";
-
+import useMediaQuery from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { DELETE_IMAGE } from "../../gql/image";
@@ -24,6 +24,8 @@ import {
   DELETE_ARTWORK,
   ARTWORKS,
   PENDING_STATUS,
+  OWNERSHIP,
+  USER_PHONE,
 } from "../../gql/artwork";
 const styleR = {
   position: "absolute",
@@ -43,8 +45,15 @@ const ArtWork = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const { data } = useQuery(ARTWORK_ID, { variables: { id: id } });
 
+  const { data: userPhone } = useQuery(USER_PHONE, {
+    variables: {
+      users_traditional_art_works: data?.traditional_art_work_by_pk.id,
+    },
+  });
+  console.log("user phone", userPhone);
   const [delete_artwork] = useMutation(DELETE_ARTWORK, {
     onError: (error) => {
       alert("delete error");
@@ -91,7 +100,10 @@ const ArtWork = () => {
   if (!data) {
     return "no data";
   }
-  console.log("data", data);
+  if (!userPhone) {
+    return;
+  }
+
   return (
     <>
       <div role="presentation" className="align">
@@ -145,8 +157,6 @@ const ArtWork = () => {
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
                 gap: "2rem",
-
-                // justifyContent: "center",
               }}
             >
               {/* <Box display="grid" rowGap="1rem"> */}
@@ -273,7 +283,7 @@ const ArtWork = () => {
             {data.traditional_art_work_by_pk.pending ? (
               <Button
                 variant="contained"
-                color="success"
+                color="warning"
                 onClick={() =>
                   pending_status({
                     variables: {
@@ -283,12 +293,12 @@ const ArtWork = () => {
                   })
                 }
               >
-                Approve
+                Pending
               </Button>
             ) : (
               <Button
                 variant="contained"
-                color="warning"
+                color="success"
                 onClick={() =>
                   pending_status({
                     variables: {
@@ -298,7 +308,7 @@ const ArtWork = () => {
                   })
                 }
               >
-                Pending
+                Approve
               </Button>
             )}
           </Box>

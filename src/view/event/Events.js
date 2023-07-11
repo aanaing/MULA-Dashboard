@@ -131,25 +131,19 @@ const Events = () => {
             </Paper>
           </form>
         </div> */}
-      </div>
 
-      <div>
-        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-          <Button
-            variant="contained"
-            sx={{
-              width: 90,
-              height: 60,
-              p: 1,
-              my: 2,
-              fontWeight: "bold",
-            }}
-            color="secondary"
-            onClick={() => navigate("/create_event")}
-          >
-            Add
-          </Button>
-        </Box>
+        {/* add */}
+        <Button
+          variant="contained"
+          sx={{
+            px: 3,
+            py: 1,
+          }}
+          color="secondary"
+          onClick={() => navigate("/create_event")}
+        >
+          Add
+        </Button>
       </div>
 
       <Box
@@ -163,28 +157,40 @@ const Events = () => {
           },
         }}
       >
-        {/* <TableContainer sx={{ maxHeight: "60vh", Width: "100px" }}> */}
-        <TableContainer component={Paper}>
-          {/* <Table stickyHeader aria-label="sticky table"> */}
-          <Table
-            stickyHeader
-            aria-label="sticky table , responsive table"
-            className={classes.table}
-          >
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "70vh",
+            Width: "100px",
+            border: "1px groove rgba(0,0,0,0.2)",
+          }}
+        >
+          <Table stickyHeader aria-label="sticky table , responsive table">
             <TableHead>
               <StyledTableRow>
                 <TableCell
                   style={{
                     minWidth: 100,
+                    fontWeight: "bold",
                   }}
                 >
                   ID
                 </TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Event Name</TableCell>
-                <TableCell>Event Time</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Image
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Event Name
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Event Time
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Location
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Actions
+                </TableCell>
               </StyledTableRow>
             </TableHead>
 
@@ -199,7 +205,7 @@ const Events = () => {
                     tabIndex={-1}
                     key={index}
                   >
-                    <TableCell>{row.id}</TableCell>
+                    <TableCell>{index + 1}</TableCell>
 
                     <TableCell>
                       <Avatar
@@ -217,10 +223,9 @@ const Events = () => {
                     <TableCell>
                       <Button
                         size="small"
-                        sx={{ color: "red" }}
-                        // color="warning"
-                        // variant="contained"
-                        fontWeight="bold"
+                        variant="contained"
+                        color="error"
+                        sx={{ color: "white", p: 1, mr: 1 }}
                         onClick={() => navigate(`/event/${row.id}`)}
                       >
                         Detail

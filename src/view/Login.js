@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import ADMIN_LOGIN from "../gql/adminLogin";
 import * as jose from "jose";
@@ -34,6 +34,13 @@ const Login = () => {
 
   const [showAlert, setShowAlert] = useState({ message: "", isError: false });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem("loggedUser");
+    if (loggedUser) {
+      navigate("*");
+    }
+  }, []);
 
   /*Part of gql */
   const [postLogin] = useMutation(ADMIN_LOGIN, {

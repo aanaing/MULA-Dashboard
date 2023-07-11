@@ -33,15 +33,6 @@ export const ALL_USERS = gql`
     }
   }
 `;
-// export const ALL_USERS = gql`
-// users(
-//   distinct_on: [users_select_column!]
-//   limit: Int
-//   offset: Int
-//   order_by: [users_order_by!]
-//   where: users_bool_exp
-//   ): [users!]!
-// `;
 
 //get one user
 export const USER = gql`

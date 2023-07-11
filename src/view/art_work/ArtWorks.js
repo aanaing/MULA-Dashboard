@@ -45,13 +45,28 @@ const ArtWork = () => {
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [artwork, setArtwork] = useState("");
-  // const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
-  const { data } = useQuery(ARTWORKS, {
-    variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
-    fetchPolicy: "network-only",
-  });
+  const [data, setData] = useState("");
+  const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
+  // const { data } = useQuery(ARTWORKS, {
+  //   variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+  //   fetchPolicy: "network-only",
+  // });
 
+  useEffect(() => {
+    loadArtwork({
+      variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+      fetchPolicy: "network-only",
+    });
+  }, [loadArtwork, rowsPerPage, offset, search]);
+
+  useEffect(() => {
+    if (resultArtwork.data) {
+      setData(resultArtwork.data.traditional_art_work);
+      setCount(
+        resultArtwork.data?.traditional_art_work_aggregate.aggregate.count
+      );
+    }
+  }, [resultArtwork]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     setOffset(rowsPerPage * newPage);
@@ -65,11 +80,22 @@ const ArtWork = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(searchValue);
+    if (searchValue === "") {
+      loadArtwork({
+        variables: {
+          limit: rowsPerPage,
+          offset: offset,
+          search: `%${search}%`,
+        },
+        fetchPolicy: "network-only",
+      });
+    }
   };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
+      // backgroundColor: "#f1f3f5",
     },
     // hide last border
     "&:last-child td, &:last-child th": {
@@ -108,7 +134,7 @@ const ArtWork = () => {
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width: 350,
+                width: "auto",
               }}
             >
               {/* Search Box */}
@@ -137,25 +163,18 @@ const ArtWork = () => {
             </Paper>
           </form>
         </div>
-      </div>
-
-      <div>
-        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-          <Button
-            variant="contained"
-            sx={{
-              width: 90,
-              height: 60,
-              p: 1,
-              my: 2,
-              fontWeight: "bold",
-            }}
-            color="secondary"
-            onClick={() => navigate("/create_artWork")}
-          >
-            Add
-          </Button>
-        </Box>
+        {/* add */}
+        <Button
+          variant="contained"
+          sx={{
+            px: 3,
+            py: 1,
+          }}
+          color="secondary"
+          onClick={() => navigate("/create_artWork")}
+        >
+          Add
+        </Button>
       </div>
 
       <Box
@@ -169,7 +188,14 @@ const ArtWork = () => {
           },
         }}
       >
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "70vh",
+            Width: "100px",
+            border: "1px groove rgba(0,0,0,0.2)",
+          }}
+        >
           <Table
             stickyHeader
             aria-label="sticky table , responsive table"
@@ -185,85 +211,106 @@ const ArtWork = () => {
                 >
                   ID
                 </TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Image</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Name</TableCell>
-
-                <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Type</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Status</TableCell>
-                <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Image
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Name
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Year
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Type
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Status
+                </TableCell>
+                <TableCell style={{ minWidth: 100, fontWeight: "bold" }}>
+                  Actions
+                </TableCell>
               </StyledTableRow>
             </TableHead>
-
-            <TableBody>
-              {data.traditional_art_work.length === 0 && <h1>No Artwork</h1>}
-              {data.traditional_art_work &&
-                data.traditional_art_work.map((row, index) => (
-                  <StyledTableRow hover role="checkbox" tabIndex={-1}>
-                    <TableCell>{row.id}</TableCell>
-
-                    <TableCell>
-                      <Avatar
-                        width="52px"
-                        height="52px"
-                        src={row.artwork_image_url}
-                      ></Avatar>
-                    </TableCell>
-                    <TableCell>{row.artwork_name}</TableCell>
-                    <TableCell>{row.artwork_year}</TableCell>
-                    <TableCell>
-                      {
-                        row.traditional_art_work_artwork_medium_type
-                          ?.medium_name
-                      }
-                    </TableCell>
-                    <TableCell>
-                      {row.pending === true ? (
-                        <Typography
-                          style={{
-                            backgroundColor: "green",
-                            padding: "0.5rem",
-                            color: "#fff",
-                            borderRadius: "10px",
-                          }}
+            {data.length === 0 ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={7} style={{ textAlign: "center" }}>
+                    <Typography variant="h6" color="error">
+                      No Artworks Data
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {data &&
+                  data.map((row, index) => (
+                    <StyledTableRow hover role="checkbox" tabIndex={-1}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        <Avatar
+                          width="52px"
+                          height="52px"
+                          src={row.artwork_image_url}
+                        ></Avatar>
+                      </TableCell>
+                      <TableCell>{row.artwork_name}</TableCell>
+                      <TableCell>{row.artwork_year}</TableCell>
+                      <TableCell>
+                        {
+                          row.traditional_art_work_artwork_medium_type
+                            ?.medium_name
+                        }
+                      </TableCell>
+                      <TableCell>
+                        {row.pending ? (
+                          <Typography
+                            sx={{
+                              backgroundColor: "orange",
+                              px: 2,
+                              py: 1,
+                              color: "#fff",
+                              borderRadius: "3px",
+                            }}
+                          >
+                            Pending
+                          </Typography>
+                        ) : (
+                          <Typography
+                            sx={{
+                              backgroundColor: "green",
+                              px: 2,
+                              py: 1,
+                              color: "#fff",
+                              borderRadius: "3px",
+                            }}
+                          >
+                            Approve
+                          </Typography>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="error"
+                          sx={{ color: "white", p: 1, mr: 1 }}
+                          onClick={() => navigate(`/art_work/${row.id}`)}
                         >
-                          Approve
-                        </Typography>
-                      ) : (
-                        <Typography
-                          style={{
-                            backgroundColor: "orange",
-                            padding: "0.5rem",
-                            color: "#fff",
-                            borderRadius: "10px",
-                          }}
-                        >
-                          Pending
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="small"
-                        sx={{ color: "red" }}
-                        // color="warning"
-                        // variant="contained"
-                        fontWeight="bold"
-                        onClick={() => navigate(`/art_work/${row.id}`)}
-                      >
-                        Detail
-                      </Button>
-                    </TableCell>
-                  </StyledTableRow>
-                ))}
-            </TableBody>
+                          Detail
+                        </Button>
+                      </TableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
         <TablePagination
           sx={{ color: "black" }}
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={data?.traditional_art_work_aggregate.aggregate.count}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

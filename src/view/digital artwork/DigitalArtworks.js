@@ -46,13 +46,24 @@ const DigitalArtworks = () => {
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [artwork, setArtwork] = useState("");
-  // const [loadArtwork, resultArtwork] = useLazyQuery(ARTWORKS);
-  const { data } = useQuery(All_DIGITAL_ARTWORKS, {
-    variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
-    fetchPolicy: "network-only",
-  });
-  console.log("digital artwork", data);
+
+  const [data, setData] = useState();
+  const [loadDigitalArtwork, resultData] = useLazyQuery(All_DIGITAL_ARTWORKS);
+
+  useEffect(() => {
+    loadDigitalArtwork({
+      variables: { limit: rowsPerPage, offset: offset, search: `%${search}%` },
+      fetchPolicy: "network-only",
+    });
+  }, [loadDigitalArtwork, rowsPerPage, offset, search]);
+
+  useEffect(() => {
+    if (resultData.data) {
+      setData(resultData.data.digital_art_work);
+      setCount(resultData?.data.digital_art_work_aggregate.aggregate.count);
+    }
+  }, [resultData]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     setOffset(rowsPerPage * newPage);
@@ -66,6 +77,19 @@ const DigitalArtworks = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(searchValue);
+    if (searchValue === "") {
+      loadDigitalArtwork(
+        {
+          variables: {
+            limit: rowsPerPage,
+            offset: offset,
+            search: `%${search}%`,
+          },
+          fetchPolicy: "network-only",
+        },
+        [loadDigitalArtwork, rowsPerPage, offset, search]
+      );
+    }
   };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -81,7 +105,7 @@ const DigitalArtworks = () => {
   if (!data) {
     return "no data";
   }
-  console.log("data", data);
+
   return (
     <div>
       <div
@@ -109,7 +133,7 @@ const DigitalArtworks = () => {
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width: 350,
+                width: "auto",
               }}
             >
               {/* Search Box */}
@@ -138,25 +162,18 @@ const DigitalArtworks = () => {
             </Paper>
           </form>
         </div>
-      </div>
-
-      <div>
-        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-          <Button
-            variant="contained"
-            sx={{
-              width: 90,
-              height: 60,
-              p: 1,
-              my: 2,
-              fontWeight: "bold",
-            }}
-            color="secondary"
-            onClick={() => navigate("/create_digital_artwork")}
-          >
-            Add
-          </Button>
-        </Box>
+        {/* add */}
+        <Button
+          variant="contained"
+          sx={{
+            px: 3,
+            py: 1,
+          }}
+          color="secondary"
+          onClick={() => navigate("/create_digital_artwork")}
+        >
+          Add
+        </Button>
       </div>
 
       <Box
@@ -170,7 +187,14 @@ const DigitalArtworks = () => {
           },
         }}
       >
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "70vh",
+            Width: "100px",
+            border: "1px groove rgba(0,0,0,0.2)",
+          }}
+        >
           <Table
             stickyHeader
             aria-label="sticky table , responsive table"
@@ -186,80 +210,102 @@ const DigitalArtworks = () => {
                 >
                   ID
                 </TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Image</TableCell>
-                <TableCell style={{ minWidth: 70 }}>Artwork Name</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Image
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Name
+                </TableCell>
 
-                <TableCell style={{ minWidth: 70 }}>Artwork Year</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artwork Year
+                </TableCell>
 
-                <TableCell style={{ minWidth: 70 }}>Status</TableCell>
-                <TableCell style={{ minWidth: 100 }}>Actions</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Status
+                </TableCell>
+                <TableCell style={{ minWidth: 100, fontWeight: "bold" }}>
+                  Actions
+                </TableCell>
               </StyledTableRow>
             </TableHead>
 
-            <TableBody>
-              {data.digital_art_work.length === 0 && <h1>No Artwork</h1>}
-              {data.digital_art_work &&
-                data.digital_art_work.map((row, index) => (
-                  <StyledTableRow hover role="checkbox" tabIndex={-1}>
-                    <TableCell>{row.id}</TableCell>
+            {data.length === 0 ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={7} style={{ textAlign: "center" }}>
+                    <Typography variant="h6" color="error">
+                      No Digital Artworks Data
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {data &&
+                  data.map((row, index) => (
+                    <StyledTableRow hover role="checkbox" tabIndex={-1}>
+                      <TableCell>{index + 1}</TableCell>
 
-                    <TableCell>
-                      <Avatar
-                        width="52px"
-                        height="52px"
-                        src={row.artwork_image_url}
-                      ></Avatar>
-                    </TableCell>
-                    <TableCell>{row.artwork_name}</TableCell>
-                    <TableCell>{row.artwork_year}</TableCell>
+                      <TableCell>
+                        <Avatar
+                          width="52px"
+                          height="52px"
+                          src={row.artwork_image_url}
+                        ></Avatar>
+                      </TableCell>
+                      <TableCell>{row.artwork_name}</TableCell>
+                      <TableCell>{row.artwork_year}</TableCell>
 
-                    <TableCell>
-                      {row.pending === true ? (
-                        <Typography
-                          style={{
-                            backgroundColor: "green",
-                            padding: "0.5rem",
-                            color: "#fff",
-                            borderRadius: "10px",
-                          }}
+                      <TableCell>
+                        {row.pending ? (
+                          <Typography
+                            sx={{
+                              backgroundColor: "orange",
+                              px: 2,
+                              py: 1,
+                              color: "#fff",
+                              borderRadius: "3px",
+                            }}
+                          >
+                            Pending
+                          </Typography>
+                        ) : (
+                          <Typography
+                            sx={{
+                              backgroundColor: "green",
+                              px: 2,
+                              py: 1,
+                              color: "#fff",
+                              borderRadius: "3px",
+                            }}
+                          >
+                            Approve
+                          </Typography>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="error"
+                          sx={{ color: "white", p: 1, mr: 1 }}
+                          onClick={() => navigate(`/digital_artwork/${row.id}`)}
                         >
-                          Approve
-                        </Typography>
-                      ) : (
-                        <Typography
-                          style={{
-                            backgroundColor: "orange",
-                            padding: "0.5rem",
-                            color: "#fff",
-                            borderRadius: "10px",
-                          }}
-                        >
-                          Pending
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="small"
-                        sx={{ color: "red" }}
-                        // color="warning"
-                        // variant="contained"
-                        fontWeight="bold"
-                        onClick={() => navigate(`/digital_artwork/${row.id}`)}
-                      >
-                        Detail
-                      </Button>
-                    </TableCell>
-                  </StyledTableRow>
-                ))}
-            </TableBody>
+                          Detail
+                        </Button>
+                      </TableCell>
+                    </StyledTableRow>
+                  ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
         <TablePagination
           sx={{ color: "black" }}
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={data?.digital_art_work_aggregate.aggregate.count}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

@@ -107,16 +107,17 @@ const User = () => {
             py: "2rem",
             color: "black",
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "center",
           }}
         >
           <Box>
             {/* User ID */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2">ID:</Typography>
               </Grid>
-              <Grid item xs={8}>
+
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2" color="text.secondary">
                   {user.id}
                 </Typography>
@@ -125,10 +126,11 @@ const User = () => {
 
             {/* FullName */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2">FullName:</Typography>
               </Grid>
-              <Grid item xs={8}>
+
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2" color="text.secondary">
                   {user.fullname}
                 </Typography>
@@ -137,10 +139,11 @@ const User = () => {
 
             {/* Email */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2">Email:</Typography>
               </Grid>
-              <Grid item xs={2}>
+
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2" color="text.secondary">
                   {user.email}
                 </Typography>
@@ -149,10 +152,11 @@ const User = () => {
 
             {/* Address */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2">Address:</Typography>
               </Grid>
-              <Grid item xs={8}>
+
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2" color="text.secondary">
                   {user.address}
                 </Typography>
@@ -161,10 +165,11 @@ const User = () => {
 
             {/* Gender */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2">Gender:</Typography>
               </Grid>
-              <Grid item xs={8}>
+
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2" color="text.secondary">
                   {user.gender}
                 </Typography>
@@ -173,96 +178,11 @@ const User = () => {
 
             {/* Phone Number */}
             <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2">Phone Number:</Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.phone}
-                </Typography>
-              </Grid>
-            </Grid>
-            {/* Role */}
-            {/* <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={2}>
-                <Typography variant="body2" color="text.secondary">
-                  Role:
-                </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.role}
-                </Typography>
-              </Grid>
-            </Grid> */}
-          </Box>
-          <Box>
-            {/* User ID */}
-            <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={3}>
-                <Typography variant="body2">ID:</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.id}
-                </Typography>
-              </Grid>
-            </Grid>
 
-            {/* FullName */}
-            <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body2">FullName:</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.fullname_mm}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            {/* Email */}
-            <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body2">Email:</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.email}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            {/* Address */}
-            <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body2">Address:</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.address_mm}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            {/* Gender */}
-            <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body2">Gender:</Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" color="text.secondary">
-                  {user.gender_mm}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            {/* Phone Number */}
-            <Grid sx={{ m: 2 }} container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body2">Phone Number:</Typography>
-              </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2" color="text.secondary">
                   {user.phone}
                 </Typography>
@@ -285,12 +205,17 @@ const User = () => {
         </Paper>
       </CardContent>
 
-      <CardActions className="flex--3--cols">
+      {/* <CardActions className="flex--3--cols"> */}
+      <CardActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
         <Box>
           {user.disabled ? (
             <Button
               variant="contained"
-              size="large"
               color="warning"
               onClick={() =>
                 editUser({ variables: { id: user.id, disabled: false } })
@@ -301,7 +226,6 @@ const User = () => {
           ) : (
             <Button
               variant="contained"
-              size="large"
               color="error"
               onClick={() =>
                 editUser({ variables: { id: user.id, disabled: true } })
@@ -312,17 +236,15 @@ const User = () => {
           )}
         </Box>
 
-        <div>
-          <Button
-            variant="contained"
-            color="info"
-            disabled={user.users_artist.length !== 0}
-            // component={Link}
-            onClick={() => navigate(`/create_artist/${user.id}`)}
-          >
-            Up to Artist
-          </Button>
-        </div>
+        <Button
+          variant="contained"
+          color="info"
+          disabled={user.users_artist.length !== 0}
+          // component={Link}
+          onClick={() => navigate(`/create_artist/${user.id}`)}
+        >
+          Up to Artist
+        </Button>
 
         <Button
           variant="contained"

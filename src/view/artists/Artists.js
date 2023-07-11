@@ -17,6 +17,7 @@ import {
   TableContainer,
   Table,
   TableHead,
+  Typography,
   TableBody,
   tableCellClasses,
   styled,
@@ -51,6 +52,7 @@ const Artists = () => {
 
   useEffect(() => {
     if (resultArtist.data) {
+      console.log("rerror", resultArtist.error);
       setArtist(resultArtist.data.artist);
       setCount(resultArtist.data?.artist_aggregate.aggregate.count);
     }
@@ -69,6 +71,19 @@ const Artists = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(searchValue);
+    if (searchValue === "") {
+      loadArtist(
+        {
+          variables: {
+            limit: rowsPerPage,
+            offset: offset,
+            search: `%${search}%`,
+          },
+          fetchPolicy: "network-only",
+        },
+        [loadArtist, rowsPerPage, offset, search]
+      );
+    }
   };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -84,7 +99,7 @@ const Artists = () => {
   if (!artist) {
     return "no artist";
   }
-  console.log("artist", artist[0].artist_profile_image_url);
+
   return (
     <div>
       <div
@@ -112,7 +127,7 @@ const Artists = () => {
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width: 350,
+                width: "auto",
               }}
             >
               {/* Search Box */}
@@ -141,25 +156,18 @@ const Artists = () => {
             </Paper>
           </form>
         </div>
-      </div>
-
-      <div>
-        <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-          <Button
-            variant="contained"
-            sx={{
-              width: 90,
-              height: 60,
-              p: 1,
-              my: 2,
-              fontWeight: "bold",
-            }}
-            color="secondary"
-            onClick={() => navigate("/create_artist")}
-          >
-            Add
-          </Button>
-        </Box>
+        {/* add */}
+        <Button
+          variant="contained"
+          sx={{
+            px: 3,
+            py: 1,
+          }}
+          color="secondary"
+          onClick={() => navigate("/create_artist")}
+        >
+          Add
+        </Button>
       </div>
 
       <Box
@@ -173,58 +181,85 @@ const Artists = () => {
           },
         }}
       >
-        <TableContainer sx={{ maxHeight: "60vh", Width: "100px" }}>
-          <Table stickyHeader aria-label="sticky table">
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "70vh",
+            Width: "100px",
+            border: "1px groove rgba(0,0,0,0.2)",
+          }}
+        >
+          <Table stickyHeader aria-label="sticky table , responsive table">
             <TableHead>
               <StyledTableRow>
-                <TableCell
-                  style={{
-                    minWidth: 100,
-                    fontWeight: "bold",
-                  }}
-                >
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
                   ID
                 </TableCell>
-                <TableCell>Artist Name</TableCell>
-                <TableCell>Profile Image</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Artist Name
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Profile Image
+                </TableCell>
 
-                <TableCell>Year Born</TableCell>
-                <TableCell>Year Died</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Year Born
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Year Died
+                </TableCell>
+                <TableCell style={{ minWidth: 70, fontWeight: "bold" }}>
+                  Actions
+                </TableCell>
               </StyledTableRow>
             </TableHead>
-
-            <TableBody>
-              {artist.length === 0 && <h1>No Artists</h1>}
-              {artist.map((row, index) => (
-                <StyledTableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.artist_name}</TableCell>
-                  <TableCell>
-                    <Avatar
-                      width="52px"
-                      height="52px"
-                      src={row.artist_profile_image_url}
-                    ></Avatar>
+            {artist.length === 0 ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={7} style={{ textAlign: "center" }}>
+                    <Typography variant="h6" color="error">
+                      No Artists Data
+                    </Typography>
                   </TableCell>
+                </TableRow>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {/* {artist.length === 0 && <h1>No Artists</h1>} */}
+                {artist.map((row, index) => (
+                  <StyledTableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={index}
+                  >
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{row.artist_name}</TableCell>
+                    <TableCell>
+                      <Avatar
+                        width="52px"
+                        height="52px"
+                        src={row.artist_profile_image_url}
+                      ></Avatar>
+                    </TableCell>
 
-                  <TableCell>{row.year_born}</TableCell>
-                  <TableCell>{row.year_died}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="small"
-                      sx={{ color: "red" }}
-                      // color="warning"
-                      // variant="contained"
-                      fontWeight="bold"
-                      onClick={() => navigate(`/artist/${row.id}`)}
-                    >
-                      Detail
-                    </Button>
-                  </TableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
+                    <TableCell>{row.year_born}</TableCell>
+                    <TableCell>{row.year_died}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        sx={{ color: "white", p: 1, mr: 1 }}
+                        onClick={() => navigate(`/artist/${row.id}`)}
+                      >
+                        Detail
+                      </Button>
+                    </TableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
         <TablePagination

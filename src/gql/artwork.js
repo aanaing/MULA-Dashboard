@@ -119,24 +119,13 @@ export const OWNERSHIP = gql`
       fullname
       fullname_mm
       id
+      phone
     }
   }
 `;
 
 //get art_series for create artwork
-// export const ART_SERIES = gql`
-//   query art_series($fk_artist_id: Int!) {
-//     art_series(where: { fk_artist_id: { _eq: $fk_artist_id } }) {
-//       series_name
-//       series_name_mm
-//       id
-//       art_series_artist_art_series {
-//         fk_art_series_id
-//         fk_traditional_art_work_id
-//       }
-//     }
-//   }
-// `;
+
 export const ART_SERIES = gql`
   query MyQuery($fk_artist_id: Int!) {
     art_series(where: { fk_artist_id: { _eq: $fk_artist_id } }) {
@@ -368,6 +357,23 @@ export const PENDING_STATUS = gql`
     ) {
       id
       pending
+    }
+  }
+`;
+
+//get user phone
+export const USER_PHONE = gql`
+  query MyQuery($users_traditional_art_works: Int!) {
+    users(
+      where: {
+        users_traditional_art_works: {
+          id: { _eq: $users_traditional_art_works }
+        }
+      }
+    ) {
+      fullname
+      id
+      phone
     }
   }
 `;

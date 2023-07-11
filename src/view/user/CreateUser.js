@@ -108,7 +108,7 @@ const CreateUser = () => {
               InputProps={{ sx: { height: 50 } }}
               variant="outlined"
               id="fullname"
-              placeholder="Enter Value"
+              placeholder="Enter Fullname"
               value={fullname}
               onChange={(e) => setFullname(e.target.value)}
               error={errors.fullname ? true : false}
@@ -122,7 +122,7 @@ const CreateUser = () => {
               variant="outlined"
               InputProps={{ sx: { height: 50 } }}
               id="phone"
-              placeholder="Enter Value"
+              placeholder="Enter Phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               error={errors.phone ? true : false}
@@ -136,7 +136,7 @@ const CreateUser = () => {
               variant="outlined"
               InputProps={{ sx: { height: 50 } }}
               id="password"
-              placeholder="Enter Value"
+              placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={errors.password ? true : false}

@@ -388,7 +388,7 @@ const CreateDigitalArtwork = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artwork_name"
-                placeholder="Enter Value"
+                placeholder="Enter Artwork Name (Eng)"
                 value={values.artwork_name}
                 onChange={handleChange("artwork_name")}
                 error={error.artwork_name ? true : false}
@@ -413,7 +413,7 @@ const CreateDigitalArtwork = () => {
                   onChange={(e) => setArtistNameId(e.target.value)}
                 >
                   <MenuItem value="" disabled={true}>
-                    Enter Value
+                    Enter Artist Name
                   </MenuItem>
                   {Array.isArray(nameData.artist)
                     ? nameData.artist.map((ast) => (
@@ -438,7 +438,7 @@ const CreateDigitalArtwork = () => {
                   type="number"
                   variant="outlined"
                   id="artwork_year"
-                  placeholder="Enter Value"
+                  placeholder="Enter Artwork Year"
                   value={values.artwork_year}
                   onChange={handleChange("artwork_year")}
                   error={error.artwork_year ? true : false}
@@ -455,7 +455,7 @@ const CreateDigitalArtwork = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artwork_name_mm"
-                placeholder="Enter Value"
+                placeholder="Enter Artwork Name (MM)"
                 value={values.artwork_name_mm}
                 onChange={handleChange("artwork_name_mm")}
                 error={error.artwork_name_mm ? true : false}
@@ -477,7 +477,7 @@ const CreateDigitalArtwork = () => {
                   type="number"
                   variant="outlined"
                   id="current_price"
-                  // label="Current Price"
+                  placeholder="Enter Current Price"
                   value={values.current_price}
                   onChange={handleChange("current_price")}
                   error={error.current_price ? true : false}
@@ -494,7 +494,7 @@ const CreateDigitalArtwork = () => {
                   type="number"
                   variant="outlined"
                   id="update_price"
-                  // label="Update Price"
+                  placeholder="Enter Update Price"
                   value={values.update_price}
                   onChange={handleChange("update_price")}
                   error={error.update_price ? true : false}

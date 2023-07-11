@@ -304,7 +304,7 @@ const CreateArtistByPhone = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artist_name"
-                placeholder="Enter Value"
+                placeholder="Enter Artist Name (Eng)"
                 value={values.artist_name}
                 onChange={handleChange("artist_name")}
                 error={error.artist_name ? true : false}
@@ -321,7 +321,7 @@ const CreateArtistByPhone = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="artist_name"
-                placeholder="Enter Value"
+                placeholder="Enter Artist Name (MM)"
                 value={values.artist_name_mm}
                 onChange={handleChange("artist_name_mm")}
                 error={error.artist_name_mm ? true : false}
@@ -337,7 +337,7 @@ const CreateArtistByPhone = () => {
                 type="number"
                 variant="outlined"
                 id="year_born"
-                placeholder="Year Born"
+                placeholder="Enter Year Born"
                 value={values.year_born}
                 onChange={handleChange("year_born")}
                 error={error.year_born ? true : false}
@@ -353,7 +353,7 @@ const CreateArtistByPhone = () => {
                 type="number"
                 variant="outlined"
                 id="year_died"
-                placeholder="Enter Value"
+                placeholder="Enter Year Died"
                 value={values.year_died}
                 onChange={handleChange("year_died")}
                 error={error.year_died ? true : false}
@@ -375,7 +375,7 @@ const CreateArtistByPhone = () => {
                 onChange={handleChange("fk_user_id")}
               >
                 <MenuItem value="" disabled>
-                  Enter Value
+                  Enter User Phone
                 </MenuItem>
                 {Array.isArray(data.users)
                   ? data.users

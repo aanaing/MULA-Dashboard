@@ -342,7 +342,7 @@ const CreateEvent = () => {
                 variant="outlined"
                 InputProps={{ sx: { height: 50 } }}
                 id="event_name"
-                placeholder="Enter Value"
+                placeholder="Enter Event Name (Eng)"
                 value={values.event_name}
                 onChange={handleChange("event_name")}
                 error={error.event_name ? true : false}
@@ -359,7 +359,7 @@ const CreateEvent = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="event_name_mm"
-                placeholder="Enter Value"
+                placeholder="Enter Event Name(MM)"
                 value={values.event_name_mm}
                 onChange={handleChange("event_name_mm")}
                 error={error.event_name_mm ? true : false}
@@ -374,7 +374,7 @@ const CreateEvent = () => {
                 InputProps={{ sx: { height: 50 } }}
                 type="date"
                 id="event_date_time"
-                placeholder="Enter Value"
+                placeholder="Enter Date"
                 value={dates}
                 onChange={handleChange("event_date_time")}
                 error={error.dates ? true : false}
@@ -396,7 +396,7 @@ const CreateEvent = () => {
                 onChange={handleChange("fk_admin_id")}
               >
                 <MenuItem value="" disabled={true}>
-                  Enter Value
+                  Enter Admin ID
                 </MenuItem>
 
                 {data.admin && Array.isArray(data.admin)
@@ -421,7 +421,7 @@ const CreateEvent = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="event_location"
-                placeholder="Enter Value"
+                placeholder="Enter Location (Eng)"
                 value={values.event_location}
                 onChange={handleChange("event_location")}
                 error={error.event_location ? true : false}
@@ -438,7 +438,7 @@ const CreateEvent = () => {
                 InputProps={{ sx: { height: 50 } }}
                 variant="outlined"
                 id="event_location_mm"
-                placeholder="Enter Value"
+                placeholder="Enter Location (MM)"
                 value={values.event_location_mm}
                 onChange={handleChange("event_location_mm")}
                 error={error.event_location_mm ? true : false}

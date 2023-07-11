@@ -174,7 +174,7 @@ const CreateReseller = () => {
                 onChange={handleChange("fk_user_id")}
               >
                 <MenuItem value="" disabled>
-                  Enter Value
+                  Enter Reseller User
                 </MenuItem>
                 {Array.isArray(userData.users)
                   ? userData.users

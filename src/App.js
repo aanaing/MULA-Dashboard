@@ -11,8 +11,8 @@ function App() {
   return (
     <SideBarContextProvider>
       <Routes>
-        <Route path="*" element={<Home />} />
         <Route path="/" element={<Login />} />
+        <Route path="*" element={<Home />} />
         {/* <Route pathe="*" element={<NotFoundView />} /> */}
       </Routes>
     </SideBarContextProvider>
